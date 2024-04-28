@@ -1,5 +1,6 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,6 @@ public class User {
     private Long id;
 
     @NotBlank
-    @Size(min = 5, max = 20, message = "Username should be 6-20 characters long")
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
@@ -38,9 +38,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @NotBlank
-    @Column(name = "address", nullable = false)
-    private String address;
+    @JsonDeserialize(converter = Address.AddressConverter.class)
+    @Embedded
+    private Address address;
 
     @NotBlank
     @Column(name = "career")
@@ -52,8 +52,8 @@ public class User {
     private String idCardNumber;
 
     @NotBlank
-    @Size(min = 10, max = 11, message = "Phone number must be 10 or 11 digits")
-    @Column(name = "phone_number", nullable = false)
+    @Size(min = 9, max = 20, message = "Phone number must be 10 or 11 digits")
+    @Column(name = "phone_number", nullable = false, unique = true)
     private String phoneNumber;
 
     @NotBlank
@@ -78,9 +78,12 @@ public class User {
     @ManyToMany
     @JoinTable(
             name = "user_permission",
-            joinColumns = @JoinColumn(name="user_fk"),
-            inverseJoinColumns = @JoinColumn(name="permission_fk")
+            joinColumns = @JoinColumn(name = "user_fk"),
+            inverseJoinColumns = @JoinColumn(name = "permission_fk")
     )
     private List<Permission> permissions;
+
+    //
+
 
 }

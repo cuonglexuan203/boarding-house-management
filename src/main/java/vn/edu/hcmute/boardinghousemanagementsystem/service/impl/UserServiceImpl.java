@@ -12,6 +12,7 @@ import vn.edu.hcmute.boardinghousemanagementsystem.repo.UserRepository;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.UserService;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -25,6 +26,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Optional<User> findByUsername(String username) {
         return Optional.empty();
+    }
+
+    @Override
+    public User save(User user) {
+        if(user != null){
+            return userRepo.save(user);
+        }
+        return null;
+    }
+
+    @Override
+    public void save(List<User> users) {
+        if(users != null){
+            userRepo.saveAll(users);
+        }
     }
 
     @Override
