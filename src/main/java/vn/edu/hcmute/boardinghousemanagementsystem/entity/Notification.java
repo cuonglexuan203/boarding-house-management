@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -19,10 +21,10 @@ public class Notification {
     private Long id;
 
     @Column(name = "updated_date", nullable = false)
-    private Date updatedDate;
+    private LocalDateTime updatedDate;
 
     @Column(name = "disappear_date", nullable = false)
-    private Date disappearDate;
+    private LocalDateTime disappearDate;
 
     @Column(name = "visibility")
     private boolean visibility;

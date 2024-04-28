@@ -4,16 +4,19 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Gender;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "user")
 public class User {
@@ -28,14 +31,14 @@ public class User {
 
     @Past(message = "Ensure birthdate is before the current date")
     @Column(name = "birthday", nullable = false)
-    private Date birthday;
+    private LocalDate birthday;
 
     @Email
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "gender", nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false)
     private Gender gender;
 
     @JsonDeserialize(converter = Address.AddressConverter.class)

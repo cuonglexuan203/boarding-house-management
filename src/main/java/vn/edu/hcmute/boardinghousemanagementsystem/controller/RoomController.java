@@ -11,6 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class RoomController {
     @GetMapping
     public String getRoom(){
-        return "askfajsf";
+        return "Room response";
     }
 }

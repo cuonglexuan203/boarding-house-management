@@ -20,8 +20,8 @@ public class Role {
     private Long id;
 
     @NotBlank
-    @Column(name = "name", nullable = false, unique = true)
-    private String name;
+    @Column(name = "role", nullable = false, unique = true)
+    private String role;
 
     // Relationships
 

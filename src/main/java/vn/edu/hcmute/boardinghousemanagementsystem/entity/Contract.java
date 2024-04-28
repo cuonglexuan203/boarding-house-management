@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.ContractStatus;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -25,10 +26,10 @@ public class Contract {
     private float depositAmount;
 
     @Column(name = "start_date", nullable = false)
-    private Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date", nullable = false)
-    private Date endDate;
+    private LocalDate endDate;
 
     @Min(1)
     @Column(name = "number_of_member")

@@ -5,9 +5,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import vn.edu.hcmute.boardinghousemanagementsystem.dto.AddressDTO;
+import vn.edu.hcmute.boardinghousemanagementsystem.dto.AddressDto;
 
 @Data
 @AllArgsConstructor
@@ -29,9 +30,9 @@ public class Address {
 
     //
 
-    public static class AddressConverter extends StdConverter<AddressDTO, Address> {
+    public static class AddressConverter extends StdConverter<AddressDto, Address> {
         @Override
-        public Address convert(AddressDTO value) {
+        public Address convert(AddressDto value) {
             Address address = new Address();
             address.setCountry(value.country());
             address.setCity(value.city());

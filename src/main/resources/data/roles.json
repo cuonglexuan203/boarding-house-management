@@ -1,11 +1,11 @@
 [
     {
-        "name": "admin"
+        "role": "admin"
     },
     {
-        "name": "user"
+        "role": "user"
     },
     {
-        "name": "host"
+        "role": "host"
     }
 ]

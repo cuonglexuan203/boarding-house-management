@@ -1,17 +1,17 @@
 [
     {
-        "name": "read"
+        "permission": "read"
     },
    
     {
-        "name": "write"
+        "permission": "write"
     },
     
     {
-        "name": "update"
+        "permission": "update"
     },
     
     {
-        "name": "delete"
+        "permission": "delete"
     }
 ]

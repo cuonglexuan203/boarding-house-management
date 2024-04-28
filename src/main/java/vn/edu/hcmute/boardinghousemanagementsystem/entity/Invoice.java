@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.InvoiceType;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.PaymentStatus;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -27,17 +27,17 @@ public class Invoice {
     private InvoiceType type;
 
     @Column(name = "invoice_date", nullable = false)
-    private Date invoiceDate;
+    private LocalDate invoiceDate;
 
     @Column(name = "payment_deadline", nullable = false)
-    private Date paymentDeadline;
+    private LocalDate paymentDeadline;
 
     @Min(0)
     @Column(name = "number_of_month")
     private int numberOfMonth;
 
     @Column(name = "polling_month", nullable = false)
-    private Date pollingMonth;
+    private LocalDate pollingMonth;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

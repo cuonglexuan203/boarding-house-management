@@ -1,6 +1,8 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.service.impl;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,30 +19,49 @@ import java.util.Optional;
 import java.util.Set;
 
 @AllArgsConstructor
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-    private UserRepository userRepo;
+    private final UserRepository userRepo;
 
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return Optional.empty();
+        return userRepo.findByUsername(username);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepo.findByEmail(email);
     }
 
     @Override
     public User save(User user) {
-        if(user != null){
-            return userRepo.save(user);
+        if (user == null) {
+            log.error("User instance is null");
+            return null;
         }
-        return null;
+        return userRepo.save(user);
     }
 
     @Override
     public void save(List<User> users) {
-        if(users != null){
-            userRepo.saveAll(users);
+        if (users == null) {
+            log.error("Users is null");
+            return;
         }
+        userRepo.saveAll(users);
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return userRepo.existsByUsername(username);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepo.existsByEmail(email);
     }
 
     @Override

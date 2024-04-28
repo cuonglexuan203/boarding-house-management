@@ -20,8 +20,8 @@ public class Permission {
     private Long id;
 
     @NotBlank
-    @Column(name = "name", nullable = false, unique = true)
-    private String name;
+    @Column(name = "permission", nullable = false, unique = true)
+    private String permission;
 
     // Relationships
 

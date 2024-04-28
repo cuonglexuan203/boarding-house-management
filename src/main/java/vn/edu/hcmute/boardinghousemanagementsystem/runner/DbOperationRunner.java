@@ -16,13 +16,14 @@ import vn.edu.hcmute.boardinghousemanagementsystem.entity.Permission;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.Role;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.User;
 import vn.edu.hcmute.boardinghousemanagementsystem.runner.deserialization.DeserializingProcessContext;
+import vn.edu.hcmute.boardinghousemanagementsystem.service.PermissionService;
+import vn.edu.hcmute.boardinghousemanagementsystem.service.RoleService;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.UserService;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-@Profile({"cuongdev", "thongdev"})
+@Profile("initdata")
 @Order(1)
 @Slf4j
 @RequiredArgsConstructor
@@ -30,6 +31,12 @@ import java.util.stream.Stream;
 public class DbOperationRunner implements CommandLineRunner {
     @NotNull
     private final UserService userService;
+
+    @NotNull
+    private final RoleService roleService;
+
+    @NotNull
+    private final PermissionService permissionService;
 
     @NotNull
     private final PasswordEncoder passwordEncoder;
@@ -82,7 +89,8 @@ public class DbOperationRunner implements CommandLineRunner {
 
             // Persistence
             userService.save(users);
-
+            roleService.save(roles);
+            permissionService.save(permissions);
 
 
 
