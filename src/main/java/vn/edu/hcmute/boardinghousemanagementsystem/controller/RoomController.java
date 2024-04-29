@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/room")
 public class RoomController {
-    @GetMapping
-    public String getRoom(){
+    @GetMapping("/{userid}")
+    public String getRooms(){
         return "Room response";
     }
+
 }

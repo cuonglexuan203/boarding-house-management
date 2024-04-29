@@ -8,7 +8,7 @@ import vn.edu.hcmute.boardinghousemanagementsystem.dto.LoginResponse;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.RegisterDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.User;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.AuthenticationService;
-import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.JwtUtil;
+import vn.edu.hcmute.boardinghousemanagementsystem.util.JwtUtil;
 
 @AllArgsConstructor
 @RestController

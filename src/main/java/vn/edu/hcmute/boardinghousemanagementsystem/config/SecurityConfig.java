@@ -22,9 +22,9 @@ import java.util.List;
 @AllArgsConstructor
 public class SecurityConfig {
 
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
-    private AuthenticationProvider authenticationProvider;
-
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final AuthenticationProvider authenticationProvider;
+    private final UnAuthorizedUserAuthenticationEntryPoint authenticationEntryPoint;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(handler -> handler.authenticationEntryPoint(authenticationEntryPoint))
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -45,7 +46,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:5000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5000", "http://localhost:3000"));
         configuration.setAllowedMethods(List.of("GET","POST"));
         configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
 

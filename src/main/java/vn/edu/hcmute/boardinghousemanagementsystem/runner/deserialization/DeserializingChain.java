@@ -2,6 +2,7 @@ package vn.edu.hcmute.boardinghousemanagementsystem.runner.deserialization;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;

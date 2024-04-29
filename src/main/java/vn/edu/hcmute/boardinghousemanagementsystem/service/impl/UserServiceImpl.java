@@ -3,6 +3,7 @@ package vn.edu.hcmute.boardinghousemanagementsystem.service.impl;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +25,6 @@ import java.util.Set;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepo;
-
 
     @Override
     public Optional<User> findByUsername(String username) {

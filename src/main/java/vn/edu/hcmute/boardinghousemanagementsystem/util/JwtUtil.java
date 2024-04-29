@@ -1,4 +1,4 @@
-package vn.edu.hcmute.boardinghousemanagementsystem.util.enums;
+package vn.edu.hcmute.boardinghousemanagementsystem.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
