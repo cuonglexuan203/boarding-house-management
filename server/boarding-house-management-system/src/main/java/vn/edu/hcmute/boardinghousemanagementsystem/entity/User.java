@@ -1,0 +1,97 @@
+package vn.edu.hcmute.boardinghousemanagementsystem.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
+import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Gender;
+
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity
+@Table(name = "user")
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @NotBlank
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
+
+    @Past(message = "Ensure birthdate is before the current date")
+    @Column(name = "birthday", nullable = false)
+    private LocalDate birthday;
+
+    @Email
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false)
+    private Gender gender;
+
+    @JsonDeserialize(converter = Address.AddressConverter.class)
+    @Embedded
+    private Address address;
+
+    @NotBlank
+    @Column(name = "career")
+    private String career;
+
+    @NotBlank
+    @Size(min = 9, max = 20, message = "Identity number is required")
+    @Column(name = "id_card_number", nullable = false, unique = true)
+    private String idCardNumber;
+
+    @NotBlank
+    @Size(min = 9, max = 20, message = "Phone number must be 10 or 11 digits")
+    @Column(name = "phone_number", nullable = false, unique = true)
+    private String phoneNumber;
+
+    @NotBlank
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
+
+    @NotBlank
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    // Relationships
+    @ToString.Exclude
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<RoomBooking> roomBookings;
+
+    @ToString.Exclude
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Notification> notifications;
+
+    @ToString.Exclude
+    @JsonIgnore
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    private List<Role> roles;
+
+    @ToString.Exclude
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_permission",
+            joinColumns = @JoinColumn(name = "user_fk"),
+            inverseJoinColumns = @JoinColumn(name = "permission_fk")
+    )
+    private List<Permission> permissions;
+
+    //
+
+
+}
