@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.Permission;
 import vn.edu.hcmute.boardinghousemanagementsystem.runner.deserialization.DeserializingChain;
 import vn.edu.hcmute.boardinghousemanagementsystem.runner.deserialization.DeserializingProcessContext;
+import vn.edu.hcmute.boardinghousemanagementsystem.util.MapperSingleton;
 
 @Slf4j
 public class PermissionDeserializingProcessor implements DeserializingChain {
@@ -18,7 +19,7 @@ public class PermissionDeserializingProcessor implements DeserializingChain {
     @Override
     public void process(byte[] jsonbBytes, DeserializingProcessContext ctx) {
         log.info("In deserializing process of Permission Deserializing Processor");
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = MapperSingleton.getInstance();
         try {
             Permission[] permissions = mapper.readValue(jsonbBytes, Permission[].class);
             ctx.setContextValue(permissions);

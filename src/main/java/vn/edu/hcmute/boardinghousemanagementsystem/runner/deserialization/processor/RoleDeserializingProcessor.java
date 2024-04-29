@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.Role;
 import vn.edu.hcmute.boardinghousemanagementsystem.runner.deserialization.DeserializingChain;
 import vn.edu.hcmute.boardinghousemanagementsystem.runner.deserialization.DeserializingProcessContext;
+import vn.edu.hcmute.boardinghousemanagementsystem.util.MapperSingleton;
 
 @Slf4j
 public class RoleDeserializingProcessor implements DeserializingChain {
@@ -18,7 +19,7 @@ public class RoleDeserializingProcessor implements DeserializingChain {
     @Override
     public void process(byte[] jsonbBytes, DeserializingProcessContext ctx) {
         log.info("In deserializing process of Role Deserializing Processor");
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = MapperSingleton.getInstance();
         try {
             Role[] roles = mapper.readValue(jsonbBytes, Role[].class);
             ctx.setContextValue(roles);
