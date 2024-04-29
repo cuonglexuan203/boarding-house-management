@@ -1,17 +1,14 @@
 [
-    {
-        "permission": "read"
-    },
-   
-    {
-        "permission": "write"
-    },
-    
-    {
-        "permission": "update"
-    },
-    
-    {
-        "permission": "delete"
-    }
+  {
+    "permission": "READ_PRIVILEGE"
+  },
+  {
+    "permission": "UPDATE_PRIVILEGE"
+  },
+  {
+    "permission": "CREATE_PRIVILEGE"
+  },
+  {
+    "permission": "DELETE_PRIVILEGE"
+  }
 ]

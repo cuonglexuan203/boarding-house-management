@@ -10,6 +10,7 @@ import vn.edu.hcmute.boardinghousemanagementsystem.repo.RoleRepository;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.RoleService;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Slf4j
@@ -17,6 +18,11 @@ import java.util.List;
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepo;
+
+    @Override
+    public Optional<Role> findByRole(String role) {
+        return roleRepo.findByRole(role);
+    }
 
     @Override
     public Role save(Role role) {

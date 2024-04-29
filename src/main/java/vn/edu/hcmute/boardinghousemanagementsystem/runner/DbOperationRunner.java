@@ -88,9 +88,9 @@ public class DbOperationRunner implements CommandLineRunner {
             }
 
             // Persistence
-            userService.save(users);
+//            permissionService.save(permissions);
             roleService.save(roles);
-            permissionService.save(permissions);
+            userService.save(users);
 
 
 

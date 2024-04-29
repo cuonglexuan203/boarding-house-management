@@ -1,16 +1,14 @@
 {
   "fullName": "Ms. Israel Krajcik",
-  "email": "Tony_Runolfsdottir@hotmail.com",
+  "email": "lxc@hotmail.com",
   "career": "Internal Communications Liaison",
-  "birthday": "1983-06-12T09:35:55.204Z",
-  "address": {
-    "country": "Jordan",
-    "city": "Efrainshire",
-    "street": "96675 Chelsie Manor"
-  },
+  "birthday": "1983-06-12",
+  "country": "Jordan",
+  "city": "Efrainshire",
+  "street": "96675 Chelsie Manor",
   "gender": "FEMALE",
-  "idCardNumber": "567338723",
-  "phoneNumber": "3023101099",
-  "username": "Kaci.Thompson",
-  "password": "ws1M495whcPXquZ"
+  "idCardNumber": "1234567809",
+  "phoneNumber": "1238971231",
+  "username": "lxc123",
+  "password": "123456789"
 }

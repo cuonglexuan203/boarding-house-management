@@ -41,10 +41,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .password(passwordEncoder.encode(input.password()))
                 .build();
         if(userService.existsByUsername(input.username())){
-            log.error("User already exists");
+            log.error("Username already exists");
             return null;
         }
-        return userService.save(user);
+        if(userService.existsByEmail(input.email())){
+            log.error("Email already exists");
+            return null;
+        }
+        if(userService.existsByPhoneNumber(input.email())){
+            log.error("Phone number already exists");
+            return null;
+        }
+        if(userService.existsByIdCardNumber(input.email())){
+            log.error("Id card number already exists");
+            return null;
+        }
+        return userService.registerNewUser(user);
     }
 
     @Override

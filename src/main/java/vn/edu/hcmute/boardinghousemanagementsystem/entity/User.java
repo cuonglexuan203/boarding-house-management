@@ -1,12 +1,10 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Gender;
 
 import java.time.LocalDate;
@@ -68,17 +66,24 @@ public class User {
     private String password;
 
     // Relationships
-
+    @ToString.Exclude
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<RoomBooking> roomBookings;
 
+    @ToString.Exclude
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Notification> notifications;
 
-    @ManyToOne
-    private Role role;
+    @ToString.Exclude
+    @JsonIgnore
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    private List<Role> roles;
 
-    @ManyToMany
+    @ToString.Exclude
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_permission",
             joinColumns = @JoinColumn(name = "user_fk"),

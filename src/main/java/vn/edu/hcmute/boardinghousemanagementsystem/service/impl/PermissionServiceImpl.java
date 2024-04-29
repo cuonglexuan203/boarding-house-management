@@ -10,12 +10,18 @@ import vn.edu.hcmute.boardinghousemanagementsystem.repo.PermissionRepository;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.PermissionService;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Slf4j
 @Service
 public class PermissionServiceImpl implements PermissionService {
     private final PermissionRepository permissionRepo;
+
+    @Override
+    public Optional<Permission> findByPermission(String permission) {
+        return permissionRepo.findByPermission(permission);
+    }
 
     @Override
     public Permission save(Permission permission) {

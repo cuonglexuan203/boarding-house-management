@@ -1,10 +1,12 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -25,10 +27,18 @@ public class Role {
 
     // Relationships
 
-    @OneToMany(mappedBy ="role")
+    @ToString.Exclude
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "role_user",
+            joinColumns = @JoinColumn(name = "role_fk"),
+            inverseJoinColumns = @JoinColumn(name = "user_fk")
+    )
     private List<User> users;
 
-    @ManyToMany
+    @ToString.Exclude
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinTable(
             name = "role_permission",
             joinColumns = @JoinColumn(name = "role_fk"),

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import vn.edu.hcmute.boardinghousemanagementsystem.entity.Role;
 
 @Order(0)
 @Slf4j
