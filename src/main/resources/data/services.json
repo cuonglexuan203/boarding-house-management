@@ -21,6 +21,6 @@
     "id": 4,
     "name": "Laundry",
     "price": 2.0,
-    "unit": "Piece"
+    "unit": "Kg"
   }
 ]

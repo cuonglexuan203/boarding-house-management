@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "content": "The electricity rates have been revised and will be effective from next billing cycle. Please check the new rates in your contract details.",
+    "disappearDate": "2024-12-31",
+    "updatedDate": "2024-04-29",
+    "visibility": true
+  },
+  {
+    "id": 2,
+    "content": "Reminder: The water conservation policy is in effect. Please ensure minimal wastage of water to avoid surcharges.",
+    "disappearDate": "2024-06-30",
+    "updatedDate": "2024-04-29",
+    "visibility": true
+  },
+  {
+    "id": 3,
+    "content": "New laundry services are now available! Enjoy our improved facilities at very competitive rates.",
+    "disappearDate": "2024-05-30",
+    "updatedDate": "2024-04-29",
+    "visibility": true
+  }
+  {
+    "id": 4,
+    "content": "Recently, the neighborhood has alerted about the theft of property. Please be aware and carefully preserve personal property",
+    "disappearDate": "2024-04-30",
+    "updatedDate": "2024-05-01",
+    "visibility": true
+  }
+  {
+    "id": 5,
+    "content": "The temperature of the weather is increasing sharply so that please be careful of fire and explosion",
+    "disappearDate": "2024-06-30",
+    "updatedDate": "2029-06-30",
+    "visibility": false
+  }
+  {
+    "id": 6,
+    "content": "Remember to pay your debts before moving out the boarding house.",
+    "disappearDate": "2010-01-01",
+    "updatedDate": "2100-01-01",
+    "visibility": true
+  }
+]
