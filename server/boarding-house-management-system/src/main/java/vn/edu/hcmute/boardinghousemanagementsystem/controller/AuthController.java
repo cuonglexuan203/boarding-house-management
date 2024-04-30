@@ -12,7 +12,6 @@ import vn.edu.hcmute.boardinghousemanagementsystem.util.JwtUtil;
 
 @AllArgsConstructor
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/auth/")
 public class AuthController {
     private final AuthenticationService authService;
