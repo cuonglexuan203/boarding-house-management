@@ -6,11 +6,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import vn.edu.hcmute.boardinghousemanagementsystem.exception.ErrorResponse;
+import vn.edu.hcmute.boardinghousemanagementsystem.exception.ErrorDetail;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.MapperSingleton;
 
 import java.io.IOException;
@@ -20,7 +19,7 @@ public class UnAuthorizedUserAuthenticationEntryPoint implements AuthenticationE
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        ErrorResponse responseBody = new ErrorResponse();
+        ErrorDetail responseBody = new ErrorDetail();
         responseBody.setMessage("Unauthorized user: " + authException.getMessage());
         responseBody.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         responseBody.setTimestamp(System.currentTimeMillis());
