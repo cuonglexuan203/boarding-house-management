@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useEffect, useState } from 'react';
 import {
   Modal,
@@ -76,49 +75,66 @@ export default function RegisterModal() {
           <>
             <ModalHeader className="flex flex-col gap-1">Register</ModalHeader>
             <ModalBody>
-              <Input
-                autoFocus
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                endContent={<UserIcon />}
-                label="Username"
-                placeholder="Enter your username"
-                variant="bordered"
-              />
-              <Input
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                endContent={<PhoneIcon />}
-                label="Phone Number"
-                placeholder="Enter your phone number"
-                variant="bordered"
-              />
-              <Input
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                endContent={<MailIcon />}
-                label="Email"
-                placeholder="Enter your email"
-                variant="bordered"
-              />
-              <Input
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                endContent={<LockIcon />}
-                label="Password"
-                placeholder="Enter your password"
-                type="password"
-                variant="bordered"
-              />
-              <Input
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                endContent={<KeyIcon />}
-                label="Confirm Password"
-                placeholder="Enter your password again"
-                type="password"
-                variant="bordered"
-              />
+              <div>
+                <Input
+                  autoFocus
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  endContent={
+                    <UserIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                  }
+                  placeholder="Username"
+                  variant="bordered"
+                />
+              </div>
+              <div>
+                <Input
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  endContent={
+                    <PhoneIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                  }
+                  placeholder="Phone Number"
+                  variant="bordered"
+                />
+              </div>
+              <div>
+                <Input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  endContent={
+                    <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                  }
+                  placeholder="Email"
+                  variant="bordered"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Input
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    endContent={
+                      <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                    }
+                    placeholder="Password"
+                    type="password"
+                    variant="bordered"
+                  />
+                </div>
+                <div>
+                  <Input
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    endContent={
+                      <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                    }
+                    placeholder="Confirm Password"
+                    type="password"
+                    variant="bordered"
+                  />
+                </div>
+              </div>
               {!passwordsMatch && (
                 <span className="text-red-500">Passwords do not match</span>
               )}
