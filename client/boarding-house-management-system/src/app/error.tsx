@@ -25,7 +25,7 @@ export default function Error({
             height={0}
             sizes="100%"
             className="w-auto h-auto"
-            src="/images/illustrations/maintenance.svg"
+            src="/image/maintenance.svg"
             alt="astronaut image"
           />
         </div>
