@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "depositAmount": 300,
+    "endDate": "2025-04-01",
+    "numberOfMember": 2,
+    "status": "PAID"
+  },
+  {
+    "id": 2,
+    "depositAmount": 200,
+    "endDate": "2025-05-01",
+    "numberOfMember": 1,
+    "status": "UNPAID"
+  },
+  {
+    "id": 3,
+    "depositAmount": 400,
+    "endDate": "2025-06-01",
+    "numberOfMember": 3,
+    "status": "PAID"
+  },
+  {
+    "id": 4,
+    "depositAmount": 500,
+    "endDate": "2025-07-01",
+    "numberOfMember": 4,
+    "status": "PAID"
+  },
+  {
+    "id": 5,
+    "depositAmount": 600,
+    "endDate": "2025-08-01",
+    "numberOfMember": 5,
+    "status": "UNPAID"
+  }
+]
