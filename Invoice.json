@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "invoiceDate": "2024-04-01",
+    "numberOfMonth": 1,
+    "paymentDeadline": "2024-04-30",
+    "paymentStatus": "Pending",
+    "surcharge": 10,
+    "surchargeReason": "Late payment",
+    "total": 510,
+    "type": "Monthly Rent"
+  },
+  {
+    "id": 2,
+    "invoiceDate": "2024-04-02",
+    "numberOfMonth": 2,
+    "paymentDeadline": "2024-06-02",
+    "paymentStatus": "Pending",
+    "surcharge": 0,
+    "surchargeReason": "",
+    "total": 1000,
+    "type": "Monthly Rent"
+  },
+  {
+    "id": 3,
+    "invoiceDate": "2024-04-03",
+    "numberOfMonth": 1,
+    "paymentDeadline": "2024-05-03",
+    "paymentStatus": "Pending",
+    "surcharge": 20,
+    "surchargeReason": "Late payment",
+    "total": 520,
+    "type": "Monthly Rent"
+  },
+  {
+    "id": 4,
+    "invoiceDate": "2024-04-04",
+    "numberOfMonth": 1,
+    "paymentDeadline": "2024-05-04",
+    "paymentStatus": "Pending",
+    "surcharge": 15,
+    "surchargeReason": "Late payment",
+    "total": 515,
+    "type": "Monthly Rent"
+  },
+  {
+    "id": 5,
+    "invoiceDate": "2024-04-05",
+    "numberOfMonth": 1,
+    "paymentDeadline": "2024-05-05",
+    "paymentStatus": "Paid",
+    "surcharge": 0,
+    "surchargeReason": "",
+    "total": 500,
+    "type": "Monthly Rent"
+  }
+]
