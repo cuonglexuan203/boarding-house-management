@@ -40,6 +40,6 @@ public class ServiceDetail {
     @ManyToOne
     private Invoice invoice;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private AccommodationService service;
 }

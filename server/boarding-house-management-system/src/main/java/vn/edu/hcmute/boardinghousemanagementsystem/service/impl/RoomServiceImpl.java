@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final UserService userService;
+
     @Override
     public List<Room> findAllRooms() {
         return roomRepository.findAll();
@@ -42,5 +43,22 @@ public class RoomServiceImpl implements RoomService {
         return rooms;
     }
 
+    @Override
+    public Room save(Room room) {
+        if (roomRepository == null) {
+            log.error("Room instance is null");
+            return null;
+        }
+        return roomRepository.save(room);
+    }
+
+    @Override
+    public void save(List<Room> rooms) {
+        if (rooms == null) {
+            log.error("Rooms is null");
+            return;
+        }
+        roomRepository.saveAll(rooms);
+    }
 
 }

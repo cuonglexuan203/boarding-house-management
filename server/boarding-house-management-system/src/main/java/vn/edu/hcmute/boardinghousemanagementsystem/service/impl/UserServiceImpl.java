@@ -49,6 +49,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public List<User> findAll() {
+        return userRepo.findAll();
+    }
+
+    @Override
     public User save(User user) {
         if (user == null) {
             log.error("User instance is null");

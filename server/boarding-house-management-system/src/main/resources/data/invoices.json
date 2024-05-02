@@ -1,0 +1,57 @@
+[
+  {
+    "invoiceDate": "2024-04-01",
+    "numberOfMonth": 1,
+    "paymentDeadline": "2024-04-30",
+    "pollingMonth": "2024-05-02",
+    "status": "UNPAID",
+    "surcharge": 10,
+    "surchargeReason": "Late payment",
+    "total": 510,
+    "type": "MONTHLY"
+  },
+  {
+    "invoiceDate": "2024-04-02",
+    "numberOfMonth": 2,
+    "paymentDeadline": "2024-06-02",
+    "pollingMonth": "2024-05-02",
+    "status": "UNPAID",
+    "surcharge": 0,
+    "surchargeReason": "",
+    "total": 1000,
+    "type": "MONTHLY"
+  },
+  {
+    "invoiceDate": "2024-04-03",
+    "numberOfMonth": 1,
+    "paymentDeadline": "2024-05-03",
+    "pollingMonth": "2024-05-02",
+    "status": "UNPAID",
+    "surcharge": 20,
+    "surchargeReason": "Late payment",
+    "total": 520,
+    "type": "MONTHLY"
+  },
+  {
+    "invoiceDate": "2024-04-04",
+    "numberOfMonth": 1,
+    "paymentDeadline": "2024-05-04",
+    "pollingMonth": "2024-05-02",
+    "status": "UNPAID",
+    "surcharge": 15,
+    "surchargeReason": "Late payment",
+    "total": 515,
+    "type": "MONTHLY"
+  },
+  {
+    "invoiceDate": "2024-04-05",
+    "numberOfMonth": 1,
+    "paymentDeadline": "2024-05-05",
+    "pollingMonth": "2024-05-02",
+    "status": "PAID",
+    "surcharge": 0,
+    "surchargeReason": "",
+    "total": 500,
+    "type": "MONTHLY"
+  }
+]

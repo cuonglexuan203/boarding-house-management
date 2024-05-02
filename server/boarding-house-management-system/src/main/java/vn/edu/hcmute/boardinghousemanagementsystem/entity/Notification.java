@@ -1,6 +1,7 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,10 @@ public class Notification {
 
     @Column(name = "disappear_date", nullable = false)
     private LocalDateTime disappearDate;
+
+    @NotBlank
+    @Column(name="content", nullable = false)
+    private String content;
 
     @Column(name = "visibility")
     private boolean visibility;

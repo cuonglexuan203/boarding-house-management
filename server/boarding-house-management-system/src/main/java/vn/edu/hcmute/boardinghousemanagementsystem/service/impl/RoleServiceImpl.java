@@ -25,6 +25,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public List<Role> findAll() {
+        return roleRepo.findAll();
+    }
+
+    @Override
     public Role save(Role role) {
         if(roleRepo == null){
             log.error("Role instance is null");
