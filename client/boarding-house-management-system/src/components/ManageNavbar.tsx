@@ -10,9 +10,9 @@ const ManageNavbar = () => {
   console.log(pathname);
   const navbarContent = [
     {
-      key: '/manage',
+      id: '/manage',
       href: 'manage',
-      title: (
+      label: (
         <>
           <HomeIcon />
           <span>Home Management</span>
@@ -20,9 +20,9 @@ const ManageNavbar = () => {
       ),
     },
     {
-      key: '/report',
+      id: '/report',
       href: 'report',
-      title: (
+      label: (
         <>
           <Image
             src={'/image/manageNavbar/analysis.png'}
@@ -37,9 +37,9 @@ const ManageNavbar = () => {
       ),
     },
     {
-      key: '/setting',
+      id: '/setting',
       href: 'setting',
-      title: (
+      label: (
         <>
           <Image
             src={'/image/manageNavbar/setting.png'}
@@ -54,9 +54,9 @@ const ManageNavbar = () => {
       ),
     },
     {
-      key: '/account',
+      id: '/account',
       href: 'account',
-      title: (
+      label: (
         <>
           <Image
             src={'/image/manageNavbar/user.png'}
@@ -71,9 +71,9 @@ const ManageNavbar = () => {
       ),
     },
     {
-      key: '/logout',
+      id: '/logout',
       href: 'logout',
-      title: (
+      label: (
         <>
           <Image
             src={'/image/manageNavbar/logout.png'}
@@ -97,15 +97,16 @@ const ManageNavbar = () => {
         aria-label="Options"
         color="primary"
         variant="bordered"
+        items={navbarContent}
       >
         {navbarContent.map((i) => (
           <Tab
-            key={i.key}
+            key={i.id}
             href={i.href}
             className="h-28"
             title={
               <div className="h-28 flex flex-col justify-center items-center space-y-1">
-                {i.title}
+                {i.label}
               </div>
             }
           />
