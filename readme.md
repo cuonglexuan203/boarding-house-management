@@ -4,7 +4,7 @@
 <div align="center">
 
 <div align="center" style="background-color: black;">
-  <img src="https://firebasestorage.googleapis.com/v0/b/hcmute-firebase-gallery.appspot.com/o/logo.png?alt=media&token=f115e3fa-5548-43c4-a80f-55bad588fbfd" alt="logo" width="200" height="auto" />
+  <img src="./assets/app_logo.png" alt="logo" width="200" height="auto" />
 </div>
   <h1>Boarding House Management App</h1>
 
