@@ -82,7 +82,6 @@ export default function RegisterModal() {
                 onChange={(e) => setUsername(e.target.value)}
                 endContent={<UserIcon />}
                 label="Username"
-                placeholder="Enter your username"
                 variant="bordered"
               />
               <Input
@@ -90,7 +89,6 @@ export default function RegisterModal() {
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 endContent={<PhoneIcon />}
                 label="Phone Number"
-                placeholder="Enter your phone number"
                 variant="bordered"
               />
               <Input
@@ -98,7 +96,6 @@ export default function RegisterModal() {
                 onChange={(e) => setEmail(e.target.value)}
                 endContent={<MailIcon />}
                 label="Email"
-                placeholder="Enter your email"
                 variant="bordered"
               />
               <Input
@@ -106,7 +103,6 @@ export default function RegisterModal() {
                 onChange={(e) => setPassword(e.target.value)}
                 endContent={<LockIcon />}
                 label="Password"
-                placeholder="Enter your password"
                 type="password"
                 variant="bordered"
               />
@@ -115,7 +111,6 @@ export default function RegisterModal() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 endContent={<KeyIcon />}
                 label="Confirm Password"
-                placeholder="Enter your password again"
                 type="password"
                 variant="bordered"
               />
