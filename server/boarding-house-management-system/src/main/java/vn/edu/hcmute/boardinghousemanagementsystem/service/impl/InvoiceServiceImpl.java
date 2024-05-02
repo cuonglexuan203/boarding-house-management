@@ -21,6 +21,7 @@ import java.util.List;
 public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final UserService userService;
+
     @Override
     public List<Invoice> findAllInvoice() {
         return invoiceRepository.findAll();
@@ -38,5 +39,23 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
         return invoices;
+    }
+
+    @Override
+    public Invoice save(Invoice invoice) {
+        if (invoiceRepository == null) {
+            log.error("Invoice instance is null");
+            return null;
+        }
+        return invoiceRepository.save(invoice);
+    }
+
+    @Override
+    public void save(List<Invoice> invoices) {
+        if (invoiceRepository == null) {
+            log.error("Invoices is null");
+            return;
+        }
+        invoiceRepository.saveAll(invoices);
     }
 }

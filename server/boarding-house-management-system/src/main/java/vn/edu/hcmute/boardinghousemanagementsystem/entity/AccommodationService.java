@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -35,5 +36,5 @@ public class AccommodationService {
     // Relationships
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
-    private List<ServiceDetail> serviceDetails;
+    private List<ServiceDetail> serviceDetails = new ArrayList<>();
 }

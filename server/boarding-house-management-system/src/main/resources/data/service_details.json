@@ -1,0 +1,32 @@
+[
+  {
+    "money": 100,
+    "newNumber": 0,
+    "oldNumber": 0,
+    "use": 1
+  },
+  {
+    "money": 200,
+    "newNumber": 250,
+    "oldNumber": 150,
+    "use": 0
+  },
+  {
+    "money": 300,
+    "newNumber": 350,
+    "oldNumber": 200,
+    "use": 0
+  },
+  {
+    "money": 400,
+    "newNumber": 0,
+    "oldNumber": 0,
+    "use": 1
+  },
+  {
+    "money": 500,
+    "newNumber": 550,
+    "oldNumber": 300,
+    "use": 0
+  }
+]

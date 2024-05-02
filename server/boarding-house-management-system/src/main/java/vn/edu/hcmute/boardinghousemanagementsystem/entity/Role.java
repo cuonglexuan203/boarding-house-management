@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -29,13 +30,13 @@ public class Role {
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "role_user",
             joinColumns = @JoinColumn(name = "role_fk"),
             inverseJoinColumns = @JoinColumn(name = "user_fk")
     )
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
     @ToString.Exclude
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
@@ -44,5 +45,5 @@ public class Role {
             joinColumns = @JoinColumn(name = "role_fk"),
             inverseJoinColumns = @JoinColumn(name = "permission_fk")
     )
-    private List<Permission> permissions;
+    private List<Permission> permissions = new ArrayList<>();
 }

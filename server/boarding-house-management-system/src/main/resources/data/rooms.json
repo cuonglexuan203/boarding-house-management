@@ -1,0 +1,42 @@
+[
+  {
+    "area": 120,
+    "type": "SINGLE",
+    "floor": 1,
+    "rentAmount": 500,
+    "roomNumber": "101",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 90,
+    "type": "SINGLE",
+    "floor": 1,
+    "rentAmount": 450,
+    "roomNumber": "102",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 80,
+    "type": "DOUBLE",
+    "floor": 2,
+    "rentAmount": 600,
+    "roomNumber": "201",
+    "status": "OCCUPIED"
+  },
+  {
+    "area": 85,
+    "type": "TRIPLE",
+    "floor": 2,
+    "rentAmount": 550,
+    "roomNumber": "202",
+    "status": "OCCUPIED"
+  },
+  {
+    "area": 95,
+    "type": "SINGLE",
+    "floor": 3,
+    "rentAmount": 500,
+    "roomNumber": "301",
+    "status": "AVAILABLE"
+  }
+]

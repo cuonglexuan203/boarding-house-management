@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,10 +22,10 @@ public class RoomBooking {
     private Long id;
 
     @Column(name = "check_in_date")
-    private LocalDateTime checkInDate;
+    private Date checkInDate;
 
     @Column(name = "check_out_date")
-    private LocalDateTime checkOutDate;
+    private Date checkOutDate;
 
     // Relationships
 
@@ -37,6 +38,6 @@ public class RoomBooking {
     @OneToOne(cascade = CascadeType.PERSIST)
     private Contract contract;
 
-    @OneToMany(mappedBy = "roomBooking", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private List<Invoice> invoices;
+    @OneToMany(mappedBy = "roomBooking", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Invoice> invoices  = new ArrayList<>();
 }
