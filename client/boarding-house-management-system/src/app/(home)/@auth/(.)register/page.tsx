@@ -1,7 +1,9 @@
+import RegisterModal from '@/components/RegisterModal';
+
 import React from 'react';
 
 const RegisterModl = () => {
-  return <div>RegisterModl</div>;
+  return <RegisterModal />;
 };
 
 export default RegisterModl;
