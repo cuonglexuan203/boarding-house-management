@@ -1,0 +1,22 @@
+[
+  {
+    "checkInDate": "2024-05-01",
+    "checkOutDate": "2024-05-10"
+  },
+  {
+    "checkInDate": "2024-05-02",
+    "checkOutDate": "2024-05-11"
+  },
+  {
+    "checkInDate": "2024-05-03",
+    "checkOutDate": "2024-05-12"
+  },
+  {
+    "checkInDate": "2024-05-04",
+    "checkOutDate": "2024-05-13"
+  },
+  {
+    "checkInDate": "2024-05-05",
+    "checkOutDate": "2024-05-14"
+  }
+]

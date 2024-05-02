@@ -9,4 +9,7 @@ public interface RoomService {
     List<Room> findAllRooms();
 
     List<Room> findRoomsByUsername(String username);
+
+    Room save(Room room);
+    void save(List<Room> rooms);
 }

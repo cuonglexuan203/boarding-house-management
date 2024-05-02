@@ -9,6 +9,7 @@ import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.InvoiceType;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.PaymentStatus;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -58,7 +59,7 @@ public class Invoice {
     private RoomBooking roomBooking;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
-    private List<ServiceDetail> serviceDetails;
+    private List<ServiceDetail> serviceDetails = new ArrayList<>();
 
 
 

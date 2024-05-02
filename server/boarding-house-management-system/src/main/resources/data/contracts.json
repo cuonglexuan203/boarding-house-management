@@ -1,0 +1,37 @@
+[
+  {
+    "depositAmount": 300,
+    "startDate": "2000-01-01",
+    "endDate": "2025-04-01",
+    "numberOfMember": 2,
+    "status": "PAID"
+  },
+  {
+    "depositAmount": 200,
+    "startDate": "2000-01-01",
+    "endDate": "2025-05-01",
+    "numberOfMember": 10,
+    "status": "UNPAID"
+  },
+  {
+    "depositAmount": 400,
+    "startDate": "2000-01-01",
+    "endDate": "2025-06-01",
+    "numberOfMember": 3,
+    "status": "PAID"
+  },
+  {
+    "depositAmount": 500,
+    "startDate": "2000-01-01",
+    "endDate": "2025-07-01",
+    "numberOfMember": 4,
+    "status": "PAID"
+  },
+  {
+    "depositAmount": 600,
+    "startDate": "2000-01-01",
+    "endDate": "2025-08-01",
+    "numberOfMember": 5,
+    "status": "UNPAID"
+  }
+]

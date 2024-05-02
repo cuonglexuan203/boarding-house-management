@@ -8,6 +8,7 @@ import lombok.*;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Gender;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -69,27 +70,27 @@ public class User {
     @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<RoomBooking> roomBookings;
+    private List<RoomBooking> roomBookings = new ArrayList<>();
 
     @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Notification> notifications;
+    private List<Notification> notifications = new ArrayList<>();
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
-    private List<Role> roles;
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private List<Role> roles = new ArrayList<>();
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "user_permission",
             joinColumns = @JoinColumn(name = "user_fk"),
             inverseJoinColumns = @JoinColumn(name = "permission_fk")
     )
-    private List<Permission> permissions;
+    private List<Permission> permissions = new ArrayList<>();
 
     //
 

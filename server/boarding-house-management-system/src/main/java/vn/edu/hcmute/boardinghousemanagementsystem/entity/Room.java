@@ -10,6 +10,7 @@ import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Floor;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomStatus;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -49,6 +50,6 @@ public class Room {
     // Relationships
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<RoomBooking> roomBookings;
+    private List<RoomBooking> roomBookings = new ArrayList<>();
 
 }
