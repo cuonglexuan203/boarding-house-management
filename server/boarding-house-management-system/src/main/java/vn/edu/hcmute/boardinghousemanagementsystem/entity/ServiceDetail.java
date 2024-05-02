@@ -41,5 +41,5 @@ public class ServiceDetail {
     private Invoice invoice;
 
     @ManyToOne
-    private Service service;
+    private AccommodationService service;
 }

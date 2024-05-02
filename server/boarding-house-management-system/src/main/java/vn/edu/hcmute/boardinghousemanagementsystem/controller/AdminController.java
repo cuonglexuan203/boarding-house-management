@@ -6,9 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin("*")
 @RestController
-@RequestMapping(value = "/api/admin", consumes = {"application/json"})
+@RequestMapping(value = "/api/admin")
 public class AdminController {
     @GetMapping
     public ResponseEntity<String> getRooms(){

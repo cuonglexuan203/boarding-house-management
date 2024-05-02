@@ -31,7 +31,7 @@ public class RoomController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         List<RoomDto> roomDtos;
-        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
             roomDtos = roomService.findAllRooms().stream()
                     .map(RoomDto::new)
                     .collect(Collectors.toList());
