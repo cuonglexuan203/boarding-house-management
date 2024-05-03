@@ -10,15 +10,21 @@ import {
 } from 'redux-persist';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import persistedReducer from './reducer';
+import { roomApi } from './services/roomApi';
+import { thunk } from 'redux-thunk';
 //
+
 export const store: EnhancedStore = configureStore({
   reducer: persistedReducer,
+  // @ts-ignore
   middleware: (getDefaultMiddleWare) =>
     getDefaultMiddleWare({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    })
+      .concat(thunk)
+      .concat(roomApi.middleware),
 });
 //
 setupListeners(store.dispatch);

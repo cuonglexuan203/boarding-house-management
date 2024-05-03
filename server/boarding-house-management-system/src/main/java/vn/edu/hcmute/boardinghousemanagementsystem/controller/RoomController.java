@@ -20,18 +20,18 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/room")
+@RequestMapping("/api/rooms")
 public class RoomController {
 
     private final RoomService roomService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<RoomDto> getRooms() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
+        System.out.println("Authentication: " + authentication);
         List<RoomDto> roomDtos;
-        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+        if (!authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
             roomDtos = roomService.findAllRooms().stream()
                     .map(RoomDto::new)
                     .collect(Collectors.toList());

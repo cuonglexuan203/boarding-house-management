@@ -1,15 +1,27 @@
+import { IRoom } from '@/utils/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-export const productsApi = createApi({
-  reducerPath: 'productsApi',
+export const roomApi = createApi({
+  reducerPath: 'roomApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/',
-    credentials: 'include',
+    baseUrl: 'http://localhost:5000/api/rooms',
+    // credentials: 'include',
   }),
   refetchOnReconnect: true,
-  tagTypes: [],
-  endpoints: (builder) => ({}),
+  tagTypes: ['rooms', 'room'],
+  endpoints: (builder) => ({
+    getRooms: builder.query<IRoom[], null>({
+      query: () => '',
+      providesTags: ['rooms'],
+    }),
+    getRoom: builder.query<IRoom, number>({
+      query: (roomId) => roomId.toString(),
+      providesTags: ['room'],
+    }),
+  }),
 });
+
+export const { useGetRoomQuery, useGetRoomsQuery } = roomApi;
 
 // export const {} = productsApi;
 
