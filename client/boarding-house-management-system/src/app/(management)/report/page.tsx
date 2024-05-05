@@ -1,7 +1,7 @@
-import React from 'react';
+'use client';
 
-const page = () => {
-  return <div>page</div>;
+const Report = () => {
+  return <div>report</div>;
 };
 
-export default page;
+export default Report;
