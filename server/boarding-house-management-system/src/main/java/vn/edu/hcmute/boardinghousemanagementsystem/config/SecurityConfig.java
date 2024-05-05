@@ -36,6 +36,7 @@ public class SecurityConfig {
                                 .requestMatchers("/home").permitAll()
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/api/invoice").hasRole("USER")
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(handler -> handler.authenticationEntryPoint(authenticationEntryPoint))

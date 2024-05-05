@@ -28,7 +28,7 @@ public class InvoiceController {
         String username = authentication.getName();
         List<InvoiceDto> invoiceDtos;
 
-        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
             invoiceDtos = invoiceService.findAllInvoice().stream()
                     .map(InvoiceDto::new)
                     .collect(Collectors.toList());
