@@ -11,15 +11,23 @@ import {
   Tabs,
   Tooltip,
 } from '@nextui-org/react';
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter';
 import { CheckIcon } from '@/components/icon/CheckIcon';
 import { CustomCheckbox } from '@/components/CustomCheckbox';
 import ExportButton from '@/components/ExportButton';
+import { AgGridReact } from 'ag-grid-react';
 
 const HomeManagement = () => {
+  const gridRef = useRef<AgGridReact>(null);
   const [selected, setSelected] = useState('management');
+  const onBtnCsvExport = useCallback(() => {
+    gridRef.current!.api.exportDataAsCsv();
+  }, []);
+  const onBtnExcelExport = useCallback(() => {
+    gridRef.current!.api.exportDataAsExcel();
+  }, []);
 
   return (
     <section className="flex w-full flex-col justify-center items-center p-4 mt-6">
@@ -136,12 +144,15 @@ const HomeManagement = () => {
               </div>
               {/* Export */}
               <div className="flex justify-center items-end">
-                <ExportButton />
+                <ExportButton
+                  onPressCsvExport={onBtnCsvExport}
+                  onPressExcelExport={onBtnExcelExport}
+                />
               </div>
             </div>
             {/* Grid */}
             <div className="w-full mt-12">
-              <RoomGrid />
+              <RoomGrid gridRef={gridRef} />
             </div>
           </div>
         </Tab>
