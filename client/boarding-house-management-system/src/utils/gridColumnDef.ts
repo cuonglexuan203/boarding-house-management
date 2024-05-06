@@ -151,6 +151,7 @@ export const roomColumnDefs: ColDef[] = [
   },
   {
     headerName: 'Status',
+    colId: 'status',
     field: 'status',
     cellEditor: AutocompleteEditor,
     cellEditorParams: {

@@ -8,6 +8,8 @@ import {
   CellEditRequestEvent,
   ClientSideRowModelModule,
   ColDef,
+  IRowNode,
+  IsExternalFilterPresentParams,
 } from 'ag-grid-community';
 import 'ag-grid-enterprise';
 import {} from 'ag-grid-enterprise';
@@ -15,13 +17,18 @@ import '@/app/(management)/manage/(room)/style.css';
 import { AgGridReact } from 'ag-grid-react';
 import { GetRowIdParams } from 'ag-grid-community';
 import { roomColumnDefs } from '@/utils/gridColumnDef';
+import { IRoom } from '@/utils/types';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 const RoomGrid = ({
   gridRef,
+  isExternalFilterPresent,
+  doesExternalFilterPass,
 }: {
   gridRef: React.RefObject<AgGridReact<any>>;
+  isExternalFilterPresent: (params: IsExternalFilterPresentParams) => boolean;
+  doesExternalFilterPass: (node: IRowNode) => boolean;
 }) => {
   const { data: rooms = [], isLoading, error } = useGetRoomsQuery(null);
   // const [rooms, setRooms] = useState([
@@ -80,6 +87,8 @@ const RoomGrid = ({
     return <div>Error</div>;
   }
   //
+
+  //
   return (
     <div className="ag-theme-quartz w-full" style={{ height: 500 }}>
       <AgGridReact
@@ -113,6 +122,8 @@ const RoomGrid = ({
         reactiveCustomComponents={true}
         onCellEditRequest={onCellEditRequest}
         getRowId={getRowId}
+        isExternalFilterPresent={isExternalFilterPresent}
+        doesExternalFilterPass={doesExternalFilterPass}
       />
     </div>
   );

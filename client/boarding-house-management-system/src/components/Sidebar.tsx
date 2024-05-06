@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
+import { motion } from 'framer-motion';
 import {
   Badge,
   Button,
@@ -29,6 +30,7 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter';
 
 export default function TemporaryDrawer() {
   const [open, setOpen] = React.useState(false);
+  const smallNav = React.useRef<HTMLElement | null>(null);
   const route = useRouter();
 
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -59,7 +61,25 @@ export default function TemporaryDrawer() {
   };
 
   return (
-    <div>
+    <motion.div
+      className="fixed z-50 left-4 top-1/2 transform -translate-y-1/2"
+      // @ts-ignore
+      ref={smallNav}
+      drag
+      dragTransition={{ bounceStiffness: 300, bounceDamping: 10 }}
+      dragPropagation
+      dragElastic={1}
+      dragConstraints={{
+        left: 0,
+        right: smallNav?.current
+          ? window.innerWidth - smallNav.current.offsetWidth - 28
+          : 0,
+        top: -(smallNav?.current ? window.innerHeight / 2 : 0),
+        bottom: smallNav?.current
+          ? window.innerHeight / 2 - smallNav.current.offsetHeight - 4
+          : 0,
+      }}
+    >
       <div className="p-8">
         <Tooltip
           content="Management menu"
@@ -71,10 +91,10 @@ export default function TemporaryDrawer() {
           <Button
             variant="solid"
             size="sm"
-            className="focus:outline-none rounded-full bg-primary w-6 h-12 flex items-center justify-center "
+            className="focus:outline-none rounded-full bg-orange-400 w-6 h-12 flex items-center justify-center shadow-2xl drop-shadow-2xl"
             onClick={toggleDrawer(true)}
           >
-            <MenuIcon />
+            <MenuIcon className="text-white" />
           </Button>
         </Tooltip>
       </div>
@@ -98,6 +118,6 @@ export default function TemporaryDrawer() {
           </List>
         </Box>
       </Drawer>
-    </div>
+    </motion.div>
   );
 }

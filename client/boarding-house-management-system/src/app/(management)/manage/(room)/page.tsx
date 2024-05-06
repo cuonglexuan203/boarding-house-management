@@ -18,6 +18,8 @@ import { CheckIcon } from '@/components/icon/CheckIcon';
 import { CustomCheckbox } from '@/components/CustomCheckbox';
 import ExportButton from '@/components/ExportButton';
 import { AgGridReact } from 'ag-grid-react';
+import { IRowNode } from 'ag-grid-community';
+import { IRoom } from '@/utils/types';
 
 interface IFilterOption {
   key: string;
@@ -37,15 +39,40 @@ const HomeManagement = () => {
     gridRef.current!.api.exportDataAsExcel();
   }, []);
 
+  //  Filter
   const filterOptions = useMemo<IFilterOption[]>(() => {
     return [
-      { key: 'availability', value: 'Availability' },
-      { key: 'staying', value: 'Staying' },
-      { key: 'forbidden', value: 'Forbidden' },
-      { key: 'repair', value: 'Under repair room' },
-      { key: 'waiting', value: 'Room' },
+      { key: 'available', value: 'Availability' },
+      { key: 'occupied', value: 'Staying' },
+      { key: 'reserved', value: 'Currently reserved' },
+      // { key: 'repair', value: 'Under repair room' },
+      { key: 'waiting', value: 'Waiting room' },
     ];
   }, []);
+
+  const isExternalFilterPresent = useCallback((): boolean => {
+    return selectedFilterOptions.length > 0;
+  }, [selectedFilterOptions]);
+
+  const doesExternalFilterPass = useCallback(
+    (node: IRowNode<IRoom>): boolean => {
+      let isMatched = true;
+      if (node.data) {
+        selectedFilterOptions.forEach((selectedOption) => {
+          if (selectedOption === 'available') {
+            isMatched =
+              isMatched && node.data?.status.toLowerCase() === 'available';
+          }
+          if (selectedOption === 'occupied') {
+            isMatched =
+              isMatched && node.data?.status.toLowerCase() === 'occupied';
+          }
+        });
+      }
+      return isMatched;
+    },
+    [selectedFilterOptions],
+  );
   return (
     <section className="flex w-full flex-col justify-center items-center p-4 mt-6">
       <Tabs
@@ -167,7 +194,11 @@ const HomeManagement = () => {
             </div>
             {/* Grid */}
             <div className="w-full mt-12">
-              <RoomGrid gridRef={gridRef} />
+              <RoomGrid
+                isExternalFilterPresent={isExternalFilterPresent}
+                doesExternalFilterPass={doesExternalFilterPass}
+                gridRef={gridRef}
+              />
             </div>
           </div>
         </Tab>
