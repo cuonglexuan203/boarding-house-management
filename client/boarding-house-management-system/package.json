@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mui/material": "^5.2.3",
+    "@mui/icons-material": "^5.2.3",
     "@ag-grid-community/core": "^31.3.1",
     "@ag-grid-community/react": "^31.3.1",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
