@@ -3,7 +3,16 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
+import {
+  Badge,
+  Button,
+  Checkbox,
+  CheckboxGroup,
+  Divider,
+  Tab,
+  Tabs,
+  Tooltip,
+} from '@nextui-org/react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -15,6 +24,8 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import GavelIcon from '@mui/icons-material/Gavel';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import PersonIcon from '@mui/icons-material/Person';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter';
 
 export default function TemporaryDrawer() {
   const [open, setOpen] = React.useState(false);
@@ -49,10 +60,24 @@ export default function TemporaryDrawer() {
 
   return (
     <div>
-      <Button onClick={toggleDrawer(true)} style={{ fontSize: '24px' }}>
-        <MenuIcon />
-        Menu
-      </Button>
+      <div className="p-8">
+        <Tooltip
+          content="Management menu"
+          color="primary"
+          placement="left-start"
+          closeDelay={200}
+          delay={500}
+        >
+          <Button
+            variant="solid"
+            size="sm"
+            className="focus:outline-none rounded-full bg-primary w-6 h-12 flex items-center justify-center "
+            onClick={toggleDrawer(true)}
+          >
+            <MenuIcon />
+          </Button>
+        </Tooltip>
+      </div>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         <Box sx={{ width: 300 }} role="presentation">
           <List>
