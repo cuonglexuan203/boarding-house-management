@@ -11,7 +11,7 @@ import {
   Tabs,
   Tooltip,
 } from '@nextui-org/react';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter';
 import { CheckIcon } from '@/components/icon/CheckIcon';
@@ -19,9 +19,17 @@ import { CustomCheckbox } from '@/components/CustomCheckbox';
 import ExportButton from '@/components/ExportButton';
 import { AgGridReact } from 'ag-grid-react';
 
+interface IFilterOption {
+  key: string;
+  value: string;
+}
+
 const HomeManagement = () => {
   const gridRef = useRef<AgGridReact>(null);
   const [selected, setSelected] = useState('management');
+  const [selectedFilterOptions, setSelectedFilterOptions] = useState<string[]>(
+    [],
+  );
   const onBtnCsvExport = useCallback(() => {
     gridRef.current!.api.exportDataAsCsv();
   }, []);
@@ -29,6 +37,15 @@ const HomeManagement = () => {
     gridRef.current!.api.exportDataAsExcel();
   }, []);
 
+  const filterOptions = useMemo<IFilterOption[]>(() => {
+    return [
+      { key: 'availability', value: 'Availability' },
+      { key: 'staying', value: 'Staying' },
+      { key: 'forbidden', value: 'Forbidden' },
+      { key: 'repair', value: 'Under repair room' },
+      { key: 'waiting', value: 'Room' },
+    ];
+  }, []);
   return (
     <section className="flex w-full flex-col justify-center items-center p-4 mt-6">
       <Tabs
@@ -82,7 +99,7 @@ const HomeManagement = () => {
               <div className="p-2 flex mt-4 rounded-md">
                 {/* Filter icon */}
                 <div className="flex justify-center items-center p-2 pr-4 mr-4 border-r-3 border-r-slate-200">
-                  <Badge content={5} color="primary">
+                  <Badge content={selectedFilterOptions.length} color="primary">
                     <FontAwesomeIcon size="2x" icon={faFilter} />
                   </Badge>
                 </div>
@@ -91,18 +108,16 @@ const HomeManagement = () => {
                   <CheckboxGroup
                     label="Select filter options"
                     orientation="horizontal"
+                    value={selectedFilterOptions}
+                    onValueChange={setSelectedFilterOptions}
                   >
-                    <CustomCheckbox value="availability">
-                      Availability
-                    </CustomCheckbox>
-                    <CustomCheckbox value="staying">Staying</CustomCheckbox>
-                    <CustomCheckbox value="forbidden">Forbidden</CustomCheckbox>
-                    <CustomCheckbox value="repair">
-                      Under repair room
-                    </CustomCheckbox>
-                    <CustomCheckbox value="waiting">
-                      Waiting room
-                    </CustomCheckbox>
+                    {filterOptions.map((i) => {
+                      return (
+                        <CustomCheckbox key={i.key} value={i.key}>
+                          {i.value}
+                        </CustomCheckbox>
+                      );
+                    })}
                   </CheckboxGroup>
                   {/* Backup */}
                   {/* <Checkbox

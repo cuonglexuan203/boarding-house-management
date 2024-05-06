@@ -1,7 +1,7 @@
 'use client';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useGetRoomsQuery } from '@/libs/services/roomApi';
 import { IRowDragItem, ModuleRegistry } from '@ag-grid-community/core';
 import {
@@ -13,10 +13,8 @@ import 'ag-grid-enterprise';
 import {} from 'ag-grid-enterprise';
 import '@/app/(management)/manage/(room)/style.css';
 import { AgGridReact } from 'ag-grid-react';
-import ImmutableColumn from './ImmutableColumn';
-import AutocompleteEditor from './grid/AutocompleteEditor';
-import { getFormattedNumber, isNumeric } from '@/utils/converterUtil';
 import { GetRowIdParams } from 'ag-grid-community';
+import { roomColumnDefs } from '@/utils/gridColumnDef';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -38,140 +36,7 @@ const RoomGrid = ({
   //   },
   // ]);
 
-  const [columnDefs, setColumnDefs] = useState<ColDef[]>([
-    {
-      headerName: '',
-      valueGetter: (params) => {
-        return null;
-      },
-      width: 100,
-      rowDrag: true,
-      sortable: false,
-      lockPosition: 'left',
-      enableRowGroup: false,
-      floatingFilter: false,
-      filter: false,
-      editable: false,
-      cellRenderer: ImmutableColumn,
-      cellRendererParams: {
-        iconSize: 32,
-        iconSrc: '/image/room/beds.png',
-      },
-      pinned: 'left',
-      lockPinned: true,
-      suppressColumnsToolPanel: true,
-      suppressFiltersToolPanel: true,
-      suppressHeaderMenuButton: true,
-      suppressHeaderFilterButton: true,
-    },
-    {
-      headerName: 'ID',
-      field: 'id',
-      suppressMovable: true,
-      editable: false,
-      width: 100,
-    },
-
-    {
-      headerName: 'Room number',
-      field: 'roomNumber',
-      cellDataType: 'string',
-      // valueSetter: (params) => {
-      //   params.data.roomNumber = 1;
-      //   return true;
-      // },
-      // cellStyle: (params) => {
-      //   if (params.value === '102') {
-      //     //mark police cells as red
-      //     return { color: 'red', backgroundColor: 'green' };
-      //   }
-      //   return null;
-      // },
-    },
-    {
-      headerName: 'Floor',
-      field: 'floor',
-      cellDataType: 'string',
-      cellEditor: AutocompleteEditor,
-      cellEditorParams: {
-        items: [
-          { value: 'GROUND' },
-          { value: 'ONE' },
-          { value: 'TWO' },
-          { value: 'THREE' },
-          { value: 'FOUR' },
-          { value: 'FIVE' },
-        ],
-        label: 'Select floor',
-      },
-    },
-    {
-      headerName: 'Rent amount',
-      field: 'rentAmount',
-      cellDataType: 'number',
-      valueGetter: (params) => {
-        return getFormattedNumber(params.data.rentAmount);
-      },
-      valueFormatter: (params) => {
-        if (!isNumeric(params.value)) {
-          return NaN.toString();
-        }
-        return params.value + ' VND';
-      },
-    },
-    {
-      headerName: 'Area',
-      field: 'area',
-      cellDataType: 'number',
-      valueGetter: (params) => {
-        return getFormattedNumber(params.data.area);
-      },
-      valueFormatter: (params) => {
-        if (!isNumeric(params.value)) {
-          return NaN.toString();
-        }
-        return params.value + ' m2';
-      },
-    },
-    {
-      headerName: 'Type',
-      field: 'type',
-      cellEditor: AutocompleteEditor,
-      cellEditorParams: {
-        items: [
-          {
-            value: 'SINGLE',
-          },
-          {
-            value: 'DOUBLE',
-          },
-          {
-            value: 'TRIPLE',
-          },
-          {
-            value: 'UNKNOWN',
-          },
-        ],
-        label: 'Select type',
-      },
-    },
-    {
-      headerName: 'Status',
-      field: 'status',
-      cellEditor: AutocompleteEditor,
-      cellEditorParams: {
-        items: [
-          {
-            value: 'AVAILABLE',
-          },
-          {
-            value: 'OCCUPIED',
-          },
-        ],
-        label: 'Select status',
-      },
-    },
-  ]);
+  const [columnDefs, setColumnDefs] = useState<ColDef[]>(roomColumnDefs);
 
   const defaultColDef = useMemo<ColDef>(() => {
     return {
@@ -219,26 +84,33 @@ const RoomGrid = ({
     <div className="ag-theme-quartz w-full" style={{ height: 500 }}>
       <AgGridReact
         ref={gridRef}
+        // Option: Definition
         rowData={rooms}
         // @ts-ignore
         columnDefs={columnDefs}
         // @ts-ignore
         defaultColDef={defaultColDef}
-        rowDragManaged={true}
+        // Feat: Pagination
         // pagination={true}
         // paginationPageSize={10}
         // paginationPageSizeSelector={[10, 25, 50]}
+
+        // Feat: Drag
         rowDragMultiRow={true}
+        rowDragManaged={true}
         rowSelection={'multiple'}
+        // @ts-ignore
+        rowDragText={rowDragText}
+        // Feat: Panel
         enableFillHandle={true}
         enableRangeSelection={true}
         rowGroupPanelShow="always"
         // sideBar={['columns']}
-        // @ts-ignore
-        rowDragText={rowDragText}
+        // Option: Grid properties
+        rowHeight={60}
+        // Feat: Editing
         readOnlyEdit={true}
         reactiveCustomComponents={true}
-        rowHeight={60}
         onCellEditRequest={onCellEditRequest}
         getRowId={getRowId}
       />
