@@ -1,9 +1,9 @@
 export interface IRoom {
   id: number;
-  rentAmount: number;
   roomNumber: string;
+  rentAmount: number;
   floor: string;
   area: number;
-  type: number;
+  type: string;
   status: string;
 }

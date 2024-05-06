@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   Button,
   ButtonGroup,
@@ -9,7 +9,13 @@ import {
 } from '@nextui-org/react';
 import { ChevronDownIcon } from './icon/ChevronDownIcon';
 
-export default function ExportButton() {
+export default function ExportButton({
+  onPressCsvExport,
+  onPressExcelExport,
+}: {
+  onPressCsvExport: (e: ProgressEvent) => void;
+  onPressExcelExport: (e: ProgressEvent) => void;
+}) {
   const [selectedOption, setSelectedOption] = React.useState(
     new Set(['excel']),
   );
@@ -30,11 +36,20 @@ export default function ExportButton() {
 
   // Convert the Set to an Array and get the first value.
   const selectedOptionValue = Array.from(selectedOption)[0];
-
+  const onPressExport = useCallback(
+    (e: ProgressEvent) => {
+      if (selectedOptionValue === 'csv') {
+        onPressCsvExport(e);
+      } else if (selectedOptionValue === 'excel') {
+        onPressExcelExport(e);
+      }
+    },
+    [selectedOptionValue, onPressCsvExport, onPressExcelExport],
+  );
   return (
     <ButtonGroup variant="flat">
       {/* @ts-ignore */}
-      <Button>{labelsMap[selectedOptionValue]}</Button>
+      <Button onPress={onPressExport}>{labelsMap[selectedOptionValue]}</Button>
       <Dropdown placement="bottom-end">
         <DropdownTrigger>
           <Button isIconOnly>
