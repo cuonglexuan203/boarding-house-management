@@ -1,25 +1,15 @@
 'use client';
 import RoomGrid from '@/components/RoomGrid';
-import { PlusIcon } from '@/components/icon/PlusIcon';
-import {
-  Badge,
-  Button,
-  Checkbox,
-  CheckboxGroup,
-  Divider,
-  Tab,
-  Tabs,
-  Tooltip,
-} from '@nextui-org/react';
+import { Badge, CheckboxGroup, Tab, Tabs, Tooltip } from '@nextui-org/react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter';
-import { CheckIcon } from '@/components/icon/CheckIcon';
 import { CustomCheckbox } from '@/components/CustomCheckbox';
 import ExportButton from '@/components/ExportButton';
 import { AgGridReact } from 'ag-grid-react';
 import { IRowNode } from 'ag-grid-community';
 import { IRoom } from '@/utils/types';
+import AddRoomModal from '@/components/AddRoomModal';
 
 interface IFilterOption {
   key: string;
@@ -110,13 +100,7 @@ const HomeManagement = () => {
                   closeDelay={200}
                   delay={500}
                 >
-                  <Button
-                    variant="solid"
-                    size="sm"
-                    className="focus:outline-none rounded-full bg-primary w-6 h-12 flex items-center justify-center"
-                  >
-                    <PlusIcon className="text-white" />
-                  </Button>
+                  <AddRoomModal />
                 </Tooltip>
               </div>
             </div>
