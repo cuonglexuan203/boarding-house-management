@@ -18,10 +18,37 @@ export const roomApi = createApi({
       query: (roomId) => roomId.toString(),
       providesTags: ['room'],
     }),
+    addRoom: builder.mutation<IRoom, IRoom>({
+      query: (body) => ({
+        url: '',
+        method: 'POST',
+        body: body,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }),
+      invalidatesTags: ['rooms'],
+    }),
+    updateRoom: builder.mutation<IRoom, IRoom>({
+      query: (body) => ({
+        url: '',
+        method: 'PATCH',
+        body,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }),
+      invalidatesTags: ['rooms'],
+    }),
   }),
 });
 
-export const { useGetRoomQuery, useGetRoomsQuery } = roomApi;
+export const {
+  useGetRoomQuery,
+  useGetRoomsQuery,
+  useAddRoomMutation,
+  useUpdateRoomMutation,
+} = roomApi;
 
 // export const {} = productsApi;
 

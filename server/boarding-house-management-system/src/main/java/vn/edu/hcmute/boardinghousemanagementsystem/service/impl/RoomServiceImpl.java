@@ -14,6 +14,7 @@ import vn.edu.hcmute.boardinghousemanagementsystem.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -22,6 +23,14 @@ import java.util.stream.Collectors;
 public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final UserService userService;
+
+    @Override
+    public Optional<Room> findById(long id) {
+        if(id <= 0){
+            return Optional.empty();
+        }
+        return roomRepository.findById(id);
+    }
 
     @Override
     public List<Room> findAllRooms() {
@@ -45,7 +54,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room save(Room room) {
-        if (roomRepository == null) {
+        if (room == null) {
             log.error("Room instance is null");
             return null;
         }

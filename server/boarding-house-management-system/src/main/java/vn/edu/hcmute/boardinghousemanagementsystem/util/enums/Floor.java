@@ -4,5 +4,8 @@ public enum Floor {
     GROUND,
     ONE,
     TWO,
-    THREE
+    THREE,
+    FOUR,
+    FIVE,
+
 }

@@ -17,7 +17,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public Contract save(Contract contract) {
-        if (contractRepo == null) {
+        if (contract == null) {
             log.error("Contract instance is null");
             return null;
         }
@@ -26,7 +26,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public void save(List<Contract> contracts) {
-        if (contractRepo == null) {
+        if (contracts == null) {
             log.error("Contracts is null");
             return;
         }

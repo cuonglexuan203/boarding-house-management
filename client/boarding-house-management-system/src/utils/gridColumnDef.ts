@@ -1,7 +1,7 @@
 import ImmutableColumn from '@/components/ImmutableColumn';
 import AutocompleteEditor from '@/components/grid/AutocompleteEditor';
 import { ColDef } from 'ag-grid-community';
-import { getFormattedNumber, isNumeric } from './converterUtil';
+import { getReadableNumber, isNumeric } from './converterUtil';
 import OnlyIconButton from '@/components/OnlyIconButton';
 import CustomDropdown, {
   ICustomDropdownItemData,
@@ -92,7 +92,7 @@ export const roomColumnDefs: ColDef[] = [
         return null;
       }
       if (params.data.rentAmount !== undefined) {
-        return getFormattedNumber(params.data.rentAmount);
+        return getReadableNumber(params.data.rentAmount);
       }
     },
     valueFormatter: (params) => {
@@ -114,7 +114,7 @@ export const roomColumnDefs: ColDef[] = [
         return null;
       }
       if (params.data.area !== undefined) {
-        return getFormattedNumber(params.data.area);
+        return getReadableNumber(params.data.area);
       }
     },
     valueFormatter: (params) => {

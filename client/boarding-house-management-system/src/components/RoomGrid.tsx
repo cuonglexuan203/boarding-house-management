@@ -2,7 +2,10 @@
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import React, { useCallback, useMemo, useState } from 'react';
-import { useGetRoomsQuery } from '@/libs/services/roomApi';
+import {
+  useGetRoomsQuery,
+  useUpdateRoomMutation,
+} from '@/libs/services/roomApi';
 import { IRowDragItem, ModuleRegistry } from '@ag-grid-community/core';
 import {
   CellEditRequestEvent,
@@ -31,6 +34,7 @@ const RoomGrid = ({
   doesExternalFilterPass: (node: IRowNode) => boolean;
 }) => {
   const { data: rooms = [], isLoading, error } = useGetRoomsQuery(null);
+  const [updateRoomTrigger] = useUpdateRoomMutation();
   // const [rooms, setRooms] = useState([
   //   {
   //     id: 1,
@@ -66,7 +70,15 @@ const RoomGrid = ({
     [],
   );
 
-  const onCellEditRequest = useCallback((event: CellEditRequestEvent) => {
+  const handleUpdateRoom = async (room: any) => {
+    try {
+      const updatedRoom = await updateRoomTrigger(room).unwrap();
+      console.log('Room updated: ' + JSON.stringify(updatedRoom));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const onCellEditRequest = useCallback(async (event: CellEditRequestEvent) => {
     console.log('Editing cell');
     const oldData = event.data;
     const newData = { ...oldData };
@@ -75,6 +87,16 @@ const RoomGrid = ({
     const tx = {
       update: [newData],
     };
+    const updateData = {
+      id: oldData.id,
+      [field!]: event.newValue,
+    };
+    try {
+      await handleUpdateRoom(updateData);
+    } catch (err) {
+      console.error(err);
+      return;
+    }
     event.api.applyTransaction(tx);
   }, []);
   const getRowId = useCallback((params: GetRowIdParams) => params.data.id, []);

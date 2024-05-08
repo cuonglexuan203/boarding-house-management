@@ -1,27 +1,21 @@
 import {
   Button,
-  Checkbox,
-  CheckboxGroup,
   Input,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
   useDisclosure,
 } from '@nextui-org/react';
 import { PlusIcon } from './icon/PlusIcon';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import CustomSelect from './CustomSelect';
-import { getFormattedNumber, parseReadableNumber } from '@/utils/converterUtil';
 import ServiceRow from './ServiceRow';
 import Image from 'next/image';
+import { parseOnlyNumber } from '@/utils/converterUtil';
+import { IRoom } from '@/utils/types';
+import { useAddRoomMutation } from '@/libs/services/roomApi';
 
 const serviceColumns = [
   {
@@ -67,6 +61,7 @@ const AddRoomModal = () => {
   const [selectedServices, setSelectedServices] = useState(
     new Map<string, number>(),
   );
+  const [addRoomTrigger, { isLoading }] = useAddRoomMutation();
   const FLOOR_TYPE = useMemo(
     () => ['GROUND', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE'],
     [],
@@ -85,7 +80,7 @@ const AddRoomModal = () => {
         newMap.delete(value.id);
         return newMap;
       });
-      console.log('false');
+      console.log(false);
       return;
     }
     setSelectedServices((pre) => {
@@ -95,6 +90,29 @@ const AddRoomModal = () => {
     });
     console.log(true);
   };
+
+  const handleAddRoom = async () => {
+    // validate input
+
+    //
+    // @ts-ignore
+    const newRoom: IRoom = {
+      id: 0,
+      roomNumber: roomName,
+      rentAmount,
+      type: Array.from(type)[0],
+      floor: Array.from(floor)[0],
+      area,
+    };
+    //
+    try {
+      const response = await addRoomTrigger(newRoom).unwrap();
+      console.log('Added room: ' + JSON.stringify(response));
+    } catch (err: any) {
+      console.log('Failed to add room: ' + err.message);
+    }
+  };
+
   return (
     <>
       <Button
@@ -202,11 +220,7 @@ const AddRoomModal = () => {
                         }
                         value={area.toLocaleString()}
                         onValueChange={(value) => {
-                          setArea(
-                            isNaN(parseReadableNumber(value))
-                              ? 0
-                              : parseReadableNumber(value),
-                          );
+                          setArea(parseOnlyNumber(value));
                         }}
                       />
                       <Input
@@ -224,11 +238,7 @@ const AddRoomModal = () => {
                         }
                         value={rentAmount.toLocaleString()}
                         onValueChange={(value) =>
-                          setRentAmount(
-                            isNaN(parseReadableNumber(value))
-                              ? 0
-                              : parseReadableNumber(value),
-                          )
+                          setRentAmount(parseOnlyNumber(value))
                         }
                       />
                     </div>
@@ -273,7 +283,13 @@ const AddRoomModal = () => {
                   <Button color="danger" variant="flat" onPress={onClose}>
                     Cancel
                   </Button>
-                  <Button color="primary" onPress={onClose}>
+                  <Button
+                    color="primary"
+                    onPress={() => {
+                      handleAddRoom();
+                      onClose();
+                    }}
+                  >
                     Add
                   </Button>
                 </ModalFooter>

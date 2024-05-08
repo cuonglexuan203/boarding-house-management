@@ -30,7 +30,7 @@ public class ServiceDetail {
     @Column(name = "new_number")
     private float newNumber;
 
-    // use: example 1, 2, 3 wifi,...
+    // use: example 1, 2, 3 wifi,... (Default: 1 for wifi)
     @Min(0)
     @Column(name = "amount_of_use")
     private float use;
