@@ -1,10 +1,12 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.InvoiceType;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.PaymentStatus;
 
@@ -55,9 +57,13 @@ public class Invoice {
 
     // Relationships
 
+    @ToString.Exclude
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST)
     private RoomBooking roomBooking;
 
+    @ToString.Exclude
+    @JsonIgnore
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
     private List<ServiceDetail> serviceDetails = new ArrayList<>();
 

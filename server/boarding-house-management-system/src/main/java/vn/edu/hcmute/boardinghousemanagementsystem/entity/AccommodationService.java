@@ -1,11 +1,13 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,8 @@ public class AccommodationService {
 
     // Relationships
 
+    @ToString.Exclude
+    @JsonIgnore
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
     private List<ServiceDetail> serviceDetails = new ArrayList<>();
 }

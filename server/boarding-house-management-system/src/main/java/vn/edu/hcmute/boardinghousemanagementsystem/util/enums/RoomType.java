@@ -8,7 +8,8 @@ public enum RoomType {
     SINGLE,
     DOUBLE,
     TRIPLE,
-    UNSPECIFIED;
+    UNSPECIFIED,
+    UNKNOWN
 
 
 

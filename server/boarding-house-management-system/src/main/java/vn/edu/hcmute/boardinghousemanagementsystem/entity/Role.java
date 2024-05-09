@@ -39,6 +39,7 @@ public class Role {
     private List<User> users = new ArrayList<>();
 
     @ToString.Exclude
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinTable(
             name = "role_permission",

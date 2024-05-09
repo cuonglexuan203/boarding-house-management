@@ -1,10 +1,12 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @AllArgsConstructor
@@ -36,10 +38,13 @@ public class ServiceDetail {
     private float use;
 
     // Relationships
-
+    @ToString.Exclude
+    @JsonIgnore
     @ManyToOne
     private Invoice invoice;
-
+    
+    @ToString.Exclude
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST)
     private AccommodationService service;
 }

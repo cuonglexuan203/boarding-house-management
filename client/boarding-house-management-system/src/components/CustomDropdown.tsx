@@ -7,6 +7,7 @@ import {
 } from '@nextui-org/react';
 import React, { useMemo } from 'react';
 import Image from 'next/image';
+import { useAppSelector } from '@/libs/hooks';
 
 export interface ICustomDropdownItemData {
   value: string;
@@ -21,6 +22,7 @@ export interface ICustomDropdownItemData {
     | 'danger'
     | undefined;
   className?: string;
+  onPress?: ((pressEvent: any, currentRowId?: number) => void) | undefined;
 }
 export interface ICustomDropdownTriggerProps {
   buttonSize?: 'sm' | 'md' | 'lg' | undefined;
@@ -44,6 +46,9 @@ const CustomDropdown = ({
   items: ICustomDropdownItemData[];
   triggerProps?: ICustomDropdownTriggerProps;
 }) => {
+  const selectedRowId = useAppSelector(
+    (state) => state.gridStatus.selectedRowId,
+  );
   const defaultTriggerProps = useMemo<ICustomDropdownTriggerProps>(() => {
     return {
       color: 'secondary',
@@ -83,6 +88,11 @@ const CustomDropdown = ({
               key={i.value}
               startContent={i.startContent}
               endContent={i.endContent}
+              onPress={async (e) => {
+                if (i.onPress) {
+                  await i.onPress(e, selectedRowId);
+                }
+              }}
             >
               {i.value}
             </DropdownItem>

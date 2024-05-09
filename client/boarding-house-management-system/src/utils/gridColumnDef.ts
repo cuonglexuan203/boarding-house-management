@@ -2,10 +2,7 @@ import ImmutableColumn from '@/components/ImmutableColumn';
 import AutocompleteEditor from '@/components/grid/AutocompleteEditor';
 import { ColDef } from 'ag-grid-community';
 import { getReadableNumber, isNumeric } from './converterUtil';
-import OnlyIconButton from '@/components/OnlyIconButton';
-import CustomDropdown, {
-  ICustomDropdownItemData,
-} from '@/components/CustomDropdown';
+import CustomDropdown from '@/components/CustomDropdown';
 
 export const roomColumnDefs: ColDef[] = [
   {
@@ -91,18 +88,26 @@ export const roomColumnDefs: ColDef[] = [
       if (!params.data) {
         return null;
       }
-      if (params.data.rentAmount !== undefined) {
-        return getReadableNumber(params.data.rentAmount);
+      let value = params.data.rentAmount;
+
+      if (value !== undefined) {
+        return value;
       }
     },
     valueFormatter: (params) => {
       if (!params.data) {
-        return '';
+        return params.value;
       }
       if (!isNumeric(params.value)) {
-        return NaN.toString();
+        return params.value;
       }
-      return params.value + ' VND';
+      return getReadableNumber(params.value) + ' VND';
+    },
+    valueParser: (params) => {
+      if (!isNumeric(params.newValue)) {
+        return params.oldValue;
+      }
+      return params.newValue;
     },
   },
   {
@@ -113,18 +118,26 @@ export const roomColumnDefs: ColDef[] = [
       if (!params.data) {
         return null;
       }
-      if (params.data.area !== undefined) {
-        return getReadableNumber(params.data.area);
+      let value = params.data.area;
+
+      if (value !== undefined) {
+        return value;
       }
     },
     valueFormatter: (params) => {
       if (!params.data) {
-        return '';
+        return params.value;
       }
       if (!isNumeric(params.value)) {
-        return NaN.toString();
+        return params.value;
       }
-      return params.value + ' m2';
+      return getReadableNumber(params.value) + ' m2';
+    },
+    valueParser: (params) => {
+      if (!isNumeric(params.newValue)) {
+        return params.oldValue;
+      }
+      return params.newValue;
     },
   },
   {
@@ -208,6 +221,9 @@ export const roomColumnDefs: ColDef[] = [
               value: 'Delete room',
               color: 'danger',
               className: 'text-danger',
+              // onPress: async (e: any, selectedRowId: number) => {
+              //   await handleDeleteRoom(selectedRowId);
+              // },
             },
           ],
         },

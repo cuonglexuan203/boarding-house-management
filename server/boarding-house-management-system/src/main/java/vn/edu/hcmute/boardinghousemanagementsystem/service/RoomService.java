@@ -14,4 +14,6 @@ public interface RoomService {
 
     Room save(Room room);
     void save(List<Room> rooms);
+
+    void delete(long id);
 }

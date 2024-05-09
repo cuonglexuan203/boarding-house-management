@@ -26,7 +26,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Optional<Room> findById(long id) {
-        if(id <= 0){
+        if (id <= 0) {
             return Optional.empty();
         }
         return roomRepository.findById(id);
@@ -68,6 +68,23 @@ public class RoomServiceImpl implements RoomService {
             return;
         }
         roomRepository.saveAll(rooms);
+    }
+
+    @Override
+    public void delete(long id) {
+        if (id <= 0) {
+            return;
+        }
+        if (!roomRepository.existsById(id)) {
+            return;
+        }
+        Room room = roomRepository.findById(id).get();
+        List<RoomBooking> roomBookings = room.getRoomBookings();
+        for (RoomBooking roomBooking: roomBookings){
+            roomBooking.setRoom(null);
+        }
+        room.getRoomBookings().removeIf(e -> true);
+        roomRepository.delete(room);
     }
 
 }

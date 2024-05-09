@@ -1,10 +1,12 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.ContractStatus;
 
 import java.time.LocalDate;
@@ -41,6 +43,8 @@ public class Contract {
 
     // Relationships
 
+    @ToString.Exclude
+    @JsonIgnore
     @OneToOne(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private RoomBooking roomBooking;
 

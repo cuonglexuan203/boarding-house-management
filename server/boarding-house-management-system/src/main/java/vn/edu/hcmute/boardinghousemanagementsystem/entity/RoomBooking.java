@@ -1,9 +1,11 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,15 +31,23 @@ public class RoomBooking {
 
     // Relationships
 
+    @ToString.Exclude
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private User user;
 
+    @ToString.Exclude
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST)
     private Room room;
 
+    @ToString.Exclude
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.PERSIST)
     private Contract contract;
 
+    @ToString.Exclude
+    @JsonIgnore
     @OneToMany(mappedBy = "roomBooking", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Invoice> invoices  = new ArrayList<>();
 }

@@ -1,12 +1,10 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Floor;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomStatus;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomType;
@@ -51,7 +49,22 @@ public class Room {
 
     // Relationships
 
-    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    @ToString.Exclude
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomBooking> roomBookings = new ArrayList<>();
 
+    //
+    public boolean removeRoomBooking(RoomBooking roomBooking) {
+        return removeRoomBooking(roomBooking.getId());
+    }
+    public boolean removeRoomBooking(long roomBookingId) {
+        return roomBookings.removeIf(i -> {
+            if (i.getId() == roomBookingId) {
+                i.setRoom(null);
+                return true;
+            }
+            return false;
+        });
+    }
 }

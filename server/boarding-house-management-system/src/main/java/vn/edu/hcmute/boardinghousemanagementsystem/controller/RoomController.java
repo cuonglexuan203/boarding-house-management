@@ -14,6 +14,7 @@ import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
 import vn.edu.hcmute.boardinghousemanagementsystem.exception.RoomNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.RoomService;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Floor;
+import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomStatus;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomType;
 
 import java.util.List;
@@ -86,6 +87,16 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.CREATED).body(RoomDto.of(persistedRoom));
     }
 
+    @DeleteMapping("/{roomId}")
+    public ResponseEntity deleteRoom(@PathVariable(name = "roomId") Long roomId){
+        if(roomId == null || roomId <= 0){
+            return ResponseEntity.badRequest().build();
+        }
+        roomService.delete(roomId);
+        return ResponseEntity.ok().build();
+    }
+
+
     public Room updateRoom(RoomDto src, Room des) {
         if (src.roomNumber() != null) {
             des.setRoomNumber(src.roomNumber());
@@ -101,6 +112,9 @@ public class RoomController {
         }
         if (src.type() != null) {
             des.setType(RoomType.valueOf(src.type()));
+        }
+        if(src.status() != null) {
+            des.setStatus(RoomStatus.valueOf(src.status()));
         }
         return des;
     }
