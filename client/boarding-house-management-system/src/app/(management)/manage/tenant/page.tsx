@@ -1,5 +1,4 @@
 'use client';
-import RoomGrid from '@/components/RoomGrid';
 import { Badge, CheckboxGroup, Tab, Tabs, Tooltip } from '@nextui-org/react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,15 +7,16 @@ import { CustomCheckbox } from '@/components/CustomCheckbox';
 import ExportButton from '@/components/ExportButton';
 import { AgGridReact } from 'ag-grid-react';
 import { IRowNode } from 'ag-grid-community';
-import { IRoom } from '@/utils/types';
+import { IRoom, ITenant } from '@/utils/types';
 import AddRoomModal from '@/components/AddRoomModal';
+import TenantGrid from '@/components/TenantGrid';
 
 interface IFilterOption {
   key: string;
   value: string;
 }
 
-const HomeManagement = () => {
+const TenantManagement = () => {
   const gridRef = useRef<AgGridReact>(null);
   const [selected, setSelected] = useState('management');
   const [selectedFilterOptions, setSelectedFilterOptions] = useState<string[]>(
@@ -32,10 +32,8 @@ const HomeManagement = () => {
   //  Filter
   const filterOptions = useMemo<IFilterOption[]>(() => {
     return [
-      { key: 'available', value: 'Availability' },
-      { key: 'occupied', value: 'Staying' },
-      { key: 'reserved', value: 'Currently reserved' },
-      { key: 'waiting', value: 'Waiting room' },
+      { key: 'male', value: 'Male' },
+      { key: 'female', value: 'Female' },
     ];
   }, []);
 
@@ -44,18 +42,17 @@ const HomeManagement = () => {
   }, [selectedFilterOptions]);
 
   const doesExternalFilterPass = useCallback(
-    (node: IRowNode<IRoom>): boolean => {
+    (node: IRowNode<ITenant>): boolean => {
       let isMatched = true;
       if (node.data) {
         selectedFilterOptions.forEach((selectedOption) => {
-          if (selectedOption === 'available') {
-            isMatched =
-              isMatched && node.data?.status.toLowerCase() === 'available';
-          }
-          if (selectedOption === 'occupied') {
-            isMatched =
-              isMatched && node.data?.status.toLowerCase() === 'occupied';
-          }
+          filterOptions.forEach((opt) => {
+            if (selectedOption === opt.key) {
+              isMatched =
+                isMatched &&
+                node.data?.gender.toLowerCase() === opt.value.toLowerCase();
+            }
+          });
         });
       }
       return isMatched;
@@ -85,9 +82,9 @@ const HomeManagement = () => {
             <div className="flex justify-between">
               {/* Page infor */}
               <div className="border-s-4 border-[#4b4ce4] ps-2">
-                <h2 className="text-2xl font-semibold">Manage Room List</h2>
+                <h2 className="text-2xl font-semibold">Manage Tenant List</h2>
                 <p className="italic text-sm text-gray-500">
-                  All rooms in <span className="">Boarding House</span>
+                  All your tenants in <span className="">Boarding House</span>
                 </p>
               </div>
               {/* Room mange guide and Add room button */}
@@ -141,7 +138,7 @@ const HomeManagement = () => {
             </div>
             {/* Grid */}
             <div className="w-full mt-12">
-              <RoomGrid
+              <TenantGrid
                 isExternalFilterPresent={isExternalFilterPresent}
                 doesExternalFilterPass={doesExternalFilterPass}
                 gridRef={gridRef}
@@ -161,4 +158,4 @@ const HomeManagement = () => {
   );
 };
 
-export default HomeManagement;
+export default TenantManagement;

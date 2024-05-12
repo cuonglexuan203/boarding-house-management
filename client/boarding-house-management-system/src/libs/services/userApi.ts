@@ -5,7 +5,7 @@ export const userApi = createApi({
   tagTypes: ['user', 'account', 'invoices'],
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:5000/',
-    credentials: 'include',
+    // credentials: 'include',
   }),
   refetchOnReconnect: true,
   endpoints: (builder) => ({}),

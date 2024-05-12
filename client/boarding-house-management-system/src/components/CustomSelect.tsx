@@ -1,9 +1,15 @@
 import { Select, SelectItem } from '@nextui-org/react';
 import React from 'react';
 
+export interface ISelectItem {
+  id: string;
+  value: string;
+}
+
 export interface ICustomSelectProps {
   label: string;
-  items: string[];
+  items: string[] | ISelectItem[];
+  className?: string;
   description?: string;
   isRequired?: boolean;
   size?: 'lg' | 'md' | 'sm' | undefined;
@@ -13,6 +19,7 @@ export interface ICustomSelectProps {
 const CustomAutocomplete = ({
   label,
   items,
+  className,
   description,
   isRequired,
   size,
@@ -23,18 +30,35 @@ const CustomAutocomplete = ({
     <>
       <Select
         isRequired={isRequired}
-        className="max-w-xs focus:outline-none"
+        className={className || 'max-w-xs focus:outline-none'}
         label={label}
         description={description}
         size={size}
         selectedKeys={selectedKey}
         onSelectionChange={onSelectionChange}
       >
-        {items.map((item) => (
-          <SelectItem key={item} value={item}>
-            {item}
-          </SelectItem>
-        ))}
+        {items?.map((item) => {
+          if (Array.isArray(item)) {
+            console.log('is aarray');
+            return (
+              <SelectItem
+                // @ts-ignore
+                key={item}
+                value={item}
+              >
+                {item}
+              </SelectItem>
+            );
+          }
+          return (
+            <SelectItem
+              key={(item as ISelectItem).id}
+              value={(item as ISelectItem).value}
+            >
+              {(item as ISelectItem).value}
+            </SelectItem>
+          );
+        })}
       </Select>
     </>
   );

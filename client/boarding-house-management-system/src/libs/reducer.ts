@@ -4,6 +4,8 @@ import { persistReducer } from 'redux-persist';
 import statusReducer from './features/statusSlice';
 import gridStatusReducer from './features/gridSlice';
 import { roomApi } from './services/roomApi';
+import { tenantApi } from './services/tenantApi';
+import { locationApi } from './services/locationApi';
 
 const rootPersistConfig = {
   key: 'root',
@@ -16,6 +18,8 @@ const rootReducer = combineReducers({
   status: statusReducer,
   gridStatus: gridStatusReducer,
   [roomApi.reducerPath]: roomApi.reducer,
+  [tenantApi.reducerPath]: tenantApi.reducer,
+  [locationApi.reducerPath]: locationApi.reducer,
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);

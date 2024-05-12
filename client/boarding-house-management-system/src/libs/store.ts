@@ -12,6 +12,8 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import persistedReducer from './reducer';
 import { roomApi } from './services/roomApi';
 import { thunk } from 'redux-thunk';
+import { tenantApi } from './services/tenantApi';
+import { locationApi } from './services/locationApi';
 //
 
 export const store: EnhancedStore = configureStore({
@@ -24,7 +26,9 @@ export const store: EnhancedStore = configureStore({
       },
     })
       .concat(thunk)
-      .concat(roomApi.middleware),
+      .concat(roomApi.middleware)
+      .concat(tenantApi.middleware)
+      .concat(locationApi.middleware),
 });
 //
 setupListeners(store.dispatch);

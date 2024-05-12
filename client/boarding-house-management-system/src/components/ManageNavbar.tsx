@@ -1,17 +1,23 @@
 'use client';
-import { Card, CardBody, Tab, Tabs } from '@nextui-org/react';
+import { Tab, Tabs } from '@nextui-org/react';
 import { usePathname } from 'next/navigation';
-import React from 'react';
+import React, { useMemo } from 'react';
 import HomeIcon from './icon/HomeIcon';
 import Image from 'next/image';
 
 const ManageNavbar = () => {
   const pathname = usePathname();
-  console.log(pathname);
+  const tabSelectedKey = useMemo(() => {
+    const nextSubrouteIdx = pathname.indexOf('/', 1);
+    if (nextSubrouteIdx == -1) {
+      return pathname;
+    }
+    return pathname.substring(0, nextSubrouteIdx);
+  }, [pathname]);
   const navbarContent = [
     {
       id: '/manage',
-      href: 'manage',
+      href: '/manage',
       label: (
         <>
           <HomeIcon />
@@ -21,7 +27,7 @@ const ManageNavbar = () => {
     },
     {
       id: '/report',
-      href: 'report',
+      href: '/report',
       label: (
         <>
           <Image
@@ -38,7 +44,7 @@ const ManageNavbar = () => {
     },
     {
       id: '/setting',
-      href: 'setting',
+      href: '/setting',
       label: (
         <>
           <Image
@@ -55,7 +61,7 @@ const ManageNavbar = () => {
     },
     {
       id: '/account',
-      href: 'account',
+      href: '/account',
       label: (
         <>
           <Image
@@ -72,7 +78,7 @@ const ManageNavbar = () => {
     },
     {
       id: '/logout',
-      href: 'logout',
+      href: '/logout',
       label: (
         <>
           <Image
@@ -91,7 +97,7 @@ const ManageNavbar = () => {
   return (
     <div className="flex w-full flex-col">
       <Tabs
-        selectedKey={pathname}
+        selectedKey={tabSelectedKey}
         size="lg"
         fullWidth
         aria-label="Options"
