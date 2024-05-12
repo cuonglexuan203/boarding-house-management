@@ -9,9 +9,11 @@ public record RegisterDto(
 
         String email,
 
-        String country,
-
         String city,
+
+        String district,
+
+        String ward,
 
         String street,
 

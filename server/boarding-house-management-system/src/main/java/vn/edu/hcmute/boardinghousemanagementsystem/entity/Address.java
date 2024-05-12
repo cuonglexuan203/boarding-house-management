@@ -17,12 +17,16 @@ import vn.edu.hcmute.boardinghousemanagementsystem.dto.AddressDto;
 public class Address {
 
     @NotBlank
-    @Column(name = "country", nullable = false)
-    private String country;
+    @Column(name = "city", nullable = false)
+    private String city; // city/province
 
     @NotBlank
-    @Column(name = "city", nullable = false)
-    private String city;
+    @Column(name = "district", nullable = false)
+    private String district;
+
+    @NotBlank
+    @Column(name = "ward", nullable = false)
+    private String ward;
 
     @NotBlank
     @Column(name = "street", nullable = false)
@@ -34,8 +38,9 @@ public class Address {
         @Override
         public Address convert(AddressDto value) {
             Address address = new Address();
-            address.setCountry(value.country());
             address.setCity(value.city());
+            address.setDistrict(value.district());
+            address.setWard(value.ward());
             address.setStreet(value.street());
             return address;
         }

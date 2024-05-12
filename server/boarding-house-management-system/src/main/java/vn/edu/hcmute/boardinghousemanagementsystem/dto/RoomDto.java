@@ -1,5 +1,6 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.ToString;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Floor;
@@ -21,6 +22,7 @@ public record RoomDto(
                 room.getStatus().toString());
     }
 
+    @JsonIgnore
     public Room getNewRoom() {
         Room room = Room.builder()
                 .roomNumber(roomNumber)
@@ -33,6 +35,8 @@ public record RoomDto(
         return room;
 
     }
+
+    @JsonIgnore
     public Room getRoom(){
         Room room = Room.builder()
                 .roomNumber(roomNumber)

@@ -31,7 +31,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = User.builder()
                 .fullName(input.fullName())
                 .email(input.email())
-                .address(new Address(input.country(), input.city(), input.street()))
+                .address(new Address(input.city(), input.district(), input.ward(), input.street()))
                 .gender(Gender.valueOf(input.gender()))
                 .birthday(LocalDate.parse(input.birthday()))
                 .career(input.career())

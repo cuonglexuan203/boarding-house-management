@@ -1,14 +1,20 @@
-{
-  "fullName": "Ms. Israel Krajcik",
-  "email": "lxc@hotmail.com",
-  "career": "Internal Communications Liaison",
-  "birthday": "1983-06-12",
-  "country": "Jordan",
-  "city": "Efrainshire",
-  "street": "96675 Chelsie Manor",
-  "gender": "FEMALE",
-  "idCardNumber": "1234567809",
-  "phoneNumber": "1238971231",
-  "username": "lxc123",
-  "password": "123456789"
-}
+[
+  {
+    "fullName": "Mrs. Neil Kohler",
+    "email": "Kellen_Farrell@hotmail.com",
+    "career": "Legacy Identity Consultant",
+    "birthday": "1961-08-17",
+    "address": {
+      "city": "St. Peters",
+      "district": "Pakistan",
+      "ward": "St. Peters",
+      "street": "077 Aracely Shoals"
+    },
+    "gender": "MALE",
+    "idCardNumber": "095041443",
+    "phoneNumber": "2616952977",
+    "username": "Keely5",
+    "password": "D9ebOhXtL1UhHxH",
+    "id": "4"
+  }
+]

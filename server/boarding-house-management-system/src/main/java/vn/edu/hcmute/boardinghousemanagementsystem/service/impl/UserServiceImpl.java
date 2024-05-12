@@ -49,6 +49,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public Optional<User> findById(long id) {
+        if (id <= 0) {
+            return Optional.empty();
+        }
+        return userRepo.findById(id);
+    }
+
+    @Override
     public List<User> findAll() {
         return userRepo.findAll();
     }
