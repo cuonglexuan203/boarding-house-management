@@ -52,6 +52,30 @@ export default function TemporaryDrawer() {
     ],
     [],
   );
+
+  // const handleListItemClick = (text: string) => {
+  //   switch (text) {
+  //     case 'Room management':
+  //       route.push('/manage');
+  //       break;
+  //     case 'Bill management':
+  //       route.push('/manage/invoice');
+  //       break;
+  //     case 'Contract management':
+  //       route.push('/manage');
+  //       break;
+  //     case 'Service management':
+  //       route.push('/manage/service');
+  //       break;
+  //     case 'Tenant management':
+  //       route.push('/manage');
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  //   setOpen(false);
+  // };
+
   return (
     <motion.div
       className="fixed z-50 left-4 top-1/2 transform -translate-y-1/2"

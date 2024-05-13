@@ -27,7 +27,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public User signUp(RegisterDto input) {
+    public User register(RegisterDto input) {
         User user = User.builder()
                 .fullName(input.fullName())
                 .email(input.email())

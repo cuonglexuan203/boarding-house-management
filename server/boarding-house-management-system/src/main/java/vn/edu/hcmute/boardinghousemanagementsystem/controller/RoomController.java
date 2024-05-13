@@ -17,6 +17,7 @@ import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Floor;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomStatus;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomType;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,7 +74,7 @@ public class RoomController {
         }
         Room existingRoom = roomService.findById(roomId).orElseThrow(() -> new RoomNotFoundException("Room not found by id: " + roomId));
         //
-        updateRoom(roomDto, existingRoom);
+        updateRoomFields(roomDto, existingRoom);
         //
         Room persistedRoom = roomService.save(existingRoom);
 
@@ -97,25 +98,42 @@ public class RoomController {
     }
 
 
-    public Room updateRoom(RoomDto src, Room des) {
-        if (src.roomNumber() != null) {
-            des.setRoomNumber(src.roomNumber());
+//    public Room updateRoom(RoomDto src, Room des) {
+//        if (src.roomNumber() != null) {
+//            des.setRoomNumber(src.roomNumber());
+//        }
+//        if (src.rentAmount() != null) {
+//            des.setRentAmount(src.rentAmount());
+//        }
+//        if (src.area() != null) {
+//            des.setArea(src.area());
+//        }
+//        if (src.floor() != null) {
+//            des.setFloor(Floor.valueOf(src.floor()));
+//        }
+//        if (src.type() != null) {
+//            des.setType(RoomType.valueOf(src.type()));
+//        }
+//        if(src.status() != null) {
+//            des.setStatus(RoomStatus.valueOf(src.status()));
+//        }
+//        return des;
+//    }
+
+    private void updateRoomFields(RoomDto src, Room des) {
+        Field[] fields = RoomDto.class.getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                Field desField = Room.class.getDeclaredField(field.getName());
+                field.setAccessible(true);
+                desField.setAccessible(true);
+                Object value = field.get(src);
+                if (value != null) {
+                    desField.set(des, value);
+                }
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                log.error("Error updating room field: " + e.getMessage());
+            }
         }
-        if (src.rentAmount() != null) {
-            des.setRentAmount(src.rentAmount());
-        }
-        if (src.area() != null) {
-            des.setArea(src.area());
-        }
-        if (src.floor() != null) {
-            des.setFloor(Floor.valueOf(src.floor()));
-        }
-        if (src.type() != null) {
-            des.setType(RoomType.valueOf(src.type()));
-        }
-        if(src.status() != null) {
-            des.setStatus(RoomStatus.valueOf(src.status()));
-        }
-        return des;
     }
 }

@@ -10,6 +10,7 @@ import { IRowNode } from 'ag-grid-community';
 import { IRoom, ITenant } from '@/utils/types';
 import AddRoomModal from '@/components/AddRoomModal';
 import TenantGrid from '@/components/TenantGrid';
+import AddTenantModal from '@/components/AddTenantModal';
 
 interface IFilterOption {
   key: string;
@@ -90,13 +91,13 @@ const TenantManagement = () => {
               {/* Room mange guide and Add room button */}
               <div>
                 <Tooltip
-                  content="Add new room"
+                  content="Add new tenant"
                   color="primary"
                   placement="left-start"
                   closeDelay={200}
                   delay={500}
                 >
-                  <AddRoomModal />
+                  <AddTenantModal />
                 </Tooltip>
               </div>
             </div>

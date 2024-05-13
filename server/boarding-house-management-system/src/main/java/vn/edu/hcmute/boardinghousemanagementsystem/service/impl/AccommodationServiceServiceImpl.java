@@ -4,16 +4,34 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.AccommodationService;
+import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
+import vn.edu.hcmute.boardinghousemanagementsystem.entity.RoomBooking;
+import vn.edu.hcmute.boardinghousemanagementsystem.entity.ServiceDetail;
 import vn.edu.hcmute.boardinghousemanagementsystem.repo.AccommodationServiceRepository;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.AccommodationServiceService;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Slf4j
 @Service
 public class AccommodationServiceServiceImpl implements AccommodationServiceService {
     private final AccommodationServiceRepository serviceRepo;
+
+    @Override
+    public List<AccommodationService> findAllAccommodationService() {
+        return serviceRepo.findAll();
+    }
+
+    @Override
+    public Optional<AccommodationService> findById(long id) {
+        if (id <= 0) {
+            return Optional.empty();
+        }
+        return serviceRepo.findById(id);
+    }
+
 
     @Override
     public AccommodationService save(AccommodationService service) {
@@ -31,5 +49,22 @@ public class AccommodationServiceServiceImpl implements AccommodationServiceServ
             return;
         }
         serviceRepo.saveAll(services);
+    }
+
+    @Override
+    public void delete(long id) {
+        if (id <= 0) {
+            return;
+        }
+        if (!serviceRepo.existsById(id)) {
+            return;
+        }
+        AccommodationService accommodationService = serviceRepo.findById(id).get();
+        List<ServiceDetail> serviceDetails = accommodationService.getServiceDetails();
+        for (ServiceDetail serviceDetail: serviceDetails){
+            serviceDetail.setService(null);
+        }
+        accommodationService.getServiceDetails().removeIf(e -> true);
+        serviceRepo.delete(accommodationService);
     }
 }

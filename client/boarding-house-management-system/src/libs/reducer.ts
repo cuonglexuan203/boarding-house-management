@@ -6,6 +6,8 @@ import gridStatusReducer from './features/gridSlice';
 import { roomApi } from './services/roomApi';
 import { tenantApi } from './services/tenantApi';
 import { locationApi } from './services/locationApi';
+// import { invoiceApi } from './services/invoiceApi';
+import { serviceApi } from './services/serviceApi';
 
 const rootPersistConfig = {
   key: 'root',
@@ -20,6 +22,8 @@ const rootReducer = combineReducers({
   [roomApi.reducerPath]: roomApi.reducer,
   [tenantApi.reducerPath]: tenantApi.reducer,
   [locationApi.reducerPath]: locationApi.reducer,
+  // [invoiceApi.reducerPath]: invoiceApi.reducer,
+  [serviceApi.reducerPath]: serviceApi.reducer,
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);

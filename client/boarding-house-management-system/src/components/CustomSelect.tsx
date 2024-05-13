@@ -38,8 +38,7 @@ const CustomAutocomplete = ({
         onSelectionChange={onSelectionChange}
       >
         {items?.map((item) => {
-          if (Array.isArray(item)) {
-            console.log('is aarray');
+          if (typeof item === 'string') {
             return (
               <SelectItem
                 // @ts-ignore
@@ -49,15 +48,16 @@ const CustomAutocomplete = ({
                 {item}
               </SelectItem>
             );
+          } else {
+            return (
+              <SelectItem
+                key={(item as ISelectItem).id}
+                value={(item as ISelectItem).value}
+              >
+                {(item as ISelectItem).value}
+              </SelectItem>
+            );
           }
-          return (
-            <SelectItem
-              key={(item as ISelectItem).id}
-              value={(item as ISelectItem).value}
-            >
-              {(item as ISelectItem).value}
-            </SelectItem>
-          );
         })}
       </Select>
     </>

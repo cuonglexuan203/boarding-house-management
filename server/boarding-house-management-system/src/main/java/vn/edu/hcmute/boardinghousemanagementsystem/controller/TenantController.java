@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.hcmute.boardinghousemanagementsystem.dto.RoomDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.TenantDto;
+import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.User;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.UserService;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.DateTimeUtil;
@@ -27,6 +29,22 @@ public class TenantController {
         List<User> tenants = userService.findAll();
         List<TenantDto> sanitizedTenants = tenants.stream().map(TenantDto::new).toList();
         return ResponseEntity.ok(sanitizedTenants);
+    }
+
+    @PostMapping
+//    @PreAuthorize("hasRole(ADMIN)")
+    public ResponseEntity<TenantDto> addRoom(@RequestBody TenantDto tenantDto) {
+        // Validate input
+        //
+        log.info("Receive an add tenant request: " + tenantDto);
+        User newTenant = tenantDto.getTenant();
+        User persistedTenant = userService.save(newTenant);
+        if (persistedTenant == null) {
+            log.error("Request for add new room failed");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        log.info("Tenant added: " + persistedTenant);
+        return ResponseEntity.status(HttpStatus.CREATED).body(TenantDto.of(persistedTenant));
     }
 
     @PatchMapping
