@@ -12,10 +12,13 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import persistedReducer from './reducer';
 import { roomApi } from './services/roomApi';
 import { thunk } from 'redux-thunk';
+import { serviceApi } from './services/serviceApi';
+import { invoiceApi } from './services/invoiceApi';
 //
 
 export const store: EnhancedStore = configureStore({
   reducer: persistedReducer,
+  
   // @ts-ignore
   middleware: (getDefaultMiddleWare) =>
     getDefaultMiddleWare({
@@ -24,7 +27,9 @@ export const store: EnhancedStore = configureStore({
       },
     })
       .concat(thunk)
-      .concat(roomApi.middleware),
+      .concat(roomApi.middleware)
+      .concat(invoiceApi.middleware)
+      .concat(serviceApi.middleware),
 });
 //
 setupListeners(store.dispatch);
