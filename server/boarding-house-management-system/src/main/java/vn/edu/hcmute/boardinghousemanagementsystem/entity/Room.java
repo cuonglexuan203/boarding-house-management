@@ -25,7 +25,7 @@ public class Room {
     private Long id;
 
     @Column(name = "rent_amount", nullable = false)
-    private float rentAmount;
+    private Float rentAmount;
 
     @NotBlank
     @Column(name = "room_number", nullable = false, unique = true)
@@ -37,7 +37,7 @@ public class Room {
 
     @Min(0)
     @Column(name = "area", nullable = false)
-    private float area;
+    private Float area;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)

@@ -24,6 +24,7 @@ import {
   useGetWardsQuery,
 } from '@/libs/services/locationApi';
 import { useAddTenantMutation } from '@/libs/services/tenantApi';
+import PasswordInput from './PasswordInput';
 
 const AddTenantModal = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -36,6 +37,8 @@ const AddTenantModal = () => {
   const [gender, setGender] = useState(new Set([]));
   const [birthday, setBirthday] = useState(parseDate('1970-01-01'));
   const [career, setCareer] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   // Address
   const {
     data: provincesData,
@@ -92,8 +95,7 @@ const AddTenantModal = () => {
 
     //
     // @ts-ignore
-    const newTennt: ITenant = {
-      id: 0,
+    const newTennt = {
       fullName,
       email,
       phoneNumber,
@@ -112,12 +114,15 @@ const AddTenantModal = () => {
       },
       birthday: birthday.toString(),
       career,
+      username,
+      password,
       rooms: [], //
     };
     //
     try {
-      // const response = await addTenantTrigger(newTennt).unwrap();
-      console.log('Added tenant: ' + JSON.stringify(newTennt));
+      // @ts-ignore
+      const response = await addTenantTrigger(newTennt).unwrap();
+      console.log('Added tenant: ' + JSON.stringify(response));
     } catch (err: any) {
       console.log('Failed to add tenant: ' + err.message);
     }
@@ -141,6 +146,7 @@ const AddTenantModal = () => {
         <PlusIcon className="text-white" />
       </Button>
       <Modal
+        placement="top"
         size="5xl"
         isOpen={isOpen}
         onOpenChange={onOpenChange}
@@ -322,6 +328,20 @@ const AddTenantModal = () => {
                       label="Career"
                       value={career}
                       onValueChange={setCareer}
+                    />
+                    <Input
+                      size="sm"
+                      className="col-span-2"
+                      isRequired
+                      isClearable
+                      label="Username"
+                      value={username}
+                      onValueChange={setUsername}
+                    />
+                    <PasswordInput
+                      value={password}
+                      onValueChange={setPassword}
+                      size="sm"
                     />
                   </div>
                 </div>

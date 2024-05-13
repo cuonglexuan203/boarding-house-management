@@ -51,7 +51,7 @@ export interface ITenant {
   id: number;
   fullName: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
   idCardNumber: string;
   gender: string; // Assuming gender can be a string
   address: IAddress;

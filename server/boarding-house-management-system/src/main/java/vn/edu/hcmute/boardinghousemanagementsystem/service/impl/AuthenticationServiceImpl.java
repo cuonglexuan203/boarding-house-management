@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.LoginDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.RegisterDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.Address;
@@ -28,7 +29,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public User register(User user) {
-
+        if(user == null) {
+            log.error("Register failed cause user is null");
+            return null;
+        }
         if(userService.existsByUsername(user.getUsername())){
             log.error("Username already exists");
             return null;
@@ -45,6 +49,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             log.error("Id card number already exists");
             return null;
         }
+        if(!StringUtils.hasText(user.getPassword())){
+            log.error("Password must not be empty");
+            return null;
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userService.registerNewUser(user);
     }
 

@@ -12,9 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import vn.edu.hcmute.boardinghousemanagementsystem.entity.Permission;
-import vn.edu.hcmute.boardinghousemanagementsystem.entity.Role;
-import vn.edu.hcmute.boardinghousemanagementsystem.entity.User;
+import vn.edu.hcmute.boardinghousemanagementsystem.entity.*;
 import vn.edu.hcmute.boardinghousemanagementsystem.exception.PermissionNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.exception.RoleNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.repo.RoleRepository;
@@ -178,6 +176,34 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public boolean existsByIdCardNumber(String idCardNumber) {
         return userRepo.existsByIdCardNumber(idCardNumber);
+    }
+
+    @Override
+    public void delete(long userId) {
+        if(userId <= 0){
+            return;
+        }
+        if(!userRepo.existsById(userId)){
+            return;
+        }
+        User user = userRepo.findById(userId).get();
+        for(RoomBooking roomBooking: user.getRoomBookings()) {
+            roomBooking.setUser(null);
+        }
+        user.getRoomBookings().clear();
+        for(Notification notification: user.getNotifications()){
+            notification.setUser(null);
+        }
+        user.getNotifications().clear();
+        for(Role role: user.getRoles()){
+            role.getUsers().remove(user);
+        }
+        user.getRoles().clear();
+        for(Permission permission: user.getPermissions()){
+            permission.getUsers().remove(user);
+        }
+        user.getPermissions().clear();
+        userRepo.delete(user);
     }
 
 

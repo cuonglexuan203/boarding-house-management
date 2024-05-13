@@ -22,5 +22,6 @@ public interface UserService {
     boolean existsByEmail(String email);
     boolean existsByPhoneNumber(String phoneNumber);
     boolean existsByIdCardNumber(String idCardNumber);
+    void delete(long userId);
 
 }

@@ -41,7 +41,7 @@ public record RoomDto(
         Room room = Room.builder()
                 .id(id)
                 .roomNumber(roomNumber)
-                .type(RoomType.valueOf(type))
+                .type(type == null ? null : RoomType.valueOf(type))
                 .rentAmount(rentAmount)
                 .floor(floor == null ? null : Floor.valueOf(floor))
                 .area(area)

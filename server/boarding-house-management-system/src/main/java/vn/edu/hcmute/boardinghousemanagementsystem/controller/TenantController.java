@@ -7,11 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.TenantDto;
+import vn.edu.hcmute.boardinghousemanagementsystem.dto.UserDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.User;
+import vn.edu.hcmute.boardinghousemanagementsystem.service.AuthenticationService;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.UserService;
-import vn.edu.hcmute.boardinghousemanagementsystem.util.DateTimeUtil;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.ObjectUtil;
-import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Gender;
 
 import java.util.List;
 
@@ -23,8 +23,10 @@ import java.util.List;
 public class TenantController {
 
     private final UserService userService;
+    private final AuthenticationService authService;
+
     @GetMapping
-    public ResponseEntity<List<TenantDto>> getTenants(){
+    public ResponseEntity<List<TenantDto>> getTenants() {
         List<User> tenants = userService.findAll();
         List<TenantDto> sanitizedTenants = tenants.stream().map(TenantDto::new).toList();
         return ResponseEntity.ok(sanitizedTenants);
@@ -32,12 +34,12 @@ public class TenantController {
 
     @PostMapping
 //    @PreAuthorize("hasRole(ADMIN)")
-    public ResponseEntity<TenantDto> addTenant(@RequestBody TenantDto tenantDto) {
+    public ResponseEntity<TenantDto> addTenant(@RequestBody UserDto userDto) {
+        // Note: new user id must be null
         // Validate input
         //
-        log.info("Receive an add tenant request: " + tenantDto);
-        User newTenant = tenantDto.getTenant();
-        User persistedTenant = userService.save(newTenant);
+        log.info("Receive an add tenant request: " + userDto);
+        User persistedTenant = authService.register(userDto.getUser());
         if (persistedTenant == null) {
             log.error("Request for add new room failed");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -57,7 +59,7 @@ public class TenantController {
         }
         User existingUser = userService.findById(tenantId).orElseThrow(() -> new UsernameNotFoundException("Tenant not found by id: " + tenantId));
         //
-        updateTenantFields(tenantDto, existingUser);
+        updateTenantFields(existingUser, tenantDto);
         //
         User persistedUser = userService.save(existingUser);
 
@@ -72,8 +74,17 @@ public class TenantController {
     }
 
 
-    public User updateTenantFields(TenantDto srcDto, User des){
+    public User updateTenantFields(User des, TenantDto srcDto) {
         User src = srcDto.getTenant();
         return ObjectUtil.reflectNonNullField(des, src, User.class);
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity deleteTenant(@PathVariable(name = "userId") Long userId) {
+        if (userId == null || userId <= 0) {
+            return ResponseEntity.badRequest().build();
+        }
+        userService.delete(userId);
+        return ResponseEntity.ok().build();
     }
 }

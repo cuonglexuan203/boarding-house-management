@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "user")
-public class User {
+public class    User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -69,12 +69,12 @@ public class User {
     // Relationships
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomBooking> roomBookings = new ArrayList<>();
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
 
     @ToString.Exclude

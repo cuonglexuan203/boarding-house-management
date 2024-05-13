@@ -83,7 +83,7 @@ public class RoomServiceImpl implements RoomService {
         for (RoomBooking roomBooking: roomBookings){
             roomBooking.setRoom(null);
         }
-        room.getRoomBookings().removeIf(e -> true);
+        room.getRoomBookings().clear();
         roomRepository.delete(room);
     }
 

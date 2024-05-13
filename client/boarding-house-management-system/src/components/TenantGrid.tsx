@@ -2,11 +2,7 @@
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import React, { useCallback, useMemo, useState } from 'react';
-import {
-  useDeleteRoomMutation,
-  useGetRoomsQuery,
-  useUpdateRoomMutation,
-} from '@/libs/services/roomApi';
+
 import { IRowDragItem, ModuleRegistry } from '@ag-grid-community/core';
 import {
   CellClickedEvent,
@@ -25,16 +21,15 @@ import { useAppDispatch } from '@/libs/hooks';
 import { setSelectedRowId } from '@/libs/features/gridSlice';
 import CustomDropdown from './CustomDropdown';
 import AutocompleteEditor from './grid/AutocompleteEditor';
-import { getReadableNumber, isNumeric } from '@/utils/converterUtil';
 import ImmutableColumn from './ImmutableColumn';
 import {
+  useDeleteTenantMutation,
   useGetTenantsQuery,
   useUpdateTenantMutation,
 } from '@/libs/services/tenantApi';
-import { IAddress } from '@/utils/types';
-import { stringify } from 'querystring';
 import CustomDatePicker from './CustomDatePicker';
 import EditAddressModal from './EditAddressModal';
+import { IAddress } from '@/utils/types';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -54,7 +49,7 @@ const TenantGrid = ({
     error: tenantError,
   } = useGetTenantsQuery(null);
   const [updateTenantTrigger] = useUpdateTenantMutation();
-  const [deleteTenantTrigger] = useDeleteRoomMutation();
+  const [deleteTenantTrigger] = useDeleteTenantMutation();
 
   const [columnDefs, setColumnDefs] = useState<ColDef[]>([
     {
@@ -120,8 +115,8 @@ const TenantGrid = ({
       cellDataType: 'string',
     },
     {
-      headerName: 'Phone',
-      field: 'phone',
+      headerName: 'Phone Number',
+      field: 'phoneNumber',
       cellDataType: 'string',
     },
     {
@@ -235,9 +230,9 @@ const TenantGrid = ({
                 value: 'Remove a tenant',
                 color: 'danger',
                 className: 'text-danger',
-                // onPress: async (e: any, selectedRowId: number) => {
-                //   await handleDeleteRoom(selectedRowId);
-                // },
+                onPress: async (e: any, selectedRowId: number) => {
+                  await handleDeleteRoom(selectedRowId);
+                },
               },
             ],
           },

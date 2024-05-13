@@ -6,6 +6,9 @@ import java.time.format.DateTimeParseException;
 
 public class DateTimeUtil {
     public static LocalDate toLocalDate(String dateString, String pattern) {
+        if(dateString == null){
+            return null;
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDate localDate = null;
         try {

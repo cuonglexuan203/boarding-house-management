@@ -3,9 +3,7 @@ package vn.edu.hcmute.boardinghousemanagementsystem.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +12,7 @@ import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
 import vn.edu.hcmute.boardinghousemanagementsystem.exception.RoomNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.RoomService;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.ObjectUtil;
-import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Floor;
-import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomStatus;
-import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomType;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,7 +69,7 @@ public class RoomController {
         }
         Room existingRoom = roomService.findById(roomId).orElseThrow(() -> new RoomNotFoundException("Room not found by id: " + roomId));
         //
-        updateRoomFields(roomDto, existingRoom);
+        updateRoomFields(existingRoom, roomDto);
         //
         Room persistedRoom = roomService.save(existingRoom);
 
@@ -90,8 +84,8 @@ public class RoomController {
     }
 
     @DeleteMapping("/{roomId}")
-    public ResponseEntity deleteRoom(@PathVariable(name = "roomId") Long roomId){
-        if(roomId == null || roomId <= 0){
+    public ResponseEntity deleteRoom(@PathVariable(name = "roomId") Long roomId) {
+        if (roomId == null || roomId <= 0) {
             return ResponseEntity.badRequest().build();
         }
         roomService.delete(roomId);
@@ -99,7 +93,7 @@ public class RoomController {
     }
 
 
-    private Room updateRoomFields(RoomDto srcDto, Room des) {
+    private Room updateRoomFields(Room des, RoomDto srcDto) {
         Room src = srcDto.getRoom();
         return ObjectUtil.reflectNonNullField(des, src, Room.class);
     }

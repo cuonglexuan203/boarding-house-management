@@ -10,10 +10,10 @@ import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Gender;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record TenantDto(Long id, String fullName, String email,
+public record UserDto(Long id, String fullName, String email,
                         String phoneNumber, String idCardNumber, String gender,
-                        Address address, String birthday, String career, List<RoomDto> rooms) {
-    public TenantDto(User user) {
+                        Address address, String birthday, String career, String username, String password, List<RoomDto> rooms) {
+    public UserDto(User user) {
         this(user.getId(),
                 user.getFullName(),
                 user.getEmail(),
@@ -23,14 +23,33 @@ public record TenantDto(Long id, String fullName, String email,
                 user.getAddress(),
                 user.getBirthday().toString(),
                 user.getCareer(),
+                user.getUsername(),
+                user.getPassword(),
                 user.getRoomBookings().stream()
                         .map(RoomBooking::getRoom)
                         .map(RoomDto::new).collect(Collectors.toList()));
     }
 
     @JsonIgnore
-    public User getTenant() {
-        User tenant = User.builder()
+    public User getNewUser(){
+        User user = User.builder()
+                .fullName(fullName())
+                .phoneNumber(phoneNumber())
+                .email(email())
+                .idCardNumber(idCardNumber())
+                .gender(gender == null ? null : Gender.valueOf(gender))
+                .address(address())
+                .birthday(DateTimeUtil.toLocalDate(birthday(), "yyyy-MM-dd"))
+                .career(career())
+                .username(username)
+                .password(password)
+                .build();
+        return user;
+    }
+
+    @JsonIgnore
+    public User getUser(){
+        User user = User.builder()
                 .id(id)
                 .fullName(fullName())
                 .phoneNumber(phoneNumber())
@@ -39,13 +58,15 @@ public record TenantDto(Long id, String fullName, String email,
                 .gender(gender == null ? null : Gender.valueOf(gender))
                 .address(address())
                 .birthday(DateTimeUtil.toLocalDate(birthday(), "yyyy-MM-dd"))
-//                .roomBookings(rooms)
                 .career(career())
+                .roomBookings(List.of())
+                .username(username)
+                .password(password)
                 .build();
-        return tenant;
+        return user;
     }
 
-    public static TenantDto of(User user) {
-        return new TenantDto(user);
+    public static UserDto of(User user) {
+        return new UserDto(user);
     }
 }
