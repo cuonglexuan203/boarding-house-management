@@ -43,13 +43,13 @@ export default function TemporaryDrawer() {
         route.push('/manage');
         break;
       case 'Bill management':
-        route.push('/manage');
+        route.push('/manage/invoice');
         break;
       case 'Contract management':
         route.push('/manage');
         break;
       case 'Service management':
-        route.push('/manage');
+        route.push('/manage/service');
         break;
       case 'Tenant management':
         route.push('/manage');
