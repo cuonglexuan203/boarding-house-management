@@ -39,12 +39,13 @@ public record RoomDto(
     @JsonIgnore
     public Room getRoom(){
         Room room = Room.builder()
+                .id(id)
                 .roomNumber(roomNumber)
                 .type(RoomType.valueOf(type))
                 .rentAmount(rentAmount)
-                .floor(Floor.valueOf(floor))
+                .floor(floor == null ? null : Floor.valueOf(floor))
                 .area(area)
-                .status(RoomStatus.valueOf(status))
+                .status(status == null ? null : RoomStatus.valueOf(status))
                 .build();
         return room;
     }

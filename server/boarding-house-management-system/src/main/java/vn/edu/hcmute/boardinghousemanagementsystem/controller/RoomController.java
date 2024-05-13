@@ -13,6 +13,7 @@ import vn.edu.hcmute.boardinghousemanagementsystem.dto.RoomDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
 import vn.edu.hcmute.boardinghousemanagementsystem.exception.RoomNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.RoomService;
+import vn.edu.hcmute.boardinghousemanagementsystem.util.ObjectUtil;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Floor;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomStatus;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomType;
@@ -98,42 +99,8 @@ public class RoomController {
     }
 
 
-//    public Room updateRoom(RoomDto src, Room des) {
-//        if (src.roomNumber() != null) {
-//            des.setRoomNumber(src.roomNumber());
-//        }
-//        if (src.rentAmount() != null) {
-//            des.setRentAmount(src.rentAmount());
-//        }
-//        if (src.area() != null) {
-//            des.setArea(src.area());
-//        }
-//        if (src.floor() != null) {
-//            des.setFloor(Floor.valueOf(src.floor()));
-//        }
-//        if (src.type() != null) {
-//            des.setType(RoomType.valueOf(src.type()));
-//        }
-//        if(src.status() != null) {
-//            des.setStatus(RoomStatus.valueOf(src.status()));
-//        }
-//        return des;
-//    }
-
-    private void updateRoomFields(RoomDto src, Room des) {
-        Field[] fields = RoomDto.class.getDeclaredFields();
-        for (Field field : fields) {
-            try {
-                Field desField = Room.class.getDeclaredField(field.getName());
-                field.setAccessible(true);
-                desField.setAccessible(true);
-                Object value = field.get(src);
-                if (value != null) {
-                    desField.set(des, value);
-                }
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                log.error("Error updating room field: " + e.getMessage());
-            }
-        }
+    private Room updateRoomFields(RoomDto srcDto, Room des) {
+        Room src = srcDto.getRoom();
+        return ObjectUtil.reflectNonNullField(des, src, Room.class);
     }
 }

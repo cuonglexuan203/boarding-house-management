@@ -27,32 +27,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public User register(RegisterDto input) {
-        User user = User.builder()
-                .fullName(input.fullName())
-                .email(input.email())
-                .address(new Address(input.city(), input.district(), input.ward(), input.street()))
-                .gender(Gender.valueOf(input.gender()))
-                .birthday(LocalDate.parse(input.birthday()))
-                .career(input.career())
-                .phoneNumber(input.phoneNumber())
-                .idCardNumber(input.idCardNumber())
-                .username(input.username())
-                .password(passwordEncoder.encode(input.password()))
-                .build();
-        if(userService.existsByUsername(input.username())){
+    public User register(User user) {
+
+        if(userService.existsByUsername(user.getUsername())){
             log.error("Username already exists");
             return null;
         }
-        if(userService.existsByEmail(input.email())){
+        if(userService.existsByEmail(user.getEmail())){
             log.error("Email already exists");
             return null;
         }
-        if(userService.existsByPhoneNumber(input.email())){
+        if(userService.existsByPhoneNumber(user.getPhoneNumber())){
             log.error("Phone number already exists");
             return null;
         }
-        if(userService.existsByIdCardNumber(input.email())){
+        if(userService.existsByIdCardNumber(user.getIdCardNumber())){
             log.error("Id card number already exists");
             return null;
         }

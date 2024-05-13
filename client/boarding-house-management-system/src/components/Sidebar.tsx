@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import { motion } from 'framer-motion';
@@ -21,7 +20,6 @@ import Link from 'next/link';
 export default function TemporaryDrawer() {
   const [open, setOpen] = React.useState(false);
   const smallNav = React.useRef<HTMLElement | null>(null);
-  const route = useRouter();
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -52,29 +50,6 @@ export default function TemporaryDrawer() {
     ],
     [],
   );
-
-  // const handleListItemClick = (text: string) => {
-  //   switch (text) {
-  //     case 'Room management':
-  //       route.push('/manage');
-  //       break;
-  //     case 'Bill management':
-  //       route.push('/manage/invoice');
-  //       break;
-  //     case 'Contract management':
-  //       route.push('/manage');
-  //       break;
-  //     case 'Service management':
-  //       route.push('/manage/service');
-  //       break;
-  //     case 'Tenant management':
-  //       route.push('/manage');
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  //   setOpen(false);
-  // };
 
   return (
     <motion.div

@@ -6,12 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.hcmute.boardinghousemanagementsystem.dto.RoomDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.TenantDto;
-import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.User;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.UserService;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.DateTimeUtil;
+import vn.edu.hcmute.boardinghousemanagementsystem.util.ObjectUtil;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Gender;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class TenantController {
 
     @PostMapping
 //    @PreAuthorize("hasRole(ADMIN)")
-    public ResponseEntity<TenantDto> addRoom(@RequestBody TenantDto tenantDto) {
+    public ResponseEntity<TenantDto> addTenant(@RequestBody TenantDto tenantDto) {
         // Validate input
         //
         log.info("Receive an add tenant request: " + tenantDto);
@@ -58,7 +57,7 @@ public class TenantController {
         }
         User existingUser = userService.findById(tenantId).orElseThrow(() -> new UsernameNotFoundException("Tenant not found by id: " + tenantId));
         //
-        updateTenant(tenantDto, existingUser);
+        updateTenantFields(tenantDto, existingUser);
         //
         User persistedUser = userService.save(existingUser);
 
@@ -72,31 +71,9 @@ public class TenantController {
         return ResponseEntity.status(HttpStatus.CREATED).body(TenantDto.of(persistedUser));
     }
 
-    public User updateTenant(TenantDto src, User des) {
-        if (src.fullName() != null) {
-            des.setFullName(src.fullName());
-        }
-        if (src.email() != null) {
-            des.setEmail(src.email());
-        }
-        if (src.phone() != null) {
-            des.setPhoneNumber(src.phone());
-        }
-        if (src.idCardNumber() != null) {
-            des.setIdCardNumber(src.idCardNumber());
-        }
-        if (src.gender() != null) {
-            des.setGender(Gender.valueOf(src.gender()));
-        }
-        if(src.address() != null) {
-            des.setAddress(src.address());
-        }
-        if(src.birthday() != null) {
-            des.setBirthday(DateTimeUtil.toLocalDate(src.birthday(), "yyyy-MM-dd"));
-        }
-        if(src.career() != null) {
-            des.setCareer(src.career());
-        }
-        return des;
+
+    public User updateTenantFields(TenantDto srcDto, User des){
+        User src = srcDto.getTenant();
+        return ObjectUtil.reflectNonNullField(des, src, User.class);
     }
 }
