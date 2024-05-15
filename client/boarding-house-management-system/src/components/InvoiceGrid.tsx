@@ -93,7 +93,7 @@ const InvoiceGrid = ({
           field: 'roomNumber',
           editable: false,
           width: 200,
-          // resizable: false,
+          resizable: false,
           // rowGroup: false,
           lockPosition: 'left',
           // enableRowGroup: false,
@@ -166,7 +166,7 @@ const InvoiceGrid = ({
         },
       ];
       //   Fees
-      let serviceColDefs: ColDef[] = [
+      let serviceColDefs: ColDef[] | ColGroupDef[] = [
         {
           headerName: 'Room rate',
           //   @ts-ignore
@@ -174,10 +174,12 @@ const InvoiceGrid = ({
             {
               headerName: 'Number of months',
               field: 'numberOfMonth',
+              width: 200,
             },
             {
               headerName: 'Rent rate',
-              filed: 'rentAmount',
+              field: 'rentAmount',
+              width: 150,
             },
           ],
         },
@@ -186,68 +188,131 @@ const InvoiceGrid = ({
         const serviceGroupColDef: ColDef | ColGroupDef = {
           headerName: `${s.name.toUpperCase()} (VND ${s.price})`,
           marryChildren: true,
-          children: [
-            {
-              headerName: 'oldNumber',
-              valueGetter: (params: any) => {
-                if (
-                  params.data.serviceDetails &&
-                  params.data.serviceDetails.length > 0
-                ) {
-                  let serviceDetail: IServiceDetail;
-                  params.data.serviceDetails.forEach((sd: IServiceDetail) => {
-                    if (s.id === sd.serviceId) {
-                      serviceDetail = sd;
+          children: s.isMeteredService
+            ? [
+                {
+                  headerName: 'Old number',
+                  valueGetter: (params: any) => {
+                    if (
+                      params.data.serviceDetails &&
+                      params.data.serviceDetails.length > 0
+                    ) {
+                      let serviceDetail: IServiceDetail;
+                      params.data.serviceDetails.forEach(
+                        (sd: IServiceDetail) => {
+                          if (s.id === sd.serviceId) {
+                            serviceDetail = sd;
+                          }
+                        },
+                      );
+                      // @ts-ignore
+                      if (!serviceDetail) {
+                        return undefined;
+                      }
+                      return serviceDetail.oldNumber;
                     }
-                  });
-                  if (!serviceDetail) {
-                    return undefined;
-                  }
-                  return serviceDetail.oldNumber;
-                }
-              },
-            },
-            {
-              headerName: 'newNumber',
-              valueGetter: (params: any) => {
-                if (
-                  params.data.serviceDetails &&
-                  params.data.serviceDetails.length > 0
-                ) {
-                  let serviceDetail: IServiceDetail;
-                  params.data.serviceDetails.forEach((sd: IServiceDetail) => {
-                    if (s.id === sd.serviceId) {
-                      serviceDetail = sd;
+                  },
+                  width: 150,
+                },
+                {
+                  headerName: 'New number',
+                  valueGetter: (params: any) => {
+                    if (
+                      params.data.serviceDetails &&
+                      params.data.serviceDetails.length > 0
+                    ) {
+                      let serviceDetail: IServiceDetail;
+                      params.data.serviceDetails.forEach(
+                        (sd: IServiceDetail) => {
+                          if (s.id === sd.serviceId) {
+                            serviceDetail = sd;
+                          }
+                        },
+                      );
+                      // @ts-ignore
+                      if (!serviceDetail) {
+                        return undefined;
+                      }
+                      return serviceDetail.newNumber;
                     }
-                  });
-                  if (!serviceDetail) {
-                    return undefined;
-                  }
-                  return serviceDetail.newNumber;
-                }
-              },
-            },
-            {
-              headerName: 'Into money',
-              valueGetter: (params: any) => {
-                if (
-                  params.data.serviceDetails &&
-                  params.data.serviceDetails.length > 0
-                ) {
-                  let serviceDetail: IServiceDetail;
-                  params.data.serviceDetails.forEach((sd: IServiceDetail) => {
-                    if (s.id === sd.serviceId) {
-                      serviceDetail = sd;
+                  },
+                  width: 150,
+                },
+                {
+                  headerName: 'Into money',
+                  valueGetter: (params: any) => {
+                    if (
+                      params.data.serviceDetails &&
+                      params.data.serviceDetails.length > 0
+                    ) {
+                      let serviceDetail: IServiceDetail;
+                      params.data.serviceDetails.forEach(
+                        (sd: IServiceDetail) => {
+                          if (s.id === sd.serviceId) {
+                            serviceDetail = sd;
+                          }
+                        },
+                      );
+                      // @ts-ignore
+                      if (!serviceDetail) {
+                        return undefined;
+                      }
+                      return serviceDetail.money;
                     }
-                  });
-                  if (!serviceDetail) {
-                    return undefined;
-                  }
-                  return serviceDetail.money;
-                }
-              },
-            },
-          ],
+                  },
+                  width: 150,
+                },
+              ]
+            : [
+                {
+                  headerName: 'Use',
+                  valueGetter: (params: any) => {
+                    if (
+                      params.data.serviceDetails &&
+                      params.data.serviceDetails.length > 0
+                    ) {
+                      let serviceDetail: IServiceDetail;
+                      params.data.serviceDetails.forEach(
+                        (sd: IServiceDetail) => {
+                          if (s.id === sd.serviceId) {
+                            serviceDetail = sd;
+                          }
+                        },
+                      );
+                      // @ts-ignore
+                      if (!serviceDetail) {
+                        return undefined;
+                      }
+                      return serviceDetail.use;
+                    }
+                  },
+                  width: 150,
+                },
+                {
+                  headerName: 'Into money',
+                  valueGetter: (params: any) => {
+                    if (
+                      params.data.serviceDetails &&
+                      params.data.serviceDetails.length > 0
+                    ) {
+                      let serviceDetail: IServiceDetail;
+                      params.data.serviceDetails.forEach(
+                        (sd: IServiceDetail) => {
+                          if (s.id === sd.serviceId) {
+                            serviceDetail = sd;
+                          }
+                        },
+                      );
+                      // @ts-ignore
+                      if (!serviceDetail) {
+                        return undefined;
+                      }
+                      return serviceDetail.money;
+                    }
+                  },
+                  width: 150,
+                },
+              ],
         };
         serviceColDefs.push(serviceGroupColDef);
       });
