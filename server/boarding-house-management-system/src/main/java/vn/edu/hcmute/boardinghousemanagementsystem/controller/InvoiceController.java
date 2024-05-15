@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/invoice")
+@RequestMapping("/api/invoices")
 public class InvoiceController {
     private final InvoiceService invoiceService;
 

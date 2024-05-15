@@ -9,11 +9,11 @@ public record ServiceDetailDto(
         float oldNumber,
         float newNumber,
         float use,
-        AccommodationServiceDto accommodationService
+        Long serviceId
 ) {
     public ServiceDetailDto(ServiceDetail serviceDetail) {
         this(serviceDetail.getId(), serviceDetail.getMoney(),
                 serviceDetail.getOldNumber(), serviceDetail.getNewNumber(),
-                serviceDetail.getUse(), new AccommodationServiceDto(serviceDetail.getService()));
+                serviceDetail.getUse(), serviceDetail.getService().getId());
     }
 }
