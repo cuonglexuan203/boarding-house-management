@@ -1,22 +1,26 @@
 [
   {
     "name": "Water",
-    "price": 20.0,
-    "unit": "Cubic Meter"
+    "price": 12000,
+    "unit": "Cubic Meter",
+    "meteredService": true
   },
   {
     "name": "Electricity",
-    "price": 0.15,
-    "unit": "kWh"
+    "price": 4000,
+    "unit": "kWh",
+    "meteredService": true
   },
   {
     "name": "Cleaning",
-    "price": 30.0,
-    "unit": "Service"
+    "price": 30000,
+    "unit": "Time",
+    "meteredService": false
   },
   {
     "name": "Laundry",
-    "price": 2.0,
-    "unit": "Kg"
+    "price": 20000,
+    "unit": "Kg",
+    "meteredService": false
   }
 ]

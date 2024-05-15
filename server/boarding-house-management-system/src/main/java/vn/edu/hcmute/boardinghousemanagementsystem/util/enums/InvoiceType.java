@@ -5,5 +5,6 @@ public enum InvoiceType {
     MONTHLY,
     DEPOSIT,
     SURCHARGE,
+    UNKNOWN
 
 }

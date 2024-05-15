@@ -31,10 +31,10 @@ public class AccommodationServiceController {
     private final AccommodationServiceService accommodationServiceService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+//    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<AccommodationServiceDto> getAccommodationService() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String username = authentication.getName();
         List<AccommodationServiceDto> accommodationServiceDtos;
 
         accommodationServiceDtos = accommodationServiceService.findAllAccommodationService().stream()

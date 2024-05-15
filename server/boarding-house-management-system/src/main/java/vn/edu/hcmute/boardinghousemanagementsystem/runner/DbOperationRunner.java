@@ -1,7 +1,5 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.runner;
 
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -200,17 +198,28 @@ public class DbOperationRunner implements CommandLineRunner {
                 contracts.get(i).setRoomBooking(roomBookings.get(i));
             }
 //
-            for (int i = 0; i < invoices.size(); i++) {
-                Invoice invoice = invoices.get(i);
-                ServiceDetail serviceDetail = serviceDetails.get(i % serviceDetails.size());
-                invoice.getServiceDetails().add(serviceDetail);
-                serviceDetail.setInvoice(invoice);
+//            for (int i = 0; i < invoices.size(); i++) {
+//                Invoice invoice = invoices.get(i);
+//                ServiceDetail serviceDetail = serviceDetails.get(i % serviceDetails.size());
+//                invoice.getServiceDetails().add(serviceDetail);
+//                serviceDetail.setInvoice(invoice);
+//            }
+            for(ServiceDetail serviceDetail : serviceDetails) {
+                serviceDetail.setInvoice(invoices.get(0));
             }
+            invoices.get(0).getServiceDetails().addAll(serviceDetails);
 //
             int serviceDetail_serviceMaxIndex = Math.min(serviceDetails.size(), services.size());
             for (int i = 0; i < serviceDetail_serviceMaxIndex; i++) {
                 serviceDetails.get(i).setService(services.get(i));
                 services.get(i).getServiceDetails().add(serviceDetails.get(i));
+            }
+            // Room and service
+            for(AccommodationService service: services) {
+                for(Room room: rooms){
+                    room.getServices().add(service);
+                    service.getRooms().add(room);
+                }
             }
             //
             roomBookingService.save(roomBookings);
@@ -227,7 +236,7 @@ public class DbOperationRunner implements CommandLineRunner {
                 roomBookings.get(i).setUser(users.get(i));
             }
             //
-            roleService.save(roles);
+                roleService.save(roles);
             //
 //            for (int i = 0; i < users.size(); i++) {
 //                User user = users.get(i);
@@ -236,7 +245,7 @@ public class DbOperationRunner implements CommandLineRunner {
 //                role.getUsers().add(user);
 //                user.getRoles().add(role);
 //            }
-            userService.save(users);
+                userService.save(users);
             // Manually mapping user_role
             List<User> attachedUsers = userService.findAll();
             List<Role> attachedRoles = roleService.findAll();

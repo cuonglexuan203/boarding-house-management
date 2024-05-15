@@ -20,15 +20,16 @@ export interface IServiceDetail {
   oldNumber: number;
   newNumber: number;
   use: number;
-  accommodationService: IAccommodationService;
+  serviceId: number;
 }
 
-export interface IAccommodationService {
-  id: number;
-  name: string;
-  price: number;
-  unit: string;
-}
+// export interface IAccommodationService {
+//   id: number;
+//   name: string;
+//   price: number;
+//   unit: string;
+//   isMeteredService: boolean;
+// }
 
 export interface IRoom {
   id: number;
@@ -86,4 +87,5 @@ export interface IService {
   name: string;
   price: number;
   unit: string;
+  isMeteredService: boolean;
 }

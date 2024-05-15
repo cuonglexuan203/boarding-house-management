@@ -33,10 +33,18 @@ public class AccommodationService {
     @Column(name = "unit", nullable = false)
     private String unit;
 
+    @Column(name="isMeteredService", nullable = false)
+    private boolean isMeteredService;
+
     // Relationships
 
     @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
     private List<ServiceDetail> serviceDetails = new ArrayList<>();
+
+    @ToString.Exclude
+    @JsonIgnore
+    @ManyToMany(mappedBy = "services")
+    private List<Room> rooms = new ArrayList<>();
 }

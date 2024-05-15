@@ -54,6 +54,15 @@ public class Room {
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomBooking> roomBookings = new ArrayList<>();
 
+    @ToString.Exclude
+    @JsonIgnore
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "room_service",
+            joinColumns = @JoinColumn(name = "room_fk"),
+            inverseJoinColumns = @JoinColumn(name = "service_fk")
+    )
+    private List<AccommodationService> services = new ArrayList<>();
     //
     public boolean removeRoomBooking(RoomBooking roomBooking) {
         return removeRoomBooking(roomBooking.getId());
