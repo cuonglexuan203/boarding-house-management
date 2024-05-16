@@ -58,23 +58,3 @@ export const {
   useUpdateRoomMutation,
   useDeleteRoomMutation,
 } = roomApi;
-
-// export const {} = productsApi;
-
-// endpoints: (builder) => ({
-//   purchase: builder.mutation<null, null>({
-//     query: (body) => ({
-//       url: 'purchase',
-//       method: 'POST',
-//       body,
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//     }),
-//     invalidatesTags: [],
-//   }),
-//   getInvoices: builder.query<null, null>({
-//     query: (userId) => `invoices?userId=${userId}`,
-//     providesTags: [],
-//   }),
-// }),

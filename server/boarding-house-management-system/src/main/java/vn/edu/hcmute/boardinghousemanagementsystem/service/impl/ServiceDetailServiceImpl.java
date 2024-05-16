@@ -8,12 +8,22 @@ import vn.edu.hcmute.boardinghousemanagementsystem.repo.ServiceDetailRepository;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.ServiceDetailService;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Slf4j
 @Service
 public class ServiceDetailServiceImpl implements ServiceDetailService {
     private final ServiceDetailRepository serviceDetailRepo;
+
+    @Override
+    public Optional<ServiceDetail> findById(long id) {
+        if(id <= 0) {
+            log.error("Service detail not found: " + id);
+            return Optional.empty();
+        }
+        return serviceDetailRepo.findById(id);
+    }
 
     @Override
     public ServiceDetail save(ServiceDetail serviceDetail) {

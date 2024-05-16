@@ -3,10 +3,7 @@ package vn.edu.hcmute.boardinghousemanagementsystem.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.InvoiceType;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.PaymentStatus;
 
@@ -17,6 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "invoice")
 public class Invoice {
@@ -37,7 +35,7 @@ public class Invoice {
 
     @Min(0)
     @Column(name = "number_of_month")
-    private int numberOfMonth;
+    private Integer numberOfMonth;
 
     @Column(name = "polling_month", nullable = false)
     private LocalDate pollingMonth;
@@ -47,13 +45,13 @@ public class Invoice {
     private PaymentStatus status;
 
     @Column(name = "surcharge")
-    private float surcharge;
+    private Float surcharge;
 
     @Column(name = "surcharge_reason")
     private String surchargeReason;
 
     @Column(name = "total")
-    private float total;
+    private Float total;
 
     // Relationships
 
@@ -64,7 +62,7 @@ public class Invoice {
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ServiceDetail> serviceDetails = new ArrayList<>();
 
 

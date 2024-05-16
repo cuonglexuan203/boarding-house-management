@@ -10,9 +10,12 @@ import {
   ClientSideRowModelModule,
   ColDef,
   ColGroupDef,
+  EditableCallbackParams,
   GridReadyEvent,
   IRowNode,
   IsExternalFilterPresentParams,
+  ValueFormatterParams,
+  ValueGetterParams,
 } from 'ag-grid-community';
 import 'ag-grid-enterprise';
 import {} from 'ag-grid-enterprise';
@@ -26,6 +29,14 @@ import ImmutableColumn from './ImmutableColumn';
 import { IService, IServiceDetail } from '@/utils/types';
 import { useGetServicesQuery } from '@/libs/services/serviceApi';
 import { AgGridReact } from 'ag-grid-react';
+import {
+  useDeleteInvoiceMutation,
+  useGetInvoicesQuery,
+  useUpdateInvoiceMutation,
+} from '@/libs/services/invoiceApi';
+import { getReadableNumber, parseNumber } from '@/utils/converterUtil';
+import RoomInvoice from './RoomInvoice';
+import { RowClassParams } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -45,316 +56,425 @@ const InvoiceGrid = ({
     isLoading: isServiceLoading,
     error: serviceError,
   } = useGetServicesQuery();
+  const {
+    data: invoices = [],
+    isLoading: isInvoiceLoading,
+    error: invoiceError,
+  } = useGetInvoicesQuery();
 
-  //   const [updateTenantTrigger] = useUpdateTenantMutation();
+  const [updateInvoiceTrigger] = useUpdateInvoiceMutation();
+  const [deleteInvoiceTrigger] = useDeleteInvoiceMutation();
   //   const [deleteTenantTrigger] = useDeleteTenantMutation();
   // @ts-ignore
-  const getColumnDefs: (s: IService[]) => ColDef[] = (
-    currentServices: IService[],
-  ) => {
-    if (currentServices.length > 0) {
-      const leftColDefs: ColDef[] = [
-        {
-          headerName: '',
-          colId: 'movableCol',
-          valueGetter: (params) => {
-            return null;
+  const getColumnDefs: (s: IService[]) => ColDef[] = useCallback(
+    (currentServices: IService[]) => {
+      if (currentServices.length > 0) {
+        const leftColDefs: ColDef[] = [
+          {
+            headerName: '',
+            colId: 'movableCol',
+            valueGetter: (params) => {
+              return null;
+            },
+            cellStyle: {
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+            width: 100,
+            resizable: false,
+            rowDrag: true,
+            sortable: false,
+            lockPosition: 'left',
+            enableRowGroup: false,
+            floatingFilter: false,
+            filter: false,
+            editable: false,
+            cellRendererSelector: (params) => {
+              if (!params.data) {
+                return undefined;
+              }
+              return {
+                component: ImmutableColumn,
+                params: {
+                  iconSize: 32,
+                  iconSrc: '/image/bill/bill.png',
+                },
+              };
+            },
+            pinned: 'left',
+            lockPinned: true,
+            suppressColumnsToolPanel: true,
+            suppressFiltersToolPanel: true,
+            suppressHeaderMenuButton: true,
+            suppressHeaderFilterButton: true,
           },
-          width: 100,
-          resizable: false,
-          //   rowDrag: true,
-          sortable: false,
-          lockPosition: 'left',
-          enableRowGroup: false,
-          floatingFilter: false,
-          filter: false,
-          editable: false,
-          cellRendererSelector: (params) => {
-            if (!params.data) {
-              return undefined;
-            }
-            return {
-              component: ImmutableColumn,
-              params: {
-                iconSize: 32,
-                iconSrc: '/image/tenant/tenant.png',
+          {
+            headerName: 'Room Number',
+            field: 'roomNumber',
+            valueGetter: (params) => {
+              if (!params.data) {
+                return undefined;
+              }
+              return params.data.floor + '/' + params.data.roomNumber;
+            },
+            cellRendererSelector: (params) => {
+              return {
+                component: RoomInvoice,
+                params: {
+                  roomNumber: params.data.roomNumber,
+                  type: params.data.type,
+                  startDate: params.data.invoiceDate,
+                  endDate: params.data.paymentDeadline,
+                  status: params.data.status === 'PAID',
+                  serviceCount: params.data.serviceDetails?.length || 0,
+                  className: 'flex justify-center items-center w-full',
+                },
+              };
+            },
+            editable: false,
+            width: 190,
+            resizable: false,
+            // rowGroup: false,
+            lockPosition: 'left',
+            // enableRowGroup: false,
+            pinned: 'left',
+            lockPinned: true,
+            suppressMovable: true,
+            suppressColumnsToolPanel: true,
+            suppressFiltersToolPanel: true,
+            suppressHeaderMenuButton: true,
+            suppressHeaderFilterButton: true,
+          },
+        ];
+        const rightColDefs: ColDef[] = [
+          {
+            headerName: 'Total',
+            editable: false,
+            lockPosition: 'right',
+            lockPinned: true,
+            pinned: 'right',
+            valueGetter: (params) => {
+              return params.data.total;
+            },
+            valueFormatter: (params) => {
+              return getReadableNumber(params.value) + ' VND';
+            },
+            cellStyle: {
+              fontWeight: 'bold',
+            },
+          },
+          {
+            headerName: 'Status',
+            editable: false,
+            valueGetter: (params) => {
+              return params.data.status;
+            },
+            lockPosition: 'right',
+            lockPinned: true,
+            pinned: 'right',
+            width: 100,
+          },
+          {
+            headerName: '',
+            colId: 'menuCol',
+            valueGetter: (params) => {
+              return null;
+            },
+            width: 50,
+            resizable: false,
+            sortable: false,
+            lockPosition: 'right',
+            enableRowGroup: false,
+            floatingFilter: false,
+            filter: false,
+            editable: false,
+            cellStyle: {
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+            cellRendererSelector: (params) => {
+              if (!params.data) {
+                return undefined;
+              }
+              return {
+                component: CustomDropdown,
+                params: {
+                  items: [
+                    {
+                      value: 'View invoice details',
+                    },
+
+                    {
+                      value: 'Print invoice',
+                    },
+                    {
+                      value: 'Send invoice via Zalo',
+                    },
+                    {
+                      value: 'Delete invoice',
+                      color: 'danger',
+                      className: 'text-danger',
+                      onPress: async (e: any, selectedRowId: number) => {
+                        await handleDeleteInvoice(selectedRowId);
+                      },
+                    },
+                  ],
+                },
+              };
+            },
+            pinned: 'right',
+            lockPinned: true,
+            suppressColumnsToolPanel: true,
+            suppressFiltersToolPanel: true,
+            suppressHeaderMenuButton: true,
+            suppressHeaderFilterButton: true,
+          },
+        ];
+        //   Fees
+        let serviceColDefs: ColDef[] | ColGroupDef[] = [
+          {
+            headerName: 'Room rate',
+            groupId: '0',
+            //   @ts-ignore
+            children: [
+              {
+                colId: '0_numberOfMonth',
+                headerName: 'Number of months',
+                field: 'numberOfMonth',
+                width: 200,
               },
-            };
+              {
+                colId: '0_rentAmount_immutability',
+                headerName: 'Rent rate',
+                field: 'rentAmount',
+                width: 150,
+                cellStyle: {
+                  fontWeight: 'bold',
+                },
+              },
+            ],
           },
-          pinned: 'left',
-          lockPinned: true,
-          suppressColumnsToolPanel: true,
-          suppressFiltersToolPanel: true,
-          suppressHeaderMenuButton: true,
-          suppressHeaderFilterButton: true,
-        },
-        {
-          headerName: 'Room Number',
-          field: 'roomNumber',
-          editable: false,
-          width: 200,
-          resizable: false,
-          // rowGroup: false,
-          lockPosition: 'left',
-          // enableRowGroup: false,
-          pinned: 'left',
-          lockPinned: true,
-          suppressMovable: true,
-          suppressColumnsToolPanel: true,
-          suppressFiltersToolPanel: true,
-          suppressHeaderMenuButton: true,
-          suppressHeaderFilterButton: true,
-        },
-      ];
-      const rightColDefs: ColDef[] = [
-        {
-          headerName: '',
-          colId: 'menuCol',
-          valueGetter: (params) => {
-            return null;
-          },
-          width: 50,
-          resizable: false,
-          sortable: false,
-          lockPosition: 'right',
-          enableRowGroup: false,
-          floatingFilter: false,
-          filter: false,
-          editable: false,
-          cellStyle: {
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          cellRendererSelector: (params) => {
-            if (!params.data) {
-              return undefined;
-            }
-            return {
-              component: CustomDropdown,
-              params: {
-                items: [
+        ];
+        currentServices.forEach((s) => {
+          const serviceGroupColDef: ColDef | ColGroupDef = {
+            headerName: `${s.name.toUpperCase()} (VND ${getReadableNumber(s.price)})`,
+            groupId: s.id.toString(),
+            children: s.isMeteredService
+              ? [
                   {
-                    value: 'View sample temporary residence text',
+                    colId: `${s.id}_oldNumber`,
+                    headerName: 'Old number',
+                    valueGetter: (params: any) => {
+                      if (
+                        params.data.serviceDetails &&
+                        params.data.serviceDetails.length > 0
+                      ) {
+                        let serviceDetail: IServiceDetail;
+                        params.data.serviceDetails.forEach(
+                          (sd: IServiceDetail) => {
+                            if (s.id === sd.serviceId) {
+                              serviceDetail = sd;
+                            }
+                          },
+                        );
+                        // @ts-ignore
+                        if (!serviceDetail) {
+                          return undefined;
+                        }
+                        return getReadableNumber(serviceDetail.oldNumber);
+                      }
+                    },
+                    width: 150,
                   },
                   {
-                    value: 'print a temporary residence document form',
-                    color: 'success',
-                    className: 'text-success',
+                    colId: `${s.id}_newNumber`,
+                    headerName: 'New number',
+                    valueGetter: (params: any) => {
+                      if (
+                        params.data.serviceDetails &&
+                        params.data.serviceDetails.length > 0
+                      ) {
+                        let serviceDetail: IServiceDetail;
+                        params.data.serviceDetails.forEach(
+                          (sd: IServiceDetail) => {
+                            if (s.id === sd.serviceId) {
+                              serviceDetail = sd;
+                            }
+                          },
+                        );
+                        // @ts-ignore
+                        if (!serviceDetail) {
+                          return undefined;
+                        }
+                        return getReadableNumber(serviceDetail.newNumber);
+                      }
+                    },
+                    width: 150,
                   },
                   {
-                    value: 'Tenants self-enter',
+                    colId: `${s.id}_money_immutability`,
+                    headerName: 'Into money',
+                    valueGetter: (params: any) => {
+                      if (
+                        params.data.serviceDetails &&
+                        params.data.serviceDetails.length > 0
+                      ) {
+                        let serviceDetail: IServiceDetail;
+                        params.data.serviceDetails.forEach(
+                          (sd: IServiceDetail) => {
+                            if (s.id === sd.serviceId) {
+                              serviceDetail = sd;
+                            }
+                          },
+                        );
+                        // @ts-ignore
+                        if (!serviceDetail) {
+                          return undefined;
+                        }
+                        return getReadableNumber(serviceDetail.money);
+                      }
+                    },
+                    width: 150,
+                    cellStyle: {
+                      fontWeight: 'bold',
+                    },
+                  },
+                ]
+              : [
+                  {
+                    colId: `${s.id}_use`,
+                    headerName: 'Use',
+                    valueGetter: (params: any) => {
+                      if (
+                        params.data.serviceDetails &&
+                        params.data.serviceDetails.length > 0
+                      ) {
+                        let serviceDetail: IServiceDetail;
+                        params.data.serviceDetails.forEach(
+                          (sd: IServiceDetail) => {
+                            if (s.id === sd.serviceId) {
+                              serviceDetail = sd;
+                            }
+                          },
+                        );
+                        // @ts-ignore
+                        if (!serviceDetail) {
+                          return undefined;
+                        }
+                        return getReadableNumber(serviceDetail.use);
+                      }
+                    },
+                    width: 150,
                   },
                   {
-                    value: 'Remove a tenant',
-                    color: 'danger',
-                    className: 'text-danger',
-                    // onPress: async (e: any, selectedRowId: number) => {
-                    //   await handleDeleteRoom(selectedRowId);
-                    // },
+                    colId: `${s.id}_money_immutability`,
+                    headerName: 'Into money',
+                    valueGetter: (params: any) => {
+                      if (
+                        params.data.serviceDetails &&
+                        params.data.serviceDetails.length > 0
+                      ) {
+                        let serviceDetail: IServiceDetail;
+                        params.data.serviceDetails.forEach(
+                          (sd: IServiceDetail) => {
+                            if (s.id === sd.serviceId) {
+                              serviceDetail = sd;
+                            }
+                          },
+                        );
+                        // @ts-ignore
+                        if (!serviceDetail) {
+                          return undefined;
+                        }
+                        return getReadableNumber(serviceDetail.money);
+                      }
+                    },
+                    width: 150,
+                    cellStyle: {
+                      fontWeight: 'bold',
+                    },
                   },
                 ],
-              },
-            };
+          };
+          serviceColDefs.push(serviceGroupColDef);
+        });
+        const surchargeColDef: ColDef = {
+          headerName: 'Plus/Deduct',
+          valueGetter: (params: ValueGetterParams) => {
+            return params.data.surcharge;
           },
-          pinned: 'right',
-          lockPinned: true,
-          suppressColumnsToolPanel: true,
-          suppressFiltersToolPanel: true,
-          suppressHeaderMenuButton: true,
-          suppressHeaderFilterButton: true,
-        },
-      ];
-      //   Fees
-      let serviceColDefs: ColDef[] | ColGroupDef[] = [
-        {
-          headerName: 'Room rate',
-          //   @ts-ignore
-          children: [
-            {
-              headerName: 'Number of months',
-              field: 'numberOfMonth',
-              width: 200,
-            },
-            {
-              headerName: 'Rent rate',
-              field: 'rentAmount',
-              width: 150,
-            },
-          ],
-        },
-      ];
-      currentServices.forEach((s) => {
-        const serviceGroupColDef: ColDef | ColGroupDef = {
-          headerName: `${s.name.toUpperCase()} (VND ${s.price})`,
-          marryChildren: true,
-          children: s.isMeteredService
-            ? [
-                {
-                  headerName: 'Old number',
-                  valueGetter: (params: any) => {
-                    if (
-                      params.data.serviceDetails &&
-                      params.data.serviceDetails.length > 0
-                    ) {
-                      let serviceDetail: IServiceDetail;
-                      params.data.serviceDetails.forEach(
-                        (sd: IServiceDetail) => {
-                          if (s.id === sd.serviceId) {
-                            serviceDetail = sd;
-                          }
-                        },
-                      );
-                      // @ts-ignore
-                      if (!serviceDetail) {
-                        return undefined;
-                      }
-                      return serviceDetail.oldNumber;
-                    }
-                  },
-                  width: 150,
-                },
-                {
-                  headerName: 'New number',
-                  valueGetter: (params: any) => {
-                    if (
-                      params.data.serviceDetails &&
-                      params.data.serviceDetails.length > 0
-                    ) {
-                      let serviceDetail: IServiceDetail;
-                      params.data.serviceDetails.forEach(
-                        (sd: IServiceDetail) => {
-                          if (s.id === sd.serviceId) {
-                            serviceDetail = sd;
-                          }
-                        },
-                      );
-                      // @ts-ignore
-                      if (!serviceDetail) {
-                        return undefined;
-                      }
-                      return serviceDetail.newNumber;
-                    }
-                  },
-                  width: 150,
-                },
-                {
-                  headerName: 'Into money',
-                  valueGetter: (params: any) => {
-                    if (
-                      params.data.serviceDetails &&
-                      params.data.serviceDetails.length > 0
-                    ) {
-                      let serviceDetail: IServiceDetail;
-                      params.data.serviceDetails.forEach(
-                        (sd: IServiceDetail) => {
-                          if (s.id === sd.serviceId) {
-                            serviceDetail = sd;
-                          }
-                        },
-                      );
-                      // @ts-ignore
-                      if (!serviceDetail) {
-                        return undefined;
-                      }
-                      return serviceDetail.money;
-                    }
-                  },
-                  width: 150,
-                },
-              ]
-            : [
-                {
-                  headerName: 'Use',
-                  valueGetter: (params: any) => {
-                    if (
-                      params.data.serviceDetails &&
-                      params.data.serviceDetails.length > 0
-                    ) {
-                      let serviceDetail: IServiceDetail;
-                      params.data.serviceDetails.forEach(
-                        (sd: IServiceDetail) => {
-                          if (s.id === sd.serviceId) {
-                            serviceDetail = sd;
-                          }
-                        },
-                      );
-                      // @ts-ignore
-                      if (!serviceDetail) {
-                        return undefined;
-                      }
-                      return serviceDetail.use;
-                    }
-                  },
-                  width: 150,
-                },
-                {
-                  headerName: 'Into money',
-                  valueGetter: (params: any) => {
-                    if (
-                      params.data.serviceDetails &&
-                      params.data.serviceDetails.length > 0
-                    ) {
-                      let serviceDetail: IServiceDetail;
-                      params.data.serviceDetails.forEach(
-                        (sd: IServiceDetail) => {
-                          if (s.id === sd.serviceId) {
-                            serviceDetail = sd;
-                          }
-                        },
-                      );
-                      // @ts-ignore
-                      if (!serviceDetail) {
-                        return undefined;
-                      }
-                      return serviceDetail.money;
-                    }
-                  },
-                  width: 150,
-                },
-              ],
+          valueFormatter: (params: ValueFormatterParams) => {
+            return getReadableNumber(params.value) + ' VND';
+          },
         };
-        serviceColDefs.push(serviceGroupColDef);
-      });
-      return [...leftColDefs, ...serviceColDefs, ...rightColDefs];
-    }
-  };
+
+        return [
+          ...leftColDefs,
+          ...serviceColDefs,
+          surchargeColDef,
+          ...rightColDefs,
+        ];
+      }
+    },
+    [],
+  );
   const [columnDefs, setColumnDefs] = useState<ColDef[]>([]);
 
   const defaultColDef = useMemo<ColDef>(() => {
     return {
-      editable: true,
+      editable: (params: EditableCallbackParams) => {
+        const colIdArr = params.colDef.colId?.split('_');
+        const serviceId = colIdArr?.at(0);
+        // @ts-ignore
+        if (parseInt(serviceId) > params.data.serviceDetails.length) {
+          return false;
+        }
+        return !colIdArr?.includes('immutability');
+      },
       filter: 'agTextColumnFilter',
       floatingFilter: true,
       enableRowGroup: true,
       cellDataType: false,
       width: 200,
+      autoHeight: true,
+    };
+  }, []);
+  const defaultColGroupDef = useMemo<Partial<ColGroupDef>>(() => {
+    return {
+      marryChildren: true,
     };
   }, []);
   const rowDragText = useCallback(
     (params: IRowDragItem, dragedCount: number) =>
       dragedCount > 1
-        ? dragedCount + ' users'
-        : 'User: ' + params.rowNode!.data.fullName + [],
+        ? dragedCount + ' bills'
+        : 'Bill: ' +
+          params.rowNode!.data.floor +
+          '/' +
+          params.rowNode!.data.roomNumber,
     [],
   );
 
-  //   const handleUpdateTenant = async (tenant: any) => {
-  //     try {
-  //       const updatedTenant = await updateTenantTrigger(tenant).unwrap();
-  //       console.log('Tenant updated: ' + JSON.stringify(updatedTenant));
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
-  //   const handleDeleteRoom = useCallback(async (tenantId: number) => {
-  //     try {
-  //       await deleteTenantTrigger(tenantId).unwrap();
-  //       console.log('Tenant deleted: ' + tenantId);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   }, []);
+  //
+  const handleUpdateInvoice = async (invoice: any) => {
+    try {
+      const updatedInvoice = await updateInvoiceTrigger(invoice).unwrap();
+      console.log('Invoice updated: ' + JSON.stringify(updatedInvoice));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const handleDeleteInvoice = useCallback(async (invoiceId: number) => {
+    try {
+      await deleteInvoiceTrigger(invoiceId).unwrap();
+      console.log('Invoice deleted: ' + invoiceId);
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
+  //
 
   const onCellClicked = (event: CellClickedEvent) => {
     if (event.colDef.colId === 'menuCol') {
@@ -376,7 +496,7 @@ const InvoiceGrid = ({
       [field!]: event.newValue,
     };
     try {
-      //   await handleUpdateTenant(updateData);
+      await handleUpdateInvoice(updateData);
     } catch (err) {
       console.error(err);
       return;
@@ -384,6 +504,16 @@ const InvoiceGrid = ({
     event.api.applyTransaction(tx);
   }, []);
   const getRowId = useCallback((params: GetRowIdParams) => params.data.id, []);
+  const getRowStyle = (params: RowClassParams) => {
+    if (params.data.status === 'PAID') {
+      return {
+        background: '#cfead0',
+      };
+    }
+    return {
+      background: '#fff5f2',
+    };
+  };
   //
   const onGridReady = useCallback(
     (params: GridReadyEvent) => {
@@ -392,36 +522,37 @@ const InvoiceGrid = ({
     [services],
   );
   //
-  const setGridOptions = (services: IService[]) => {
+  const setGridOptions = useCallback((services: IService[]) => {
     if (services.length > 0 && gridRef.current) {
       const columnDefs = getColumnDefs(services);
       gridRef.current!.api.setGridOption('columnDefs', columnDefs);
     }
-  };
+  }, []);
 
   // useEffect(() => {
   //   setGridOptions(services);
   // }, [services]);
   //
-  if (isServiceLoading) {
+  if (isServiceLoading || isInvoiceLoading) {
     return <div>Loading...</div>;
   }
-  if (serviceError) {
+  if (serviceError || invoiceError) {
     return <div>Error</div>;
   }
   //
 
   //
   return (
-    <div className="ag-theme-quartz w-full" style={{ height: 500 }}>
+    <div className="ag-theme-quartz w-full h-[700px]">
       <AgGridReact
         ref={gridRef}
         // Option: Definition
-        rowData={[]}
+        rowData={invoices}
         // @ts-ignore
         columnDefs={columnDefs}
         // @ts-ignore
         defaultColDef={defaultColDef}
+        defaultColGroupDef={defaultColGroupDef}
         // Feat: Pagination
         // pagination={true}
         // paginationPageSize={10}
@@ -449,8 +580,10 @@ const InvoiceGrid = ({
         doesExternalFilterPass={doesExternalFilterPass}
         onCellClicked={onCellClicked}
         suppressAnimationFrame={true}
+        suppressRowHoverHighlight={true}
         //
         onGridReady={onGridReady}
+        getRowStyle={getRowStyle}
       />
     </div>
   );

@@ -4,16 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import vn.edu.hcmute.boardinghousemanagementsystem.entity.Invoice;
-import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
-import vn.edu.hcmute.boardinghousemanagementsystem.entity.RoomBooking;
-import vn.edu.hcmute.boardinghousemanagementsystem.entity.User;
+import vn.edu.hcmute.boardinghousemanagementsystem.entity.*;
 import vn.edu.hcmute.boardinghousemanagementsystem.repo.InvoiceRepository;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.InvoiceService;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Slf4j
@@ -21,6 +19,15 @@ import java.util.List;
 public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final UserService userService;
+
+    @Override
+    public Optional<Invoice> findById(long id) {
+        if (id <= 0) {
+            log.error("Invoice not found: " + id);
+            return Optional.empty();
+        }
+        return invoiceRepository.findById(id);
+    }
 
     @Override
     public List<Invoice> findAllInvoice() {
@@ -57,5 +64,26 @@ public class InvoiceServiceImpl implements InvoiceService {
             return;
         }
         invoiceRepository.saveAll(invoices);
+    }
+
+    @Override
+    public void delete(long id) {
+        if (id <= 0) {
+            return;
+        }
+        if (!invoiceRepository.existsById(id)) {
+            return;
+        }
+//
+        Invoice invoice = invoiceRepository.findById(id).get();
+        invoice.getRoomBooking().getInvoices().remove(invoice);
+        invoice.setRoomBooking(null);
+        for (ServiceDetail serviceDetail : invoice.getServiceDetails()) {
+            serviceDetail.setInvoice(null);
+        }
+        invoice.getServiceDetails().clear();
+//
+        invoiceRepository.save(invoice);
+        invoiceRepository.deleteById(invoice.getId());
     }
 }

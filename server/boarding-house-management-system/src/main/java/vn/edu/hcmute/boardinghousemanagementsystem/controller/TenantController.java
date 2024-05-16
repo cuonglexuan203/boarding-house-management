@@ -70,7 +70,7 @@ public class TenantController {
         }
         //
         log.info("Tenant updated: " + persistedUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(TenantDto.of(persistedUser));
+        return ResponseEntity.status(HttpStatus.OK).body(TenantDto.of(persistedUser));
     }
 
 

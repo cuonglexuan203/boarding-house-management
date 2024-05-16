@@ -231,7 +231,7 @@ const TenantGrid = ({
                 color: 'danger',
                 className: 'text-danger',
                 onPress: async (e: any, selectedRowId: number) => {
-                  await handleDeleteRoom(selectedRowId);
+                  await handleDeleteTenant(selectedRowId);
                 },
               },
             ],
@@ -273,7 +273,7 @@ const TenantGrid = ({
       console.error(err);
     }
   };
-  const handleDeleteRoom = useCallback(async (tenantId: number) => {
+  const handleDeleteTenant = useCallback(async (tenantId: number) => {
     try {
       await deleteTenantTrigger(tenantId).unwrap();
       console.log('Tenant deleted: ' + tenantId);

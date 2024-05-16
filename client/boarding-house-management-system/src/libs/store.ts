@@ -15,7 +15,7 @@ import { thunk } from 'redux-thunk';
 import { tenantApi } from './services/tenantApi';
 import { locationApi } from './services/locationApi';
 import { serviceApi } from './services/serviceApi';
-// import { invoiceApi } from './services/invoiceApi';
+import { invoiceApi } from './services/invoiceApi';
 //
 
 export const store: EnhancedStore = configureStore({
@@ -33,7 +33,8 @@ export const store: EnhancedStore = configureStore({
       .concat(tenantApi.middleware)
       .concat(locationApi.middleware)
       // .concat(invoiceApi.middleware)
-      .concat(serviceApi.middleware),
+      .concat(serviceApi.middleware)
+      .concat(invoiceApi.middleware),
 });
 //
 setupListeners(store.dispatch);

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const UserIcon = (props) => (
+export const UserIcon = (props: any) => (
   <svg
     aria-hidden="true"
     fill="none"
