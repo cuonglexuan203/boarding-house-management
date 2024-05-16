@@ -485,17 +485,47 @@ const InvoiceGrid = ({
 
   const onCellEditRequest = useCallback(async (event: CellEditRequestEvent) => {
     const oldData = event.data;
-    const newData = { ...oldData };
+    const newData = JSON.parse(JSON.stringify(oldData));
     const field = event.colDef.field;
-    newData[field!] = event.newValue;
+    let updateData;
+    if (field === undefined) {
+      const colIdArr = event.colDef.colId?.split('_');
+      if (colIdArr!.length >= 2) {
+        // @ts-ignore
+        const serviceDetailId = parseInt(colIdArr!.at(0), 10);
+        const serviceDetailField = colIdArr?.at(1) as string;
+        if (newData.serviceDetails) {
+          const serviceDetail: IServiceDetail = newData.serviceDetails.find(
+            (i: IServiceDetail) => i.id === serviceDetailId,
+          );
+          if (serviceDetail) {
+            // @ts-ignore
+            serviceDetail[serviceDetailField] = event.newValue;
+          }
+        }
+        updateData = {
+          id: oldData.id,
+          serviceDetails: [
+            {
+              id: serviceDetailId,
+              [serviceDetailField]: event.newValue,
+            },
+          ],
+        };
+      }
+    } else {
+      newData[field!] = event.newValue;
+      updateData = {
+        id: oldData.id,
+        [field!]: event.newValue,
+      };
+    }
     const tx = {
       update: [newData],
     };
-    const updateData = {
-      id: oldData.id,
-      [field!]: event.newValue,
-    };
     try {
+      console.log(updateData);
+      console.log(tx);
       await handleUpdateInvoice(updateData);
     } catch (err) {
       console.error(err);
