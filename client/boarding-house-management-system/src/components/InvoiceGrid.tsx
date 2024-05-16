@@ -402,6 +402,7 @@ const InvoiceGrid = ({
         });
         const surchargeColDef: ColDef = {
           headerName: 'Plus/Deduct',
+          field: 'surcharge',
           valueGetter: (params: ValueGetterParams) => {
             return params.data.surcharge;
           },

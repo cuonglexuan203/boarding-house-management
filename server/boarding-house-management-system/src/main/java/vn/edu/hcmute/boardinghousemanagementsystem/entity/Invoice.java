@@ -65,6 +65,13 @@ public class Invoice {
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ServiceDetail> serviceDetails = new ArrayList<>();
 
+    // Trigger
 
+    @PrePersist
+    @PreUpdate
+    private void calculateTotal(){
+         float roomCharge = this.numberOfMonth * (this.roomBooking != null && this.roomBooking.getRoom() != null ? this.roomBooking.getRoom().getRentAmount() : 0);
+        this.total = serviceDetails.stream().map(ServiceDetail::getMoney).reduce(roomCharge, Float::sum) + surcharge;
+    }
 
 }

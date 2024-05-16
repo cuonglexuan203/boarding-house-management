@@ -45,4 +45,16 @@ public class ServiceDetail {
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST)
     private AccommodationService service;
+
+    // Trigger
+
+    @PrePersist
+    @PreUpdate
+    private void calculteMoney(){
+        if(service.isMeteredService()){
+            this.money = (this.newNumber - this.oldNumber) * this.service.getPrice();
+            return;
+        }
+        this.money = this.use * this.service.getPrice();
+    }
 }
