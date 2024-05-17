@@ -58,6 +58,15 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    public Invoice saveAndFlush(Invoice invoice) {
+        if (invoiceRepository == null) {
+            log.error("Invoice instance is null");
+            return null;
+        }
+        return invoiceRepository.saveAndFlush(invoice);
+    }
+
+    @Override
     public void save(List<Invoice> invoices) {
         if (invoiceRepository == null) {
             log.error("Invoices is null");

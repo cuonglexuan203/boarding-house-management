@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
+import vn.edu.hcmute.boardinghousemanagementsystem.listener.InvoiceListener;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.InvoiceType;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.PaymentStatus;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
+@EntityListeners(InvoiceListener.class)
 @Table(name = "invoice")
 public class Invoice {
     @Id
@@ -65,11 +67,8 @@ public class Invoice {
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ServiceDetail> serviceDetails = new ArrayList<>();
 
-    // Trigger
-
-    @PrePersist
-    @PreUpdate
-    private void calculateTotal(){
+    // Methods
+    public void calculateTotal(){
          float roomCharge = this.numberOfMonth * (this.roomBooking != null && this.roomBooking.getRoom() != null ? this.roomBooking.getRoom().getRentAmount() : 0);
         this.total = serviceDetails.stream().map(ServiceDetail::getMoney).reduce(roomCharge, Float::sum) + surcharge;
     }

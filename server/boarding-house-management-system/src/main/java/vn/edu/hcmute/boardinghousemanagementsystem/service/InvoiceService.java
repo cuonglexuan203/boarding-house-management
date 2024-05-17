@@ -10,6 +10,7 @@ public interface InvoiceService {
     List<Invoice> findAllInvoice();
     List<Invoice> findInvoicesByUsername(String username);
     Invoice save(Invoice invoice);
+    Invoice saveAndFlush(Invoice invoice);
     void save(List<Invoice> invoices);
     void delete(long id);
 

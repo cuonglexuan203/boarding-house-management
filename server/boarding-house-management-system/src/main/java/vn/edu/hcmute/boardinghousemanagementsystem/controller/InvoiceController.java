@@ -62,7 +62,7 @@ public class InvoiceController {
         //
         updateInvoiceFields(existingInvoice, invoiceDto);
         //
-        Invoice persistedInvoice = invoiceService.save(existingInvoice);
+        Invoice persistedInvoice = invoiceService.saveAndFlush(existingInvoice);
 
         // Redundant
         if (persistedInvoice == null) {

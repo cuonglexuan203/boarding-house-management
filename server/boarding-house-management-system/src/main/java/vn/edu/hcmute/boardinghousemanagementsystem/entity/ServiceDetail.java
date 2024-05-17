@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
+import vn.edu.hcmute.boardinghousemanagementsystem.listener.ServiceDetailListener;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
+@EntityListeners(ServiceDetailListener.class)
 @Table(name = "service_detail")
 public class ServiceDetail {
     @Id
@@ -46,15 +48,4 @@ public class ServiceDetail {
     @ManyToOne(cascade = CascadeType.PERSIST)
     private AccommodationService service;
 
-    // Trigger
-
-    @PrePersist
-    @PreUpdate
-    private void calculteMoney(){
-        if(service.isMeteredService()){
-            this.money = (this.newNumber - this.oldNumber) * this.service.getPrice();
-            return;
-        }
-        this.money = this.use * this.service.getPrice();
-    }
 }
