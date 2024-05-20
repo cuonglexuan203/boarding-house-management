@@ -39,6 +39,7 @@ export interface IRoom {
   area: number;
   type: string;
   status: string;
+  services: IService[];
 }
 
 export interface IAddress {

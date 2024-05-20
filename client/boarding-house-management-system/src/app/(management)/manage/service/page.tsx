@@ -1,25 +1,11 @@
 'use client';
 import ServiceGrid from '@/components/ServiceGrid';
-import { PlusIcon } from '@/components/icon/PlusIcon';
-import {
-  Badge,
-  Button,
-  Checkbox,
-  CheckboxGroup,
-  Divider,
-  Tab,
-  Tabs,
-  Tooltip,
-} from '@nextui-org/react';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter';
-import { CheckIcon } from '@/components/icon/CheckIcon';
-import { CustomCheckbox } from '@/components/CustomCheckbox';
+import { Tooltip } from '@nextui-org/react';
+import React, { useCallback, useRef, useState } from 'react';
+
 import ExportButton from '@/components/ExportButton';
 import { AgGridReact } from 'ag-grid-react';
 import { IRowNode } from 'ag-grid-community';
-import { IRoom } from '@/utils/types';
 import AddServiceModal from '@/components/AddServiceModal';
 import { IsExternalFilterPresentParams } from 'ag-grid-community';
 

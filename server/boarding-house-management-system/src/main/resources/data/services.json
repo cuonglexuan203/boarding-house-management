@@ -3,24 +3,24 @@
     "name": "Water",
     "price": 12000,
     "unit": "Cubic Meter",
-    "meteredService": true
+    "isMeteredService": true
   },
   {
     "name": "Electricity",
     "price": 4000,
     "unit": "kWh",
-    "meteredService": true
+    "isMeteredService": true
   },
   {
     "name": "Cleaning",
     "price": 30000,
     "unit": "Time",
-    "meteredService": false
+    "isMeteredService": false
   },
   {
     "name": "Laundry",
     "price": 20000,
     "unit": "Kg",
-    "meteredService": false
+    "isMeteredService": false
   }
 ]

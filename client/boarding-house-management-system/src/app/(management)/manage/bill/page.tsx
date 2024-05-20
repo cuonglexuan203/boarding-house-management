@@ -1,5 +1,5 @@
 'use client';
-import { Badge, CheckboxGroup, Tab, Tabs, Tooltip } from '@nextui-org/react';
+import { Badge, CheckboxGroup, Tooltip } from '@nextui-org/react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter';
@@ -8,9 +8,8 @@ import ExportButton from '@/components/ExportButton';
 import { AgGridReact } from 'ag-grid-react';
 import { IRowNode } from 'ag-grid-community';
 import { ITenant } from '@/utils/types';
-import TenantGrid from '@/components/TenantGrid';
-import AddTenantModal from '@/components/AddTenantModal';
 import InvoiceGrid from '@/components/InvoiceGrid';
+import AddInvoiceModal from '@/components/AddInvoiceModal';
 
 interface IFilterOption {
   key: string;
@@ -83,7 +82,7 @@ const InvoiceManagement = () => {
               closeDelay={200}
               delay={500}
             >
-              <AddTenantModal />
+              <AddInvoiceModal />
             </Tooltip>
           </div>
         </div>

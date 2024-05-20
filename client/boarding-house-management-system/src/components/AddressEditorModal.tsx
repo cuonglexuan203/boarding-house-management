@@ -16,24 +16,23 @@ import {
   useGetProvincesQuery,
   useGetWardsQuery,
 } from '@/libs/services/locationApi';
-import { IAddress, ITenant } from '@/utils/types';
-import { useUpdateTenantMutation } from '@/libs/services/tenantApi';
+import { IAddress } from '@/utils/types';
 import { CustomCellEditorProps } from 'ag-grid-react';
 
-export interface IEditAddressModalProps extends CustomCellEditorProps {
+export interface IAddressEditorModalProps extends CustomCellEditorProps {
   label: string;
   tenantId?: string;
   className?: string;
   currentValue: IAddress;
 }
 
-const EditAddressModal = ({
+const AddressEditorModal = ({
   label,
   className,
   onValueChange,
   stopEditing,
   currentValue,
-}: IEditAddressModalProps) => {
+}: IAddressEditorModalProps) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure({ defaultOpen: true });
   const {
     data: provincesData,
@@ -258,4 +257,4 @@ const EditAddressModal = ({
   );
 };
 
-export default EditAddressModal;
+export default AddressEditorModal;

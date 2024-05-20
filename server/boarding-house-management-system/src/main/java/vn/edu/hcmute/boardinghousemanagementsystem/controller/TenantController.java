@@ -18,7 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @Slf4j
-@CrossOrigin("*")
 @RequestMapping("/api/tenants")
 public class TenantController {
 
@@ -27,9 +26,8 @@ public class TenantController {
 
     @GetMapping
     public ResponseEntity<List<TenantDto>> getTenants() {
-        List<User> tenants = userService.findAll();
-        List<TenantDto> sanitizedTenants = tenants.stream().map(TenantDto::new).toList();
-        return ResponseEntity.ok(sanitizedTenants);
+        List<TenantDto> tenantDtos = userService.getTenantDtos();
+        return ResponseEntity.ok(tenantDtos);
     }
 
     @PostMapping
@@ -39,7 +37,7 @@ public class TenantController {
         // Validate input
         //
         log.info("Receive an add tenant request: " + userDto);
-        User persistedTenant = authService.register(userDto.getUser());
+        User persistedTenant = authService.register(userDto);
         if (persistedTenant == null) {
             log.error("Request for add new room failed");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -57,11 +55,7 @@ public class TenantController {
             log.error("Request for update tenant failed");
             ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        User existingUser = userService.findById(tenantId).orElseThrow(() -> new UsernameNotFoundException("Tenant not found by id: " + tenantId));
-        //
-        updateTenantFields(existingUser, tenantDto);
-        //
-        User persistedUser = userService.save(existingUser);
+        User persistedUser = userService.updateTenant(tenantDto);
 
         // Redundant
         if (persistedUser == null) {
@@ -73,11 +67,6 @@ public class TenantController {
         return ResponseEntity.status(HttpStatus.OK).body(TenantDto.of(persistedUser));
     }
 
-
-    public User updateTenantFields(User des, TenantDto srcDto) {
-        User src = srcDto.getTenant();
-        return ObjectUtil.reflectNonNullField(des, src, User.class);
-    }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity deleteTenant(@PathVariable(name = "userId") Long userId) {

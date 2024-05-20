@@ -1,18 +1,42 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.Email;
+import org.springframework.util.StringUtils;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.Address;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.RoomBooking;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.User;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.DateTimeUtil;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Gender;
+import vn.edu.hcmute.boardinghousemanagementsystem.validation.annotation.AvailableValues;
+import vn.edu.hcmute.boardinghousemanagementsystem.validation.annotation.Numeric;
+import vn.edu.hcmute.boardinghousemanagementsystem.validation.annotation.PhoneNumber;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record UserDto(Long id, String fullName, String email,
-                        String phoneNumber, String idCardNumber, String gender,
-                        Address address, String birthday, String career, String username, String password, List<RoomDto> rooms) {
+public record UserDto(Long id,
+                      String fullName,
+
+                      @Email
+                      String email,
+
+                      @PhoneNumber
+                      String phoneNumber,
+
+                      @Numeric
+                      String idCardNumber,
+
+                      @AvailableValues(values = {"MALE", "FEMALE"})
+                      String gender,
+
+                      Address address,
+
+                      String birthday,
+                      String career,
+                      String username,
+                      String password,
+                      List<RoomDto> rooms) {
     public UserDto(User user) {
         this(user.getId(),
                 user.getFullName(),
@@ -31,7 +55,7 @@ public record UserDto(Long id, String fullName, String email,
     }
 
     @JsonIgnore
-    public User getNewUser(){
+    public User getNewUser() {
         User user = User.builder()
                 .fullName(fullName())
                 .phoneNumber(phoneNumber())
@@ -41,6 +65,7 @@ public record UserDto(Long id, String fullName, String email,
                 .address(address())
                 .birthday(DateTimeUtil.toLocalDate(birthday(), "yyyy-MM-dd"))
                 .career(career())
+//                .roomBookings(rooms == null ? rooms.stream().map()
                 .username(username)
                 .password(password)
                 .build();
@@ -48,7 +73,7 @@ public record UserDto(Long id, String fullName, String email,
     }
 
     @JsonIgnore
-    public User getUser(){
+    public User getUser() {
         User user = User.builder()
                 .id(id)
                 .fullName(fullName())

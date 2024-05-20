@@ -23,7 +23,7 @@ public record TenantDto(Long id, String fullName, String email,
                 user.getAddress(),
                 user.getBirthday().toString(),
                 user.getCareer(),
-                user.getRoomBookings().stream()
+                user.getRoomBookings() == null ? null : user.getRoomBookings().stream()
                         .map(RoomBooking::getRoom)
                         .map(RoomDto::new).collect(Collectors.toList()));
     }

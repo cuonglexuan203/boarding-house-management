@@ -28,7 +28,7 @@ import {
   useUpdateTenantMutation,
 } from '@/libs/services/tenantApi';
 import CustomDatePicker from './CustomDatePicker';
-import EditAddressModal from './EditAddressModal';
+import AddressEditorModal from './AddressEditorModal';
 import { IAddress } from '@/utils/types';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
@@ -156,7 +156,7 @@ const TenantGrid = ({
           return undefined;
         }
         return {
-          component: EditAddressModal,
+          component: AddressEditorModal,
           params: {
             label: 'Edit Address',
             currentValue: params.data.address,

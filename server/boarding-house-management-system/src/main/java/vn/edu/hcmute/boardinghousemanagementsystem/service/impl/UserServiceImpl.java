@@ -11,15 +11,20 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import vn.edu.hcmute.boardinghousemanagementsystem.dto.TenantDto;
+import vn.edu.hcmute.boardinghousemanagementsystem.dto.UserDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.*;
 import vn.edu.hcmute.boardinghousemanagementsystem.exception.PermissionNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.exception.RoleNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.repo.RoleRepository;
 import vn.edu.hcmute.boardinghousemanagementsystem.repo.UserRepository;
+import vn.edu.hcmute.boardinghousemanagementsystem.service.AuthenticationService;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.PermissionService;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.RoleService;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.UserService;
+import vn.edu.hcmute.boardinghousemanagementsystem.util.ObjectUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,6 +39,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final RoleService roleService;
 
     private final PermissionService permissionService;
+
     //
 
     @Override
@@ -204,6 +210,28 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         user.getPermissions().clear();
         userRepo.delete(user);
+    }
+
+    @Override
+    public List<TenantDto> getTenantDtos() {
+        List<TenantDto> tenantDtos = findAll().stream().map(TenantDto::new).toList();
+        return tenantDtos;
+    }
+
+    @Override
+    public User updateTenant(TenantDto tenantDto) {
+        long id = tenantDto.id();
+        User existingUser = findById(id).orElseThrow(() -> new UsernameNotFoundException("Tenant not found by id: " + id));
+        //
+        updateTenantFields(existingUser, tenantDto);
+        //
+        User persistedUser = save(existingUser);
+        return persistedUser;
+    }
+
+    private User updateTenantFields(User des, TenantDto srcDto) {
+        User src = srcDto.getTenant();
+        return ObjectUtil.reflectNonNullField(des, src, User.class);
     }
 
 

@@ -225,6 +225,7 @@ const ServiceGrid = ({
       [field!]: event.newValue,
     };
     try {
+      console.log(updateData);
       await handleUpdateService(updateData);
     } catch (err) {
       console.error(err);

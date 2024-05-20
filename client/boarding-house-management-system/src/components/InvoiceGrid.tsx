@@ -37,6 +37,7 @@ import {
 import { getReadableNumber, parseNumber } from '@/utils/converterUtil';
 import RoomInvoice from './RoomInvoice';
 import { RowClassParams } from 'ag-grid-community';
+import SurchargeEditorModal from './SurchargeEditorModal';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -253,6 +254,9 @@ const InvoiceGrid = ({
                 cellStyle: {
                   fontWeight: 'bold',
                 },
+                valueFormatter: (params) => {
+                  return getReadableNumber(params.value).toString();
+                },
               },
             ],
           },
@@ -261,6 +265,7 @@ const InvoiceGrid = ({
           const serviceGroupColDef: ColDef | ColGroupDef = {
             headerName: `${s.name.toUpperCase()} (VND ${getReadableNumber(s.price)})`,
             groupId: s.id.toString(),
+            // @ts-ignore
             children: s.isMeteredService
               ? [
                   {
@@ -286,7 +291,11 @@ const InvoiceGrid = ({
                         return getReadableNumber(serviceDetail.oldNumber);
                       }
                     },
+                    valueFormatter: (params) => {
+                      return getReadableNumber(params.value) || undefined;
+                    },
                     width: 150,
+                    columnGroupShow: 'open',
                   },
                   {
                     colId: `${s.id}_newNumber`,
@@ -311,7 +320,11 @@ const InvoiceGrid = ({
                         return getReadableNumber(serviceDetail.newNumber);
                       }
                     },
+                    valueFormatter: (params) => {
+                      return getReadableNumber(params.value) || undefined;
+                    },
                     width: 150,
+                    columnGroupShow: 'open',
                   },
                   {
                     colId: `${s.id}_money_immutability`,
@@ -335,6 +348,9 @@ const InvoiceGrid = ({
                         }
                         return getReadableNumber(serviceDetail.money);
                       }
+                    },
+                    valueFormatter: (params) => {
+                      return getReadableNumber(params.value) || undefined;
                     },
                     width: 150,
                     cellStyle: {
@@ -366,7 +382,11 @@ const InvoiceGrid = ({
                         return getReadableNumber(serviceDetail.use);
                       }
                     },
+                    valueFormatter: (params) => {
+                      return getReadableNumber(params.value) || undefined;
+                    },
                     width: 150,
+                    columnGroupShow: 'open',
                   },
                   {
                     colId: `${s.id}_money_immutability`,
@@ -391,6 +411,9 @@ const InvoiceGrid = ({
                         return getReadableNumber(serviceDetail.money);
                       }
                     },
+                    valueFormatter: (params) => {
+                      return getReadableNumber(params.value) || undefined;
+                    },
                     width: 150,
                     cellStyle: {
                       fontWeight: 'bold',
@@ -398,6 +421,7 @@ const InvoiceGrid = ({
                   },
                 ],
           };
+          // @ts-ignore
           serviceColDefs.push(serviceGroupColDef);
         });
         const surchargeColDef: ColDef = {
@@ -408,6 +432,23 @@ const InvoiceGrid = ({
           },
           valueFormatter: (params: ValueFormatterParams) => {
             return getReadableNumber(params.value) + ' VND';
+          },
+          cellEditorSelector: (params) => {
+            return {
+              component: SurchargeEditorModal,
+              params: {
+                label: 'Set Surcharge for Bill',
+                currentValue: params.value,
+                currentReason: params.data.surchargeReason,
+                className: '',
+              },
+            };
+          },
+          cellStyle: (params) => {
+            return {
+              color: params.value >= 0 ? 'blue' : 'red',
+              fontWeight: 'bold',
+            };
           },
         };
 
@@ -515,11 +556,20 @@ const InvoiceGrid = ({
         };
       }
     } else {
-      newData[field!] = event.newValue;
-      updateData = {
-        id: oldData.id,
-        [field!]: event.newValue,
-      };
+      if (field === 'surcharge') {
+        newData[field!] = event.newValue.surcharge;
+        updateData = {
+          id: oldData.id,
+          [field!]: event.newValue.surcharge,
+          ['surchargeReason']: event.newValue.surchargeReason,
+        };
+      } else {
+        newData[field!] = event.newValue;
+        updateData = {
+          id: oldData.id,
+          [field!]: event.newValue,
+        };
+      }
     }
     const tx = {
       update: [newData],

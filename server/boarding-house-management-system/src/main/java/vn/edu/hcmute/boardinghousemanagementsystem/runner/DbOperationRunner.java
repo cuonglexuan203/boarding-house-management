@@ -17,7 +17,7 @@ import vn.edu.hcmute.boardinghousemanagementsystem.service.*;
 import java.util.List;
 import java.util.stream.Stream;
 
-@Profile("initdata")
+@Profile("cuongdev")
 @Order(1)
 @Slf4j
 @RequiredArgsConstructor

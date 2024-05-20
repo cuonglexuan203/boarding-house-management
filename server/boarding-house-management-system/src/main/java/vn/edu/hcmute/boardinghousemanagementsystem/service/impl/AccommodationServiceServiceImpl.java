@@ -3,12 +3,15 @@ package vn.edu.hcmute.boardinghousemanagementsystem.service.impl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import vn.edu.hcmute.boardinghousemanagementsystem.dto.AccommodationServiceDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.AccommodationService;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.RoomBooking;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.ServiceDetail;
+import vn.edu.hcmute.boardinghousemanagementsystem.exception.AccommodationServiceNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.repo.AccommodationServiceRepository;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.AccommodationServiceService;
+import vn.edu.hcmute.boardinghousemanagementsystem.util.ObjectUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +23,7 @@ public class AccommodationServiceServiceImpl implements AccommodationServiceServ
     private final AccommodationServiceRepository serviceRepo;
 
     @Override
-    public List<AccommodationService> findAllAccommodationService() {
+    public List<AccommodationService> findAll() {
         return serviceRepo.findAll();
     }
 
@@ -40,6 +43,30 @@ public class AccommodationServiceServiceImpl implements AccommodationServiceServ
             return null;
         }
         return serviceRepo.save(service);
+    }
+
+    @Override
+    public AccommodationService save(AccommodationServiceDto serviceDto) {
+        AccommodationService newAccommodationService = serviceDto.getNewAccommodationService();
+        AccommodationService persistedAccommodationService = save(newAccommodationService);
+        return persistedAccommodationService;
+    }
+
+    @Override
+    public AccommodationService update(AccommodationServiceDto serviceDto) {
+        long id = serviceDto.id();
+        AccommodationService existingAccommodationService = findById(id).orElseThrow(() -> new AccommodationServiceNotFoundException("AccommodationService not found by id: " + id));
+        //
+        updateAccommodationService(serviceDto, existingAccommodationService);
+        //
+        AccommodationService persistedAccommodationService = save(existingAccommodationService);
+        return persistedAccommodationService;
+    }
+
+    private AccommodationService updateAccommodationService(AccommodationServiceDto srcDto, AccommodationService des) {
+        AccommodationService src = srcDto.getNewAccommodationService();
+        src.setId(null);
+        return ObjectUtil.reflectNonNullField(des, src, AccommodationService.class);
     }
 
     @Override

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.LoginDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.RegisterDto;
+import vn.edu.hcmute.boardinghousemanagementsystem.dto.UserDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.Address;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.User;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.AuthenticationService;
@@ -55,6 +56,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userService.registerNewUser(user);
+    }
+
+    @Override
+    public User register(UserDto userDto) {
+        User user = userDto.getUser();
+        final User persistedUser = register(user);
+        return persistedUser;
     }
 
     @Override

@@ -8,12 +8,17 @@ import java.util.Optional;
 
 public interface RoomService {
     Optional<Room> findById(long id);
-    List<Room> findAllRooms();
+    List<Room> findAll();
 
-    List<Room> findRoomsByUsername(String username);
+    List<Room> findByUsername(String username);
 
     Room save(Room room);
     void save(List<Room> rooms);
 
     void delete(long id);
+    //
+    List<Room> getRooms();
+    List<RoomDto> getRoomDtos();
+    Room save(RoomDto roomDto);
+    Room update(RoomDto roomDto);
 }

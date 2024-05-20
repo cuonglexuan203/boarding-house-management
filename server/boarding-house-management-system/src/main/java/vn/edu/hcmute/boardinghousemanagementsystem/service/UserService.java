@@ -1,6 +1,10 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.service;
 
+import vn.edu.hcmute.boardinghousemanagementsystem.dto.RoomDto;
+import vn.edu.hcmute.boardinghousemanagementsystem.dto.TenantDto;
+import vn.edu.hcmute.boardinghousemanagementsystem.dto.UserDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.Role;
+import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.User;
 
 import java.util.List;
@@ -23,5 +27,8 @@ public interface UserService {
     boolean existsByPhoneNumber(String phoneNumber);
     boolean existsByIdCardNumber(String idCardNumber);
     void delete(long userId);
+    //
+    List<TenantDto> getTenantDtos();
+    User updateTenant(TenantDto tenantDto);
 
 }

@@ -1,4 +1,5 @@
 import { getReadableNumber, parseOnlyNumber } from '@/utils/converterUtil';
+import { IService } from '@/utils/types';
 import { Checkbox, Input } from '@nextui-org/react';
 import React, { useState } from 'react';
 
@@ -6,40 +7,28 @@ const ServiceRow = ({
   service,
   onValueChange,
 }: {
-  service: any;
+  service: IService;
   onValueChange: (
     isChecked: boolean,
-    value: { id: string; value: number },
+    value: {
+      id: number;
+    },
   ) => void;
 }) => {
-  const [currentIndicator, setCurrentIndicator] = useState<number>(0);
   const s = service;
   return (
     <tr key={s.id}>
       <td className="p-3">
         <Checkbox
           onValueChange={(isChecked) =>
-            onValueChange(isChecked, { id: s.id, value: currentIndicator })
+            onValueChange(isChecked, {
+              id: s.id,
+            })
           }
         />
       </td>
       <td className="p-3">{s.name}</td>
       <td className="p-3">{getReadableNumber(s.price)}</td>
-      <td className="p-3">
-        <Input
-          className="text-default-400 text-small"
-          size="sm"
-          type="currency"
-          // @ts-ignore
-          value={currentIndicator.toLocaleString()}
-          onValueChange={(v) => setCurrentIndicator(parseOnlyNumber(v))}
-          endContent={
-            <div className="pointer-events-none flex items-center">
-              <span>/{s.unit}</span>
-            </div>
-          }
-        />
-      </td>
     </tr>
   );
 };

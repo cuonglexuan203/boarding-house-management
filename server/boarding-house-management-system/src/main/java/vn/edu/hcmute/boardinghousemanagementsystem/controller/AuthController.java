@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.LoginDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.LoginResponse;
-import vn.edu.hcmute.boardinghousemanagementsystem.dto.RegisterDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.UserDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.User;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.AuthenticationService;

@@ -1,5 +1,6 @@
 import {
   Button,
+  CheckboxGroup,
   DatePicker,
   Input,
   Modal,
@@ -16,7 +17,7 @@ import ServiceRow from './ServiceRow';
 import Image from 'next/image';
 import { parseOnlyNumber } from '@/utils/converterUtil';
 import { IRoom, ITenant } from '@/utils/types';
-import { useAddRoomMutation } from '@/libs/services/roomApi';
+import { useAddRoomMutation, useGetRoomsQuery } from '@/libs/services/roomApi';
 import { parseDate } from '@internationalized/date';
 import {
   useGetDistrictsQuery,
@@ -25,6 +26,7 @@ import {
 } from '@/libs/services/locationApi';
 import { useAddTenantMutation } from '@/libs/services/tenantApi';
 import PasswordInput from './PasswordInput';
+import RoomCheckbox from './RoomCheckbox';
 
 const AddTenantModal = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -63,6 +65,20 @@ const AddTenantModal = () => {
   const [ward, setWard] = useState(new Set([]));
 
   const [addressDetails, setAddressDetails] = useState('');
+  const [selectedRooms, setSelectedRooms] = useState<string[]>([]);
+  //
+  const {
+    data: rooms = [],
+    isLoading: isRoomLoading,
+    error: roomError,
+  } = useGetRoomsQuery();
+  if (isRoomLoading || roomError) {
+    <div>Loading...</div>;
+  }
+  const availableRooms = useMemo(() => {
+    // @ts-ignore
+    return rooms.filter((r) => r.status.toLowerCase() === 'occupied');
+  }, [rooms]);
   //
   // @ts-ignore
   const provinces: ISelectItem[] = useMemo(() => {
@@ -194,11 +210,32 @@ const AddTenantModal = () => {
                 <div className="grid grid-cols-5">
                   {/* Room info */}
                   <div className="col-span-3">
+                    {/* Header */}
                     <div className="border-s-4 border-[#4b4ce4] ps-2">
                       <h2 className="text-xl font-semibold">Room List</h2>
                       <p className="italic text-xs text-gray-500">
                         List of rooms to add tenants
                       </p>
+                    </div>
+                    {/* Room list */}
+                    <div className="mt-4">
+                      {isRoomLoading ? (
+                        'Loading...'
+                      ) : roomError ? (
+                        'Error'
+                      ) : (
+                        <CheckboxGroup
+                          color="warning"
+                          label="Select rooms"
+                          orientation="horizontal"
+                          value={selectedRooms}
+                          onValueChange={setSelectedRooms}
+                        >
+                          {availableRooms.map((r) => (
+                            <RoomCheckbox key={r.id} value={r} />
+                          ))}
+                        </CheckboxGroup>
+                      )}
                     </div>
                   </div>
                   {/* Tenant info */}

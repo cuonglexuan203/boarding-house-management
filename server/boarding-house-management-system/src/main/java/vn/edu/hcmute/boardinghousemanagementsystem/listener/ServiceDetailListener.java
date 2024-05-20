@@ -9,7 +9,7 @@ public class ServiceDetailListener {
     @PreUpdate
     private void calculateMoney(ServiceDetail serviceDetail) {
         final float unitPrice = serviceDetail.getService().getPrice();
-        if (serviceDetail.getService().isMeteredService()) {
+        if (serviceDetail.getService().getIsMeteredService()) {
             serviceDetail.setMoney((serviceDetail.getNewNumber() - serviceDetail.getOldNumber()) * unitPrice);
         } else {
             serviceDetail.setMoney((serviceDetail.getUse() * unitPrice));

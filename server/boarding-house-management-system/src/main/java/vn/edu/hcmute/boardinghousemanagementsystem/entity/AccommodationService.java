@@ -27,14 +27,14 @@ public class AccommodationService {
 
     @Min(0)
     @Column(name = "price", nullable = false)
-    private float price;
+    private Float price;
 
     @NotBlank
     @Column(name = "unit", nullable = false)
     private String unit;
 
     @Column(name="isMeteredService", nullable = false)
-    private boolean isMeteredService;
+    private Boolean isMeteredService;
 
     // Relationships
 

@@ -1,23 +1,17 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.controller;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.web.bind.annotation.*;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.AccommodationServiceDto;
-import vn.edu.hcmute.boardinghousemanagementsystem.dto.InvoiceDto;
-import vn.edu.hcmute.boardinghousemanagementsystem.dto.RoomDto;
+
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.AccommodationService;
-import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
-import vn.edu.hcmute.boardinghousemanagementsystem.exception.AccommodationServiceNotFoundException;
+
 import vn.edu.hcmute.boardinghousemanagementsystem.service.AccommodationServiceService;
-import vn.edu.hcmute.boardinghousemanagementsystem.service.InvoiceService;
-import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.Floor;
-import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomStatus;
-import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomType;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +31,7 @@ public class AccommodationServiceController {
 //        String username = authentication.getName();
         List<AccommodationServiceDto> accommodationServiceDtos;
 
-        accommodationServiceDtos = accommodationServiceService.findAllAccommodationService().stream()
+        accommodationServiceDtos = accommodationServiceService.findAll().stream()
                 .map(AccommodationServiceDto::new)
                 .collect(Collectors.toList());
 
@@ -57,8 +51,7 @@ public class AccommodationServiceController {
 //    @PreAuthorize("hasRole(ADMIN)")
     public ResponseEntity<AccommodationServiceDto> addAccommodationService(@RequestBody AccommodationServiceDto accommodationServiceDto) {
         log.info("Receive an add Service request: " + accommodationServiceDto);
-        AccommodationService newAccommodationService = accommodationServiceDto.getNewAccommodationService();
-        AccommodationService persistedAccommodationService = accommodationServiceService.save(newAccommodationService);
+        AccommodationService persistedAccommodationService = accommodationServiceService.save(accommodationServiceDto);
         if (persistedAccommodationService == null) {
             log.error("Request for add new Service failed");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -76,13 +69,7 @@ public class AccommodationServiceController {
             log.error("Request for update new AccommodationService failed");
             ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        AccommodationService existingAccommodationService = accommodationServiceService.findById(accommodationServiceId).orElseThrow(() -> new AccommodationServiceNotFoundException("AccommodationService not found by id: " + accommodationServiceId));
-        //
-        updateAccommodationService(accommodationServiceDto, existingAccommodationService);
-        //existingAccommodationService = accommodationServiceDto.
-        //
-        AccommodationService persistedAccommodationService = accommodationServiceService.save(existingAccommodationService);
-
+       AccommodationService persistedAccommodationService = accommodationServiceService.update(accommodationServiceDto);
         // Redundant
         if (persistedAccommodationService == null) {
             log.error("Request for update new AccommodationService failed");
@@ -94,25 +81,12 @@ public class AccommodationServiceController {
     }
 
     @DeleteMapping("/{accommodationServiceId}")
-    public ResponseEntity deleteAccommodationService(@PathVariable(name = "accommodationServiceId") Long accommodationServiceId){
-        if(accommodationServiceId == null || accommodationServiceId <= 0){
+    public ResponseEntity<String> deleteAccommodationService(@PathVariable(name = "accommodationServiceId") Long accommodationServiceId) {
+        if (accommodationServiceId == null || accommodationServiceId <= 0) {
             return ResponseEntity.badRequest().build();
         }
         accommodationServiceService.delete(accommodationServiceId);
         return ResponseEntity.ok().build();
     }
 
-
-    public AccommodationService updateAccommodationService(AccommodationServiceDto src, AccommodationService des) {
-        if (src.name() != null) {
-            des.setName(src.name());
-        }
-        if (src.price()!=0) {
-            des.setPrice(src.price());
-        }
-        if (src.unit() != null) {
-            des.setUnit(src.unit());
-        }
-        return des;
-    }
 }

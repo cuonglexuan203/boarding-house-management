@@ -16,41 +16,8 @@ import Image from 'next/image';
 import { parseOnlyNumber } from '@/utils/converterUtil';
 import { IRoom } from '@/utils/types';
 import { useAddRoomMutation } from '@/libs/services/roomApi';
+import { useGetServicesQuery } from '@/libs/services/serviceApi';
 
-const serviceColumns = [
-  {
-    key: 'name',
-    label: 'NAME',
-  },
-  {
-    key: 'price',
-    label: 'PRICE',
-  },
-  {
-    key: 'currentIndicators',
-    label: 'CURRENT INDICATORs',
-  },
-];
-const serviceRows = [
-  {
-    id: 1,
-    name: 'Electricity',
-    price: '3500',
-    unit: 'kwh',
-  },
-  {
-    id: 2,
-    name: 'Water',
-    price: '12000',
-    unit: 'm3',
-  },
-  {
-    id: 3,
-    name: 'Wifi',
-    price: '30000',
-    unit: 'month',
-  },
-];
 const AddRoomModal = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [roomName, setRoomName] = useState('');
@@ -58,10 +25,13 @@ const AddRoomModal = () => {
   const [type, setType] = useState(new Set([]));
   const [area, setArea] = useState(0.0);
   const [rentAmount, setRentAmount] = useState(0.0);
-  const [selectedServices, setSelectedServices] = useState(
-    new Map<string, number>(),
-  );
-  const [addRoomTrigger, { isLoading }] = useAddRoomMutation();
+  const [selectedServices, setSelectedServices] = useState<number[]>([]);
+  const {
+    data: services = [],
+    isLoading: isServicesLoading,
+    error: servicesError,
+  } = useGetServicesQuery();
+  const [addRoomTrigger] = useAddRoomMutation();
   const FLOOR_TYPE = useMemo(
     () => ['GROUND', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE'],
     [],
@@ -72,28 +42,18 @@ const AddRoomModal = () => {
   );
   const onValueChange = (
     isChecked: boolean,
-    value: { id: string; value: number },
+    value: {
+      id: number;
+    },
   ) => {
     if (!isChecked) {
-      setSelectedServices((pre) => {
-        const newMap = new Map(pre);
-        newMap.delete(value.id);
-        return newMap;
-      });
-      console.log(false);
+      setSelectedServices(selectedServices.filter((i) => i !== value.id));
       return;
     }
-    setSelectedServices((pre) => {
-      const newMap = new Map(pre);
-      newMap.set(value.id, value.value);
-      return newMap;
-    });
-    console.log(true);
+    setSelectedServices([...selectedServices, value.id]);
   };
 
   const handleAddRoom = async () => {
-    // validate input
-
     //
     // @ts-ignore
     const newRoom: IRoom = {
@@ -103,7 +63,22 @@ const AddRoomModal = () => {
       type: Array.from(type)[0],
       floor: Array.from(floor)[0],
       area,
+      // @ts-ignore
+      services: selectedServices.map((i) => ({
+        id: i,
+      })),
     };
+    console.log(newRoom);
+    // Validate input
+    if (newRoom.id < 0) {
+      return;
+    }
+    if (rentAmount < 0) {
+      return;
+    }
+    if (area < 0) {
+      return;
+    }
     //
     try {
       const response = await addRoomTrigger(newRoom).unwrap();
@@ -124,6 +99,7 @@ const AddRoomModal = () => {
         <PlusIcon className="text-white" />
       </Button>
       <Modal
+        placement="top"
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         backdrop="blur"
@@ -254,39 +230,50 @@ const AddRoomModal = () => {
                       </p>
                     </div>
                     {/* Service table */}
-                    <div>
+                    <div className="flex justify-center items-center">
                       <table className="text-left text-sm">
                         <thead className="uppercase underline underline-offset-1 font-bold">
-                          <tr>
+                          <tr className="">
                             <th className="p-3">
-                              {/* <Checkbox value={'all'} /> */}
+                              #{/* <Checkbox value={'all'} /> */}
                             </th>
                             <th className="p-3">Name</th>
-                            <th className="p-3">Price</th>
-                            <th className="p-3">Current Indicators</th>
+                            <th className="p-3">Price (VND)</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {serviceRows.map((s) => (
-                            <ServiceRow
-                              key={s.id}
-                              service={s}
-                              onValueChange={onValueChange}
-                            />
-                          ))}
+                          {isServicesLoading
+                            ? 'Loading...'
+                            : servicesError
+                              ? 'Error'
+                              : services.map((s) => (
+                                  <ServiceRow
+                                    key={s.id}
+                                    service={s}
+                                    onValueChange={onValueChange}
+                                  />
+                                ))}
                         </tbody>
                       </table>
                     </div>
                   </div>
                 </div>
                 <ModalFooter>
-                  <Button color="danger" variant="flat" onPress={onClose}>
+                  <Button
+                    color="danger"
+                    variant="flat"
+                    onPress={() => {
+                      onClose();
+                      setSelectedServices([]);
+                    }}
+                  >
                     Cancel
                   </Button>
                   <Button
                     color="primary"
                     onPress={() => {
                       handleAddRoom();
+                      setSelectedServices([]);
                       onClose();
                     }}
                   >

@@ -10,7 +10,7 @@ export const roomApi = createApi({
   refetchOnReconnect: true,
   tagTypes: ['rooms', 'room'],
   endpoints: (builder) => ({
-    getRooms: builder.query<IRoom[], null>({
+    getRooms: builder.query<IRoom[], void>({
       query: () => '',
       providesTags: ['rooms'],
     }),
