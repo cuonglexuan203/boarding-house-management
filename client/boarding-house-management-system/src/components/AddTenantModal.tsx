@@ -132,10 +132,11 @@ const AddTenantModal = () => {
       career,
       username,
       password,
-      rooms: [], //
+      rooms: selectedRooms.map((i) => ({ id: i })), //
     };
     //
     try {
+      console.log(newTennt);
       // @ts-ignore
       const response = await addTenantTrigger(newTennt).unwrap();
       console.log('Added tenant: ' + JSON.stringify(response));

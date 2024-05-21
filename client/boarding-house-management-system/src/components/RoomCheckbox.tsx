@@ -6,7 +6,7 @@ import React from 'react';
 
 const RoomCheckbox = ({ value }: { value: IRoom }) => {
   return (
-    <div className="rounded-lg border-1 p-1">
+    <div className="rounded-lg border-1 p-1 min-w-44">
       <Checkbox value={value.id.toString()}>
         <div className="flex">
           <div className="flex justify-center items-center mr-2">
