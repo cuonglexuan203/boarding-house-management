@@ -1,29 +1,12 @@
 [
   {
-    "role": "ROLE_ADMIN",
-    "permissions": [
-      {
-        "permission": "DELETE_PRIVILEGE"
-      },
-      {
-        "permission": "CREATE_PRIVILEGE"
-      }
-    ]
+    "role": "ROLE_ADMIN"
   },
   {
-    "role": "ROLE_STAFF",
-    "permissions": [
-      {
-        "permission": "UPDATE_PRIVILEGE"
-      }
-    ]
+    "role": "ROLE_STAFF"
+
   },
   {
-    "role": "ROLE_USER",
-    "permissions": [
-      {
-        "permission": "READ_PRIVILEGE"
-      }
-    ]
+    "role": "ROLE_USER"
   }
 ]

@@ -40,11 +40,20 @@ public class AccommodationService {
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ServiceDetail> serviceDetails = new ArrayList<>();
 
     @ToString.Exclude
     @JsonIgnore
     @ManyToMany(mappedBy = "services")
     private List<Room> rooms = new ArrayList<>();
+//
+    public void addServiceDetail(ServiceDetail serviceDetail){
+        serviceDetail.setService(this);
+        this.serviceDetails.add(serviceDetail);
+    }
+    public void removeServiceDetail(ServiceDetail serviceDetail){
+        serviceDetail.setService(null);
+        this.serviceDetails.remove(serviceDetail);
+    }
 }

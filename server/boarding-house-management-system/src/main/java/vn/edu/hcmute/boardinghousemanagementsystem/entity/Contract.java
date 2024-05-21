@@ -45,7 +45,13 @@ public class Contract {
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToOne(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private RoomBooking roomBooking;
+
+    //
+    public void addRoomBooking(RoomBooking roomBooking){
+        roomBooking.setContract(this);
+        this.roomBooking = roomBooking;
+    }
 
 }

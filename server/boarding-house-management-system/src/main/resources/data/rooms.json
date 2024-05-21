@@ -4,7 +4,7 @@
     "type": "SINGLE",
     "floor": 1,
     "rentAmount": 500,
-    "roomNumber": "101",
+    "roomNumber": "A101",
     "status": "AVAILABLE"
   },
   {
@@ -12,7 +12,7 @@
     "type": "SINGLE",
     "floor": 1,
     "rentAmount": 450,
-    "roomNumber": "102",
+    "roomNumber": "B102",
     "status": "AVAILABLE"
   },
   {
@@ -20,7 +20,7 @@
     "type": "DOUBLE",
     "floor": 2,
     "rentAmount": 600,
-    "roomNumber": "201",
+    "roomNumber": "C201",
     "status": "OCCUPIED"
   },
   {
@@ -28,7 +28,7 @@
     "type": "TRIPLE",
     "floor": 2,
     "rentAmount": 550,
-    "roomNumber": "202",
+    "roomNumber": "D202",
     "status": "OCCUPIED"
   },
   {
@@ -36,7 +36,207 @@
     "type": "SINGLE",
     "floor": 3,
     "rentAmount": 500,
-    "roomNumber": "301",
+    "roomNumber": "E301",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 120,
+    "type": "SINGLE",
+    "floor": 1,
+    "rentAmount": 500,
+    "roomNumber": "F101",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 90,
+    "type": "SINGLE",
+    "floor": 1,
+    "rentAmount": 450,
+    "roomNumber": "G102",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 80,
+    "type": "DOUBLE",
+    "floor": 2,
+    "rentAmount": 600,
+    "roomNumber": "H201",
+    "status": "OCCUPIED"
+  },
+  {
+    "area": 85,
+    "type": "TRIPLE",
+    "floor": 2,
+    "rentAmount": 550,
+    "roomNumber": "I202",
+    "status": "OCCUPIED"
+  },
+  {
+    "area": 95,
+    "type": "SINGLE",
+    "floor": 3,
+    "rentAmount": 500,
+    "roomNumber": "J301",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 120,
+    "type": "SINGLE",
+    "floor": 1,
+    "rentAmount": 500,
+    "roomNumber": "K101",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 90,
+    "type": "SINGLE",
+    "floor": 1,
+    "rentAmount": 450,
+    "roomNumber": "L102",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 80,
+    "type": "DOUBLE",
+    "floor": 2,
+    "rentAmount": 600,
+    "roomNumber": "M201",
+    "status": "OCCUPIED"
+  },
+  {
+    "area": 85,
+    "type": "TRIPLE",
+    "floor": 2,
+    "rentAmount": 550,
+    "roomNumber": "N202",
+    "status": "OCCUPIED"
+  },
+  {
+    "area": 95,
+    "type": "SINGLE",
+    "floor": 3,
+    "rentAmount": 500,
+    "roomNumber": "O301",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 120,
+    "type": "SINGLE",
+    "floor": 1,
+    "rentAmount": 500,
+    "roomNumber": "P101",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 90,
+    "type": "SINGLE",
+    "floor": 1,
+    "rentAmount": 450,
+    "roomNumber": "Q102",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 80,
+    "type": "DOUBLE",
+    "floor": 2,
+    "rentAmount": 600,
+    "roomNumber": "R201",
+    "status": "OCCUPIED"
+  },
+  {
+    "area": 85,
+    "type": "TRIPLE",
+    "floor": 2,
+    "rentAmount": 550,
+    "roomNumber": "AA202",
+    "status": "OCCUPIED"
+  },
+  {
+    "area": 95,
+    "type": "SINGLE",
+    "floor": 3,
+    "rentAmount": 500,
+    "roomNumber": "BB301",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 120,
+    "type": "SINGLE",
+    "floor": 1,
+    "rentAmount": 500,
+    "roomNumber": "Y101",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 90,
+    "type": "SINGLE",
+    "floor": 1,
+    "rentAmount": 450,
+    "roomNumber": "Z102",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 80,
+    "type": "DOUBLE",
+    "floor": 2,
+    "rentAmount": 600,
+    "roomNumber": "W201",
+    "status": "OCCUPIED"
+  },
+  {
+    "area": 85,
+    "type": "TRIPLE",
+    "floor": 2,
+    "rentAmount": 550,
+    "roomNumber": "CC202",
+    "status": "OCCUPIED"
+  },
+  {
+    "area": 95,
+    "type": "SINGLE",
+    "floor": 3,
+    "rentAmount": 500,
+    "roomNumber": "DD301",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 120,
+    "type": "SINGLE",
+    "floor": 1,
+    "rentAmount": 500,
+    "roomNumber": "EE101",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 90,
+    "type": "SINGLE",
+    "floor": 1,
+    "rentAmount": 450,
+    "roomNumber": "FF102",
+    "status": "AVAILABLE"
+  },
+  {
+    "area": 80,
+    "type": "DOUBLE",
+    "floor": 2,
+    "rentAmount": 600,
+    "roomNumber": "GG201",
+    "status": "OCCUPIED"
+  },
+  {
+    "area": 85,
+    "type": "TRIPLE",
+    "floor": 2,
+    "rentAmount": 550,
+    "roomNumber": "HH202",
+    "status": "OCCUPIED"
+  },
+  {
+    "area": 95,
+    "type": "SINGLE",
+    "floor": 3,
+    "rentAmount": 500,
+    "roomNumber": "KK301",
     "status": "AVAILABLE"
   }
 ]

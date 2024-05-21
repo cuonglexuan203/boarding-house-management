@@ -6,5 +6,9 @@ import java.util.List;
 
 public interface RoomBookingService {
     RoomBooking save(RoomBooking roomBooking);
+
     void save(List<RoomBooking> roomBookings);
+
+    //
+    RoomBooking getLatestRoomBookingInUse(long roomId);
 }

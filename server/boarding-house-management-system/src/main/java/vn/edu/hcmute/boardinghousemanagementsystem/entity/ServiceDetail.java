@@ -45,7 +45,7 @@ public class ServiceDetail {
     
     @ToString.Exclude
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private AccommodationService service;
 
 }

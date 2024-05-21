@@ -17,7 +17,7 @@ import vn.edu.hcmute.boardinghousemanagementsystem.service.*;
 import java.util.List;
 import java.util.stream.Stream;
 
-@Profile("cuongdev")
+@Profile("initdata")
 @Order(1)
 @Slf4j
 @RequiredArgsConstructor
@@ -179,91 +179,102 @@ public class DbOperationRunner implements CommandLineRunner {
             }
             // Persistence
             // Mapping
+            roleService.save(roles);
+            permissionService.save(permissions);
+//          role & permission
+            roles.get(0).addPermission(permissions.get(2));
+            roles.get(0).addPermission(permissions.get(3));
+            roles.get(1).addPermission(permissions.get(1));
+            roles.get(2).addPermission(permissions.get(0));
 //
-            int roomBooking_invoiceMaxIndex = Math.min(roomBookings.size(), invoices.size());
-            for (int i = 0; i < roomBooking_invoiceMaxIndex; i++) {
-                roomBookings.get(i).getInvoices().add(invoices.get(i));
-                invoices.get(i).setRoomBooking(roomBookings.get(i));
+            notificationService.save(notifications);
+            userService.save(users);
+//          user & role
+            users.get(0).addRole(roles.get(0));
+            users.get(1).addRole(roles.get(1));
+            users.get(2).addRole(roles.get(1));
+            for (int i = 3; i < users.size(); i++) {
+                users.get(i).addRole(roles.get(2));
             }
-            //
-            int roomBooking_roomMaxIndex = Math.min(roomBookings.size(), rooms.size());
-            for (int i = 0; i < roomBooking_roomMaxIndex; i++) {
-                roomBookings.get(i).setRoom(rooms.get(i));
-                rooms.get(i).getRoomBookings().add(roomBookings.get(i));
+//          user & notification
+            int user_notification_minIdx = Math.min(users.size(), notifications.size());
+            for (int i = 0; i < user_notification_minIdx; i++) {
+                users.get(i).addNotification(notifications.get(i));
             }
-            //
-            int roomBooking_contractMaxIndex = Math.min(roomBookings.size(), contracts.size());
-            for (int i = 0; i < roomBooking_contractMaxIndex; i++) {
-                roomBookings.get(i).setContract(contracts.get(i));
-                contracts.get(i).setRoomBooking(roomBookings.get(i));
-            }
+            userService.save(users);
 //
-//            for (int i = 0; i < invoices.size(); i++) {
-//                Invoice invoice = invoices.get(i);
-//                ServiceDetail serviceDetail = serviceDetails.get(i % serviceDetails.size());
-//                invoice.getServiceDetails().add(serviceDetail);
-//                serviceDetail.setInvoice(invoice);
-//            }
-            for(ServiceDetail serviceDetail : serviceDetails) {
-                serviceDetail.setInvoice(invoices.get(0));
-            }
-            invoices.get(0).getServiceDetails().addAll(serviceDetails);
-//
-            int serviceDetail_serviceMaxIndex = Math.min(serviceDetails.size(), services.size());
-            for (int i = 0; i < serviceDetail_serviceMaxIndex; i++) {
-                serviceDetails.get(i).setService(services.get(i));
-                services.get(i).getServiceDetails().add(serviceDetails.get(i));
-            }
-            // Room and service
-            for(AccommodationService service: services) {
-                for(Room room: rooms){
-                    room.getServices().add(service);
-                    service.getRooms().add(room);
+            accommodationServiceService.save(services);
+//            serviceDetailService.save(serviceDetails);
+//           service & service detail
+            int servicesSize = services.size();
+            int servicesIdx = 0;
+            for(int i = 0; i < serviceDetails.size(); i++){
+                if(servicesIdx >= servicesSize){
+                    servicesIdx = 0;
                 }
+                services.get(servicesIdx++).addServiceDetail(serviceDetails.get(i));
+            }
+//          service detail & invoice
+            invoiceService.save(invoices);
+            int invoicesSize = invoices.size();
+            int invoiceIdx = 0;
+            for(int i = 0; i < serviceDetails.size(); i++){
+                if(invoiceIdx >= invoicesSize){
+                    invoiceIdx = 0;
+                }
+                invoices.get(invoiceIdx++).addServiceDetail(serviceDetails.get(i));
+            }
+            invoiceService.save(invoices);
+            //
+//          room & service
+            roomService.save(rooms);
+            servicesIdx = 0;
+            for(int i = 0; i < rooms.size(); i++){
+                if(servicesIdx >= servicesSize){
+                    servicesIdx = 0;
+                }
+                rooms.get(i).addService(services.get(servicesIdx++));
+            }
+//
+//          room booking & invoice
+            int roomBookingsSize = roomBookings.size();
+            int roomBookingsIdx = 0;
+            for(int i = 0; i < invoicesSize; i++){
+                roomBookings.get(roomBookingsIdx++).addInvoice(invoices.get(i));
+            }
+//          room & room booking
+            int roomsSize = rooms.size();
+            int roomsIdx = 0;
+            for(int i = 0;  i < roomBookings.size(); i++){
+                if(roomsIdx >= roomsSize){
+                    roomsIdx = 0;
+                }
+                rooms.get(roomsIdx++).addRoomBooking(roomBookings.get(i));
             }
             //
+//          room booking & contract
+            int contractsSize = contracts.size();
+            int contractsIdx = 0;
+            for(int i = 0; i < roomBookings.size(); i++){
+                if(contractsIdx >= contractsSize){
+                    contractsIdx = 0;
+                }
+                contracts.get(contractsIdx++).addRoomBooking(roomBookings.get(i));
+            }
             roomBookingService.save(roomBookings);
-            //
-            int user_notificationMaxIndex = Math.min(users.size(), notifications.size());
-            for (int i = 0; i < user_notificationMaxIndex; i++) {
-                users.get(i).getNotifications().add(notifications.get(i));
-                notifications.get(i).setUser(users.get(i));
-            }
 //
-            int user_roomBookingsMaxIndex = Math.min(users.size(), roomBookings.size());
-            for (int i = 0; i < user_roomBookingsMaxIndex; i++) {
-                users.get(i).getRoomBookings().add(roomBookings.get(i));
-                roomBookings.get(i).setUser(users.get(i));
+//          room booking & user
+            roomBookingsIdx = 0;
+            for(int i = 0; i < users.size(); i++){
+                User user = users.get(i);
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                if(roomBookingsIdx >= roomBookingsSize){
+                    roomBookingsIdx = 0;
+                }
+                roomBookings.get(roomBookingsIdx++).addUser(user);
             }
-            //
-                roleService.save(roles);
-            //
-//            for (int i = 0; i < users.size(); i++) {
-//                User user = users.get(i);
-//                Role role = roles.get(i % roles.size());
-//                //
-//                role.getUsers().add(user);
-//                user.getRoles().add(role);
-//            }
-                userService.save(users);
-            // Manually mapping user_role
-            List<User> attachedUsers = userService.findAll();
-            List<Role> attachedRoles = roleService.findAll();
-            for (int i = 0; i < attachedUsers.size(); i++) {
-                if(i == 0){
-                    attachedUsers.getFirst().getRoles().add(attachedRoles.getFirst());
-                    attachedRoles.getFirst().getUsers().add(attachedUsers.getFirst());
-                }
-                else if (i == 1) {
-                    attachedUsers.get(1).getRoles().add(attachedRoles.get(1));
-                    attachedRoles.get(1).getUsers().add(attachedUsers.get(1));
-                }
-                else {
-                    attachedUsers.get(2).getRoles().add(attachedRoles.get(2));
-                    attachedRoles.get(2).getUsers().add(attachedUsers.get(2));
-                }
-            }
-            roleService.save(attachedRoles);
+            userService.save(users);
+
             //
         } catch (Exception e) {
             e.printStackTrace();

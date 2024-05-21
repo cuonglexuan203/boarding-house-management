@@ -33,21 +33,41 @@ public class RoomBooking {
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private User user;
+    @ManyToMany
+    @JoinTable(name = "room_booking_user",
+            joinColumns = @JoinColumn(name = "room_booking_fk"),
+            inverseJoinColumns = @JoinColumn(name = "user_fk"))
+    private List<User> users = new ArrayList<>();
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Room room;
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Contract contract;
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(mappedBy = "roomBooking", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Invoice> invoices  = new ArrayList<>();
+    @OneToMany(mappedBy = "roomBooking", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+    private List<Invoice> invoices = new ArrayList<>();
+//
+    public void addUser(User user) {
+        user.getRoomBookings().add(this);
+        this.users.add(user);
+    }
+    public void removeUser(User user) {
+        user.getRoomBookings().remove(this);
+        this.users.remove(user);
+    }
+    public void addInvoice(Invoice invoice) {
+        invoice.setRoomBooking(this);
+        this.invoices.add(invoice);
+    }
+    public void removeInvoice(Invoice invoice) {
+        invoice.setRoomBooking(null);
+        this.invoices.remove(invoice);
+    }
 }

@@ -40,7 +40,7 @@ public class Notification {
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
 

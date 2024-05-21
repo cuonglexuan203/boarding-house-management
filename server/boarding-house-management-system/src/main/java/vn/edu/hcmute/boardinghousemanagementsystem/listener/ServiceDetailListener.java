@@ -4,6 +4,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.ServiceDetail;
 
+
 public class ServiceDetailListener {
     @PrePersist
     @PreUpdate

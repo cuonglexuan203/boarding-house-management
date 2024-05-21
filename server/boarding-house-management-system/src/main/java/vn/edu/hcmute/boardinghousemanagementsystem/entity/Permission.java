@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -30,10 +31,10 @@ public class Permission {
     @ToString.Exclude
     @JsonIgnore
     @ManyToMany(mappedBy = "permissions")
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
     @ToString.Exclude
     @JsonIgnore
     @ManyToMany(mappedBy = "permissions")
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 }

@@ -69,7 +69,7 @@ public class    User {
     // Relationships
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.MERGE)
     private List<RoomBooking> roomBookings = new ArrayList<>();
 
     @ToString.Exclude
@@ -79,7 +79,7 @@ public class    User {
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private List<Role> roles = new ArrayList<>();
 
     @ToString.Exclude
@@ -93,6 +93,31 @@ public class    User {
     private List<Permission> permissions = new ArrayList<>();
 
     //
+    public void addRole(Role role) {
+        role.getUsers().add(this);
+        this.roles.add(role);
+    }
+    public void removeRole(Role role) {
+        role.getUsers().remove(this);
+        this.roles.remove(role);
+    }
+
+    public void addNotification(Notification notification) {
+        notification.setUser(this);
+        this.notifications.add(notification);
+    }
+    public void removeNotification(Notification notification) {
+        notification.setUser(null);
+        this.notifications.remove(notification);
+    }
+    public void addRoomBooking(RoomBooking roomBooking){
+        roomBooking.getUsers().add(this);
+        this.getRoomBookings().add(roomBooking);
+    }
+    public void removeRoomBooking(RoomBooking roomBooking){
+        roomBooking.getUsers().remove(null);
+        this.getRoomBookings().remove(roomBooking);
+    }
 
 
 }

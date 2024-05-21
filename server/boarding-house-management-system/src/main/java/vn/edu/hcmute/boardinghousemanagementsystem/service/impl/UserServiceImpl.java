@@ -194,7 +194,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         User user = userRepo.findById(userId).get();
         for(RoomBooking roomBooking: user.getRoomBookings()) {
-            roomBooking.setUser(null);
+            roomBooking.getUsers().remove(user);
         }
         user.getRoomBookings().clear();
         for(Notification notification: user.getNotifications()){

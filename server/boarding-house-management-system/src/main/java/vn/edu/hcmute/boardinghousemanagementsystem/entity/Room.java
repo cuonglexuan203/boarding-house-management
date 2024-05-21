@@ -51,12 +51,12 @@ public class Room {
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<RoomBooking> roomBookings = new ArrayList<>();
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "room_service",
             joinColumns = @JoinColumn(name = "room_fk"),
@@ -64,9 +64,6 @@ public class Room {
     )
     private List<AccommodationService> services = new ArrayList<>();
     //
-    public boolean removeRoomBooking(RoomBooking roomBooking) {
-        return removeRoomBooking(roomBooking.getId());
-    }
     public boolean removeRoomBooking(long roomBookingId) {
         return roomBookings.removeIf(i -> {
             if (i.getId() == roomBookingId) {
@@ -75,5 +72,21 @@ public class Room {
             }
             return false;
         });
+    }
+    public void addService(AccommodationService service) {
+        service.getRooms().add(this);
+        this.services.add(service);
+    }
+    public void removeService(AccommodationService service) {
+        service.getRooms().remove(this);
+        this.services.remove(service);
+    }
+    public void addRoomBooking(RoomBooking roomBooking) {
+        roomBooking.setRoom(this);
+        this.roomBookings.add(roomBooking);
+    }
+    public void removeRoomBooking(RoomBooking roomBooking) {
+        roomBooking.setRoom(null);
+        this.roomBookings.remove(roomBooking);
     }
 }

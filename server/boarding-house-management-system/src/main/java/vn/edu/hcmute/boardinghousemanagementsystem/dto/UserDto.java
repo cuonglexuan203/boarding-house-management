@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import org.springframework.util.StringUtils;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.Address;
+import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.RoomBooking;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.User;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.DateTimeUtil;
@@ -65,7 +66,6 @@ public record UserDto(Long id,
                 .address(address())
                 .birthday(DateTimeUtil.toLocalDate(birthday(), "yyyy-MM-dd"))
                 .career(career())
-//                .roomBookings(rooms == null ? rooms.stream().map()
                 .username(username)
                 .password(password)
                 .build();
@@ -84,7 +84,6 @@ public record UserDto(Long id,
                 .address(address())
                 .birthday(DateTimeUtil.toLocalDate(birthday(), "yyyy-MM-dd"))
                 .career(career())
-                .roomBookings(List.of())
                 .username(username)
                 .password(password)
                 .build();

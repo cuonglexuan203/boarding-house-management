@@ -40,11 +40,21 @@ public class Role {
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
             name = "role_permission",
             joinColumns = @JoinColumn(name = "role_fk"),
             inverseJoinColumns = @JoinColumn(name = "permission_fk")
     )
     private List<Permission> permissions = new ArrayList<>();
+    //
+    public void addPermission(Permission permission){
+        permission.getRoles().add(this);
+        this.permissions.add(permission);
+    }
+
+    public void removePermission(Permission permission){
+        permission.getRoles().remove(this);
+        this.permissions.remove(permission);
+    }
 }

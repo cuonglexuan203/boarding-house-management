@@ -59,7 +59,7 @@ public class Invoice {
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private RoomBooking roomBooking;
 
     @ToString.Exclude
@@ -71,6 +71,11 @@ public class Invoice {
     public void calculateTotal(){
          float roomCharge = this.numberOfMonth * (this.roomBooking != null && this.roomBooking.getRoom() != null ? this.roomBooking.getRoom().getRentAmount() : 0);
         this.total = serviceDetails.stream().map(ServiceDetail::getMoney).reduce(roomCharge, Float::sum) + surcharge;
+    }
+
+    public void addServiceDetail(ServiceDetail serviceDetail){
+        serviceDetail.setInvoice(this);
+        this.serviceDetails.add(serviceDetail);
     }
 
 }
