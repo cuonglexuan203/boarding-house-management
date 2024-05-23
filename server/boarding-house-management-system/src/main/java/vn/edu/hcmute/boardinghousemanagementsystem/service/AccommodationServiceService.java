@@ -16,6 +16,6 @@ public interface AccommodationServiceService {
     void delete(long id);
     //
     AccommodationService save(AccommodationServiceDto serviceDto);
-    AccommodationService update(AccommodationServiceDto serviceDto);
+    AccommodationService update(AccommodationServiceDto serviceDto, List<Room> rooms);
 
 }

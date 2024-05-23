@@ -37,8 +37,8 @@ const ServiceGrid = ({
   // doesExternalFilterPass,
 }: {
   gridRef: React.RefObject<AgGridReact<any>>;
-  isExternalFilterPresent: (params: IsExternalFilterPresentParams) => boolean;
-  doesExternalFilterPass: (node: IRowNode) => boolean;
+  isExternalFilterPresent?: (params: IsExternalFilterPresentParams) => boolean;
+  doesExternalFilterPass?: (node: IRowNode) => boolean;
 }) => {
   const dispatch = useAppDispatch();
   const { data: services = [], isLoading, error } = useGetServicesQuery();
@@ -278,8 +278,6 @@ const ServiceGrid = ({
         reactiveCustomComponents={true}
         onCellEditRequest={onCellEditRequest}
         getRowId={getRowId}
-        // isExternalFilterPresent={isExternalFilterPresent}
-        // doesExternalFilterPass={doesExternalFilterPass}
         onCellClicked={onCellClicked}
       />
     </div>

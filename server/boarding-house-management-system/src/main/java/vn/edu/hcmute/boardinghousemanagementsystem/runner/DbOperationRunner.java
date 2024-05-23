@@ -204,7 +204,7 @@ public class DbOperationRunner implements CommandLineRunner {
             userService.save(users);
 //
             accommodationServiceService.save(services);
-//            serviceDetailService.save(serviceDetails);
+            serviceDetailService.save(serviceDetails);
 //           service & service detail
             int servicesSize = services.size();
             int servicesIdx = 0;

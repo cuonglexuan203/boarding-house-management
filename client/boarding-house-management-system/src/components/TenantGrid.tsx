@@ -29,7 +29,7 @@ import {
 } from '@/libs/services/tenantApi';
 import CustomDatePicker from './CustomDatePicker';
 import AddressEditorModal from './AddressEditorModal';
-import { IAddress } from '@/utils/types';
+import { IAddress, IRoom } from '@/utils/types';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -108,6 +108,20 @@ const TenantGrid = ({
       headerName: 'Full name',
       field: 'fullName',
       cellDataType: 'string',
+    },
+    {
+      headerName: 'Rooms',
+      field: 'rooms',
+      valueFormatter: (params) => {
+        if (!params.value) {
+          return params.value;
+        }
+        const roomIds = params.value?.map((i: IRoom) => {
+          return i.floor + ' / ' + i.roomNumber;
+        });
+        return roomIds?.join(', ');
+      },
+      editable: false,
     },
     {
       headerName: 'Email',

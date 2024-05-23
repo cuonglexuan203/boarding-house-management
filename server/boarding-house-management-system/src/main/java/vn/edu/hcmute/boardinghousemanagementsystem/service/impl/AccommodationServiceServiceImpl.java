@@ -9,12 +9,15 @@ import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.RoomBooking;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.ServiceDetail;
 import vn.edu.hcmute.boardinghousemanagementsystem.exception.AccommodationServiceNotFoundException;
+import vn.edu.hcmute.boardinghousemanagementsystem.exception.RoomNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.repo.AccommodationServiceRepository;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.AccommodationServiceService;
+import vn.edu.hcmute.boardinghousemanagementsystem.service.RoomService;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.ObjectUtil;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Slf4j
@@ -53,10 +56,19 @@ public class AccommodationServiceServiceImpl implements AccommodationServiceServ
     }
 
     @Override
-    public AccommodationService update(AccommodationServiceDto serviceDto) {
-        long id = serviceDto.id();
+    public AccommodationService update(AccommodationServiceDto serviceDto, List<Room> rooms) {
+        Long id = serviceDto.id();
+        if (id == null || id <= 0) {
+            return null;
+        }
+        if (rooms == null) {
+            return null;
+        }
         AccommodationService existingAccommodationService = findById(id).orElseThrow(() -> new AccommodationServiceNotFoundException("AccommodationService not found by id: " + id));
-        //
+        existingAccommodationService.removeAllRooms();
+        for (Room room : rooms) {
+            existingAccommodationService.addRoom(room);
+        }
         updateAccommodationService(serviceDto, existingAccommodationService);
         //
         AccommodationService persistedAccommodationService = save(existingAccommodationService);
@@ -88,7 +100,7 @@ public class AccommodationServiceServiceImpl implements AccommodationServiceServ
         }
         AccommodationService accommodationService = serviceRepo.findById(id).get();
         List<ServiceDetail> serviceDetails = accommodationService.getServiceDetails();
-        for (ServiceDetail serviceDetail: serviceDetails){
+        for (ServiceDetail serviceDetail : serviceDetails) {
             serviceDetail.setService(null);
         }
         accommodationService.getServiceDetails().removeIf(e -> true);

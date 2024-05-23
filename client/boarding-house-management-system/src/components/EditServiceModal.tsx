@@ -1,29 +1,37 @@
+import { useGetRoomsQuery } from '@/libs/services/roomApi';
 import {
   Button,
   Checkbox,
+  CheckboxGroup,
   Input,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Spacer,
   useDisclosure,
 } from '@nextui-org/react';
-import { PlusIcon } from './icon/PlusIcon';
-import { useMemo, useState } from 'react';
-import CustomSelect from './CustomSelect';
+import React, { useMemo, useState } from 'react';
 import Image from 'next/image';
+import CustomSelect from './CustomSelect';
+import RoomCheckbox from './RoomCheckbox';
 import { parseOnlyNumber } from '@/utils/converterUtil';
 import { IService } from '@/utils/types';
-import { useAddServiceMutation } from '@/libs/services/serviceApi';
+import { useUpdateServiceMutation } from '@/libs/services/serviceApi';
 
-const AddServiceModal = () => {
+const EditServiceModal = ({ service }: { service: IService }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [name, setServiceName] = useState('');
-  const [price, setPrice] = useState(0.0);
-  const [unit, setUnit] = useState(new Set([]));
-  const [isMeteredService, setIsMeteredService] = useState(false);
-  const [addServiceTrigger, { isLoading }] = useAddServiceMutation();
+  const [selectedRooms, setSelectedRooms] = useState<string[]>(
+    service.roomIds.map(String),
+  );
+  const [name, setServiceName] = useState(service.name);
+  const [price, setPrice] = useState(service.price);
+  const [unit, setUnit] = useState(new Set([service.unit]));
+  const [isMeteredService, setIsMeteredService] = useState(
+    service.isMeteredService,
+  );
+  const [updateServiceTrigger] = useUpdateServiceMutation();
   const UNIT_TYPE = useMemo(
     () => [
       'kWh',
@@ -37,39 +45,51 @@ const AddServiceModal = () => {
     ],
     [],
   );
+  //
+  const {
+    data: rooms = [],
+    isLoading: isRoomLoading,
+    error: roomError,
+  } = useGetRoomsQuery();
 
-  const handleAddService = async () => {
-    // validate input
-
-    //
-    // @ts-ignore
-    const newService: IService = {
-      id: 0,
-      name: name,
-      price: price,
-      unit: Array.from(unit)[0],
-      isMeteredService,
-    };
-    //
+  const occupiedRooms = useMemo(
+    () => rooms?.filter((r) => r.status.toLowerCase() === 'occupied'),
+    [rooms],
+  );
+  const handleUpdateService = async () => {
     try {
-      const response = await addServiceTrigger(newService).unwrap();
-      console.log('Added service: ' + JSON.stringify(response));
-    } catch (err: any) {
-      console.log('Failed to add service: ' + err.message);
+      const modifiedService: IService = {
+        id: service.id,
+        name,
+        price,
+        // @ts-ignore
+        unit: Array.from(unit).at(0),
+        isMeteredService,
+        roomIds: selectedRooms.map(Number),
+      };
+      const updatedService =
+        await updateServiceTrigger(modifiedService).unwrap();
+      console.log('Service updated: ' + JSON.stringify(updatedService));
+    } catch (err) {
+      console.error(err);
     }
   };
 
   return (
     <>
-      <Button
-        onPress={onOpen}
-        variant="solid"
-        size="sm"
-        className="focus:outline-none rounded-full bg-primary w-6 h-12 flex items-center justify-center"
-      >
-        <PlusIcon className="text-white" />
+      <Button className="bg-transparent" isIconOnly onPress={onOpen}>
+        <Image
+          alt=""
+          src={'/image/service/edit.png'}
+          sizes="100%"
+          width={0}
+          height={0}
+          className="w-8 h-auto"
+        />
       </Button>
       <Modal
+        placement="top"
+        size="5xl"
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         backdrop="blur"
@@ -99,7 +119,7 @@ const AddServiceModal = () => {
           {(onClose) => (
             <>
               <ModalHeader>
-                <div className="flex justify-center items-center w-full">
+                <div className="flex justify-center items-center w-full text-center">
                   <Image
                     alt=""
                     src={'/image/room/add.png'}
@@ -107,24 +127,60 @@ const AddServiceModal = () => {
                     width={40}
                     height={40}
                   />
-                  <h2 className="text-2xl ml-2">Add Service</h2>
+                  <div>
+                    <h2 className="text-2xl ml-2">Edit Service</h2>
+                    <p className="italic text-default-500">
+                      Click the Select 1 or more rooms to service
+                    </p>
+                  </div>
                 </div>
               </ModalHeader>
               <ModalBody>
-                <div className="space-y-6">
+                <div className="grid grid-cols-5">
                   {/* Room info */}
-                  <div className="space-y-4">
+                  <div className="col-span-3">
+                    {/* Header */}
+                    <div className="border-s-4 border-[#4b4ce4] ps-2">
+                      <h2 className="text-xl font-semibold">Room List</h2>
+                      <p className="italic text-xs text-gray-500">
+                        Service room list
+                      </p>
+                    </div>
+                    {/* Room list */}
+                    <div className="mt-2">
+                      {isRoomLoading ? (
+                        'Loading...'
+                      ) : roomError ? (
+                        'Error'
+                      ) : (
+                        <CheckboxGroup
+                          color="warning"
+                          label="Select rooms"
+                          orientation="horizontal"
+                          value={selectedRooms}
+                          onValueChange={setSelectedRooms}
+                        >
+                          {occupiedRooms.map((r) => (
+                            <RoomCheckbox key={r.id} value={r} />
+                          ))}
+                        </CheckboxGroup>
+                      )}
+                    </div>
+                  </div>
+                  {/* Service info */}
+                  <div className="space-y-4 col-span-2">
                     {/* Header */}
                     <div className="border-s-4 border-[#4b4ce4] ps-2">
                       <h2 className="text-xl font-semibold">
-                        Service Information
+                        Service information
                       </h2>
                       <p className="italic text-xs text-gray-500">
-                        Input basic Service information
+                        Enter complete information for the service
                       </p>
                     </div>
                     {/* Required infor */}
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-4">
+                      <Spacer y={3} />
                       <Input
                         size="sm"
                         className="col-span-2"
@@ -174,18 +230,18 @@ const AddServiceModal = () => {
                     </div>
                   </div>
                 </div>
-                <ModalFooter>
+                <ModalFooter className="space-x-6">
                   <Button color="danger" variant="flat" onPress={onClose}>
                     Cancel
                   </Button>
                   <Button
                     color="primary"
                     onPress={() => {
-                      handleAddService();
+                      handleUpdateService();
                       onClose();
                     }}
                   >
-                    Add
+                    Update
                   </Button>
                 </ModalFooter>
               </ModalBody>
@@ -197,4 +253,4 @@ const AddServiceModal = () => {
   );
 };
 
-export default AddServiceModal;
+export default EditServiceModal;

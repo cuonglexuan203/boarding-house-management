@@ -8,6 +8,8 @@ import { AgGridReact } from 'ag-grid-react';
 import { IRowNode } from 'ag-grid-community';
 import AddServiceModal from '@/components/AddServiceModal';
 import { IsExternalFilterPresentParams } from 'ag-grid-community';
+import { useGetServicesQuery } from '@/libs/services/serviceApi';
+import ServiceItem from '@/components/ServiceItem';
 
 interface IFilterOption {
   key: string;
@@ -15,6 +17,7 @@ interface IFilterOption {
 }
 
 const ServiceMangement = () => {
+  const { data: services = [], isLoading, error } = useGetServicesQuery();
   const gridRef = useRef<AgGridReact>(null);
   const [selected, setSelected] = useState('management');
   // const [selectedFilterOptions, setSelectedFilterOptions] = useState<string[]>(
@@ -27,88 +30,46 @@ const ServiceMangement = () => {
     gridRef.current!.api.exportDataAsExcel();
   }, []);
 
-  //  Filter
-  // const filterOptions = useMemo<IFilterOption[]>(() => {
-  //   return [
-  //     { key: 'available', value: 'Availability' },
-  //     { key: 'occupied', value: 'Staying' },
-  //     { key: 'reserved', value: 'Currently reserved' },
-  //     // { key: 'repair', value: 'Under repair room' },
-  //     { key: 'waiting', value: 'Waiting room' },
-  //   ];
-  // }, []);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error</div>;
+  }
 
-  // const isExternalFilterPresent = useCallback((): boolean => {
-  //   return selectedFilterOptions.length > 0;
-  // }, [selectedFilterOptions]);
-
-  // const doesExternalFilterPass = useCallback(
-  //   (node: IRowNode<IRoom>): boolean => {
-  //     let isMatched = true;
-  //     if (node.data) {
-  //       selectedFilterOptions.forEach((selectedOption) => {
-  //         if (selectedOption === 'available') {
-  //           isMatched =
-  //             isMatched && node.data?.status.toLowerCase() === 'available';
-  //         }
-  //         if (selectedOption === 'occupied') {
-  //           isMatched =
-  //             isMatched && node.data?.status.toLowerCase() === 'occupied';
-  //         }
-  //       });
-  //     }
-  //     return isMatched;
-  //   },
-  //   [selectedFilterOptions],
-  // );
   return (
     <section className="flex w-full flex-col justify-center items-center p-4 mt-6">
-      <div className="mt-4 w-full">
-        {/* Information */}
-        <div className="flex justify-between">
-          {/* Page infor */}
-          <div className="border-s-4 border-[#4b4ce4] ps-2">
-            <h2 className="text-2xl font-semibold">All Services</h2>
-          </div>
+      <div className="mt-4 w-full flex justify-center items-center">
+        {/* Services */}
+        <div className="w-full max-w-[600px]">
+          {/* Service items */}
           <div>
-            <Tooltip
-              content="Add new invoice"
-              color="primary"
-              placement="left-start"
-              closeDelay={200}
-              delay={500}
-            >
-              <AddServiceModal />
-            </Tooltip>
+            {/* Information */}
+            <div className="flex justify-between">
+              {/* Page infor */}
+              <div className="border-s-4 border-[#4b4ce4] ps-2">
+                <h2 className="text-2xl font-semibold">All Services</h2>
+                <p className="italic text-sm text-gray-500">Tenant services</p>
+              </div>
+              <div>
+                <Tooltip
+                  content="Add new invoice"
+                  color="primary"
+                  placement="left-start"
+                  closeDelay={200}
+                  delay={500}
+                >
+                  <AddServiceModal />
+                </Tooltip>
+              </div>
+            </div>
+            {/* Items */}
+            <div className="mt-4 flex flex-col gap-4">
+              {services.map((s) => (
+                <ServiceItem service={s} key={s.id} />
+              ))}
+            </div>
           </div>
-        </div>
-        {/* Grid functionality */}
-        <div className="flex justify-between">
-          {/* Filter */}
-          <div className="p-2 flex mt-4 rounded-md"></div>
-          {/* Export */}
-          <div className="flex justify-center items-end p-2">
-            <ExportButton
-              onPressCsvExport={onBtnCsvExport}
-              onPressExcelExport={onBtnExcelExport}
-            />
-          </div>
-        </div>
-        {/* Grid */}
-        <div className="w-full mt-12">
-          <ServiceGrid
-            // isExternalFilterPresent={isExternalFilterPresent}
-            // doesExternalFilterPass={doesExternalFilterPass}
-            gridRef={gridRef}
-            isExternalFilterPresent={function (
-              params: IsExternalFilterPresentParams<any, any>,
-            ): boolean {
-              throw new Error('Function not implemented.');
-            }}
-            doesExternalFilterPass={function (node: IRowNode<any>): boolean {
-              throw new Error('Function not implemented.');
-            }}
-          />
         </div>
       </div>
     </section>

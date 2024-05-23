@@ -10,7 +10,10 @@ import vn.edu.hcmute.boardinghousemanagementsystem.dto.AccommodationServiceDto;
 
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.AccommodationService;
 
+import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
+import vn.edu.hcmute.boardinghousemanagementsystem.exception.RoomNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.AccommodationServiceService;
+import vn.edu.hcmute.boardinghousemanagementsystem.service.RoomService;
 
 
 import java.util.List;
@@ -23,9 +26,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/services")
 public class AccommodationServiceController {
     private final AccommodationServiceService accommodationServiceService;
+    private final RoomService roomService;
 
     @GetMapping
-//    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<AccommodationServiceDto> getAccommodationService() {
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        String username = authentication.getName();
@@ -65,11 +68,15 @@ public class AccommodationServiceController {
         log.info("Receive an update AccommodationService request: " + accommodationServiceDto);
         //
         Long accommodationServiceId = accommodationServiceDto.id();
-        if (accommodationServiceId == null || accommodationServiceId == 0) {
+        if (accommodationServiceId == null || accommodationServiceId <= 0) {
             log.error("Request for update new AccommodationService failed");
             ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-       AccommodationService persistedAccommodationService = accommodationServiceService.update(accommodationServiceDto);
+        //
+        List<Room> rooms = accommodationServiceDto.roomIds().stream().map(i -> roomService.findById(i)
+                        .orElseThrow(() -> new RoomNotFoundException("Room not found by id: " + i)))
+                .collect(Collectors.toList());
+       AccommodationService persistedAccommodationService = accommodationServiceService.update(accommodationServiceDto, rooms);
         // Redundant
         if (persistedAccommodationService == null) {
             log.error("Request for update new AccommodationService failed");

@@ -56,4 +56,19 @@ public class AccommodationService {
         serviceDetail.setService(null);
         this.serviceDetails.remove(serviceDetail);
     }
+
+    public void addRoom(Room room){
+        room.getServices().add(this);
+        this.rooms.add(room);
+    }
+    public void removeRoom(Room room){
+        room.getServices().remove(this);
+        this.rooms.add(null);
+    }
+    public void removeAllRooms(){
+        for(Room room : rooms){
+            room.getServices().remove(this);
+        }
+        rooms.clear();
+    }
 }

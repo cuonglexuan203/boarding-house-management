@@ -1,10 +1,14 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 import vn.edu.hcmute.boardinghousemanagementsystem.listener.InvoiceListener;
+import vn.edu.hcmute.boardinghousemanagementsystem.util.IDeepCloneable;
+import vn.edu.hcmute.boardinghousemanagementsystem.util.MapperSingleton;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.InvoiceType;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.PaymentStatus;
 
@@ -19,7 +23,7 @@ import java.util.List;
 @Entity
 @EntityListeners(InvoiceListener.class)
 @Table(name = "invoice")
-public class Invoice {
+public class Invoice implements IDeepCloneable<Invoice> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -68,14 +72,25 @@ public class Invoice {
     private List<ServiceDetail> serviceDetails = new ArrayList<>();
 
     // Methods
-    public void calculateTotal(){
-         float roomCharge = this.numberOfMonth * (this.roomBooking != null && this.roomBooking.getRoom() != null ? this.roomBooking.getRoom().getRentAmount() : 0);
+    public void calculateTotal() {
+        float roomCharge = this.numberOfMonth * (this.roomBooking != null && this.roomBooking.getRoom() != null ? this.roomBooking.getRoom().getRentAmount() : 0);
         this.total = serviceDetails.stream().map(ServiceDetail::getMoney).reduce(roomCharge, Float::sum) + surcharge;
     }
 
-    public void addServiceDetail(ServiceDetail serviceDetail){
+    public void addServiceDetail(ServiceDetail serviceDetail) {
         serviceDetail.setInvoice(this);
         this.serviceDetails.add(serviceDetail);
     }
 
+    @Override
+    public Invoice deepClone() {
+        ObjectMapper mapper = MapperSingleton.getInstance();
+        try {
+            String json = mapper.writeValueAsString(this);
+            return mapper.readValue(json, Invoice.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to clone Invoice object", e);
+        }
+
+    }
 }

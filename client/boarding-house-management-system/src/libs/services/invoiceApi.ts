@@ -1,4 +1,4 @@
-import { IInvoice } from '@/utils/types';
+import { IAddInvoice, IInvoice } from '@/utils/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const invoiceApi = createApi({
@@ -17,7 +17,7 @@ export const invoiceApi = createApi({
       query: (InvoiceId) => InvoiceId.toString(),
       providesTags: ['invoice'],
     }),
-    addInvoice: builder.mutation<IInvoice, IInvoice>({
+    addInvoice: builder.mutation<IInvoice[], IAddInvoice>({
       query: (body) => ({
         url: '',
         method: 'POST',
@@ -54,4 +54,5 @@ export const {
   useGetInvoiceQuery,
   useUpdateInvoiceMutation,
   useDeleteInvoiceMutation,
+  useAddInvoiceMutation,
 } = invoiceApi;

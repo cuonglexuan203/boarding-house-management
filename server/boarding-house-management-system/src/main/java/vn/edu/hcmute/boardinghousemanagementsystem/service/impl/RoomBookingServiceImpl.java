@@ -11,6 +11,7 @@ import vn.edu.hcmute.boardinghousemanagementsystem.repo.RoomBookingRepository;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.RoomBookingService;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.RoomService;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.DateTimeUtil;
+import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -48,6 +49,9 @@ public class RoomBookingServiceImpl implements RoomBookingService {
         }
         LocalDate now = LocalDate.now();
         Room room = roomService.findById(roomId).orElseThrow(() -> new RoomNotFoundException("Room not found with id: " + roomId));
+        if(!room.getStatus().equals(RoomStatus.OCCUPIED)){
+           return null;
+        }
         List<RoomBooking> roomBookings = room.getRoomBookings().stream().filter(r -> {
             Contract contract = r.getContract();
             return DateTimeUtil.isDateInRange(contract.getStartDate(), contract.getEndDate(), now);

@@ -4,6 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.AccommodationService;
+import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public record AccommodationServiceDto(
         @Min(value = 0, message = "Room id must be greater than or equal to 0")
@@ -17,13 +22,16 @@ public record AccommodationServiceDto(
 
         @NotBlank
         String unit,
-        Boolean isMeteredService
+        Boolean isMeteredService,
+        List<Long> roomIds
 ) {
 
     @JsonIgnore
     public AccommodationServiceDto(AccommodationService accommodationService) {
         this(accommodationService.getId(), accommodationService.getName(),
-                accommodationService.getPrice(), accommodationService.getUnit(), accommodationService.getIsMeteredService());
+                accommodationService.getPrice(), accommodationService.getUnit(), accommodationService.getIsMeteredService(),
+                accommodationService.getRooms().stream().map(Room::getId).collect(Collectors.toList())
+        );
     }
 
     @JsonIgnore
@@ -32,14 +40,14 @@ public record AccommodationServiceDto(
                 .name(name)
                 .price(price)
                 .unit(unit)
-//                .isMeteredService(isMeteredService)
-                .isMeteredService(false)
+                .isMeteredService(isMeteredService)
+                .rooms(new ArrayList<>())
                 .build();
         return accommodationService;
     }
 
     @JsonIgnore
-    public AccommodationService getAccommodationService(){
+    public AccommodationService getAccommodationService() {
         AccommodationService accommodationService = AccommodationService.builder()
                 .id(id)
                 .name(name)

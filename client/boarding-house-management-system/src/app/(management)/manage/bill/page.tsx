@@ -7,7 +7,7 @@ import { CustomCheckbox } from '@/components/CustomCheckbox';
 import ExportButton from '@/components/ExportButton';
 import { AgGridReact } from 'ag-grid-react';
 import { IRowNode } from 'ag-grid-community';
-import { ITenant } from '@/utils/types';
+import { IInvoice } from '@/utils/types';
 import InvoiceGrid from '@/components/InvoiceGrid';
 import AddInvoiceModal from '@/components/AddInvoiceModal';
 
@@ -42,7 +42,7 @@ const InvoiceManagement = () => {
   }, [selectedFilterOptions]);
 
   const doesExternalFilterPass = useCallback(
-    (node: IRowNode<ITenant>): boolean => {
+    (node: IRowNode<IInvoice>): boolean => {
       let isMatched = true;
       if (node.data) {
         selectedFilterOptions.forEach((selectedOption) => {
@@ -50,7 +50,7 @@ const InvoiceManagement = () => {
             if (selectedOption === opt.key) {
               isMatched =
                 isMatched &&
-                node.data?.gender.toLowerCase() === opt.value.toLowerCase();
+                node.data?.status.toLowerCase() === opt.value.toLowerCase();
             }
           });
         });

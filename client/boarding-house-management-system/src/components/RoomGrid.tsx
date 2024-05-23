@@ -40,7 +40,7 @@ const RoomGrid = ({
   doesExternalFilterPass: (node: IRowNode) => boolean;
 }) => {
   const dispatch = useAppDispatch();
-  const { data: rooms = [], isLoading, error } = useGetRoomsQuery(null);
+  const { data: rooms = [], isLoading, error } = useGetRoomsQuery();
   const [updateRoomTrigger] = useUpdateRoomMutation();
   const [deleteRoomTrigger] = useDeleteRoomMutation();
   // const [rooms, setRooms] = useState([

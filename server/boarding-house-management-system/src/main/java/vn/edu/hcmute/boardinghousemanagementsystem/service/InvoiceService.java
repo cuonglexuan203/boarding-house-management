@@ -1,9 +1,8 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.service;
 
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.InvoiceDto;
-import vn.edu.hcmute.boardinghousemanagementsystem.dto.RoomDto;
+import vn.edu.hcmute.boardinghousemanagementsystem.dto.AddInvoiceDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.Invoice;
-import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +18,8 @@ public interface InvoiceService {
     //
     List<Invoice> getInvoices();
     List<InvoiceDto> getInvoiceDtos();
-    Invoice save(InvoiceDto invoiceDto);
+    public List<Invoice> createInvoices(Invoice newInvoice, int numberOfRooms);
+    public List<Invoice> addNewInvoices(AddInvoiceDto invoiceInfo);
     Invoice update(InvoiceDto invoiceDto);
 
 }

@@ -14,6 +14,11 @@ export interface IInvoice {
   rentAmount: number;
 }
 
+export interface IAddInvoice {
+  invoice: IInvoice;
+  roomIds: number[] | string[];
+}
+
 export interface IServiceDetail {
   id: number;
   money: number;
@@ -89,4 +94,5 @@ export interface IService {
   price: number;
   unit: string;
   isMeteredService: boolean;
+  roomIds: number[];
 }

@@ -15,7 +15,7 @@ import {
   Textarea,
   useDisclosure,
 } from '@nextui-org/react';
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { PlusIcon } from './icon/PlusIcon';
 import Image from 'next/image';
 import { parseDate } from '@internationalized/date';
@@ -23,6 +23,8 @@ import { getReadableNumber, parseOnlyNumber } from '@/utils/converterUtil';
 import { getCurrentDateString } from '@/utils/dateUtil';
 import { useGetRoomsQuery } from '@/libs/services/roomApi';
 import RoomCheckbox from './RoomCheckbox';
+import { IAddInvoice, IInvoice } from '@/utils/types';
+import { useAddInvoiceMutation } from '@/libs/services/invoiceApi';
 
 const reasons = [
   {
@@ -79,7 +81,35 @@ const AddInvoiceModal = () => {
     isLoading: isRoomLoading,
     error: roomError,
   } = useGetRoomsQuery();
+  const [addInvoiceTrigger] = useAddInvoiceMutation();
 
+  const occupiedRooms = useMemo(
+    () => rooms?.filter((r) => r.status.toLowerCase() === 'occupied'),
+    [rooms],
+  );
+  const handleAddInvoices = async () => {
+    const newInvoice: IInvoice = {
+      // @ts-ignore
+      type: Array.from(type).at(0),
+      invoiceDate: invoiceDate.toString(),
+      paymentDeadline: paymentDeadline.toString(),
+      numberOfMonth,
+      pollingMonth: pollingMonth.toString(),
+      surcharge: surchargeType === 'plus' ? surcharge : -surcharge,
+      surchargeReason,
+    };
+    const roomIds = selectedRooms;
+    const addInvoicesBody: IAddInvoice = {
+      invoice: newInvoice,
+      roomIds,
+    };
+    try {
+      const response = await addInvoiceTrigger(addInvoicesBody).unwrap();
+      console.log('Add new invoices:' + response);
+    } catch (err: any) {
+      console.log('Failed to add invoice: ' + err.message);
+    }
+  };
   return (
     <>
       <Button
@@ -165,7 +195,7 @@ const AddInvoiceModal = () => {
                           value={selectedRooms}
                           onValueChange={setSelectedRooms}
                         >
-                          {rooms.map((r) => (
+                          {occupiedRooms.map((r) => (
                             <RoomCheckbox key={r.id} value={r} />
                           ))}
                         </CheckboxGroup>
@@ -297,7 +327,7 @@ const AddInvoiceModal = () => {
                   <Button
                     color="primary"
                     onPress={() => {
-                      //   handleAddTenant();
+                      handleAddInvoices();
                       onClose();
                     }}
                   >
