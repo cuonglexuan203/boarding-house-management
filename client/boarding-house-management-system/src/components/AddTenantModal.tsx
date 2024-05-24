@@ -13,11 +13,8 @@ import {
 import { PlusIcon } from './icon/PlusIcon';
 import { useMemo, useState } from 'react';
 import CustomSelect, { ISelectItem } from './CustomSelect';
-import ServiceRow from './ServiceRow';
 import Image from 'next/image';
-import { parseOnlyNumber } from '@/utils/converterUtil';
-import { IRoom, ITenant } from '@/utils/types';
-import { useAddRoomMutation, useGetRoomsQuery } from '@/libs/services/roomApi';
+import { useGetRoomsQuery } from '@/libs/services/roomApi';
 import { parseDate } from '@internationalized/date';
 import {
   useGetDistrictsQuery,

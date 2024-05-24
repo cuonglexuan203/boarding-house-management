@@ -27,7 +27,6 @@ import { setSelectedRowId } from '@/libs/features/gridSlice';
 import CustomDropdown from './CustomDropdown';
 import AutocompleteEditor from './grid/AutocompleteEditor';
 import { getReadableNumber, isNumeric } from '@/utils/converterUtil';
-import ImmutableColumn from './ImmutableColumn';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 

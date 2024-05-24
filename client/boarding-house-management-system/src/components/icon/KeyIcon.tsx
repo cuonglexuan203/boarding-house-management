@@ -1,5 +1,5 @@
 import React from 'react';
-export const KeyIcon = (props) => (
+export const KeyIcon = (props: any) => (
   <svg
     aria-hidden="true"
     fill="none"

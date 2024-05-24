@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const PhoneIcon = (props) => (
+export const PhoneIcon = (props: any) => (
   <svg
     aria-hidden="true"
     fill="none"

@@ -1,11 +1,5 @@
 import { IService } from '@/utils/types';
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-} from '@nextui-org/react';
+import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/react';
 import Image from 'next/image';
 import React from 'react';
 import EditServiceModal from './EditServiceModal';

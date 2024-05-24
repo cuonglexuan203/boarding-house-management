@@ -1,5 +1,6 @@
 import React from 'react';
 
+// @ts-ignore
 export const ChevronDown = ({ fill, size, height, width, ...props }) => {
   return (
     <svg
@@ -22,6 +23,7 @@ export const ChevronDown = ({ fill, size, height, width, ...props }) => {
   );
 };
 
+// @ts-ignore
 export const Lock = ({ fill, size, height, width, ...props }) => {
   const color = fill;
 
@@ -69,6 +71,7 @@ export const Lock = ({ fill, size, height, width, ...props }) => {
   );
 };
 
+// @ts-ignore
 export const Activity = ({ fill, size, height, width, ...props }) => {
   return (
     <svg
@@ -94,10 +97,14 @@ export const Activity = ({ fill, size, height, width, ...props }) => {
   );
 };
 
+// @ts-ignore
 export const Flash = ({
   fill = 'currentColor',
+  // @ts-ignore
   size,
+  // @ts-ignore
   height,
+  // @ts-ignore
   width,
   ...props
 }) => {
@@ -124,8 +131,11 @@ export const Flash = ({
 
 export const Server = ({
   fill = 'currentColor',
+  // @ts-ignore
   size,
+  // @ts-ignore
   height,
+  // @ts-ignore
   width,
   ...props
 }) => {
@@ -151,8 +161,11 @@ export const Server = ({
 
 export const TagUser = ({
   fill = 'currentColor',
+  // @ts-ignore
   size,
+  // @ts-ignore
   height,
+  // @ts-ignore
   width,
   ...props
 }) => {
@@ -186,8 +199,11 @@ export const TagUser = ({
 
 export const Scale = ({
   fill = 'currentColor',
+  // @ts-ignore
   size,
+  // @ts-ignore
   height,
+  // @ts-ignore
   width,
   ...props
 }) => {

@@ -1,4 +1,3 @@
-import { stringifyCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import React from 'react';
 export const CheckIcon = ({
   size,

@@ -14,7 +14,6 @@ import { MailIcon } from './icon/MailIcon';
 import { LockIcon } from './icon/LockIcon';
 import { UserIcon } from './icon/UserIcon';
 import { PhoneIcon } from './icon/PhoneIcon';
-import { KeyIcon } from './icon/KeyIcon';
 import { useRouter } from 'next/navigation';
 
 export default function RegisterModal() {

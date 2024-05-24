@@ -1,7 +1,6 @@
-import { getReadableNumber, parseOnlyNumber } from '@/utils/converterUtil';
+import { getReadableNumber } from '@/utils/converterUtil';
 import { IService } from '@/utils/types';
-import { Checkbox, Input } from '@nextui-org/react';
-import React, { useState } from 'react';
+import { Checkbox } from '@nextui-org/react';
 
 const ServiceRow = ({
   service,

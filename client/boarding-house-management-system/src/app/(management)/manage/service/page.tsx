@@ -1,34 +1,12 @@
 'use client';
-import ServiceGrid from '@/components/ServiceGrid';
 import { Tooltip } from '@nextui-org/react';
-import React, { useCallback, useRef, useState } from 'react';
 
-import ExportButton from '@/components/ExportButton';
-import { AgGridReact } from 'ag-grid-react';
-import { IRowNode } from 'ag-grid-community';
 import AddServiceModal from '@/components/AddServiceModal';
-import { IsExternalFilterPresentParams } from 'ag-grid-community';
 import { useGetServicesQuery } from '@/libs/services/serviceApi';
 import ServiceItem from '@/components/ServiceItem';
 
-interface IFilterOption {
-  key: string;
-  value: string;
-}
-
 const ServiceMangement = () => {
   const { data: services = [], isLoading, error } = useGetServicesQuery();
-  const gridRef = useRef<AgGridReact>(null);
-  const [selected, setSelected] = useState('management');
-  // const [selectedFilterOptions, setSelectedFilterOptions] = useState<string[]>(
-  //   [],
-  // );
-  const onBtnCsvExport = useCallback(() => {
-    gridRef.current!.api.exportDataAsCsv();
-  }, []);
-  const onBtnExcelExport = useCallback(() => {
-    gridRef.current!.api.exportDataAsExcel();
-  }, []);
 
   if (isLoading) {
     return <div>Loading...</div>;

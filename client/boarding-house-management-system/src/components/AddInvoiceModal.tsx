@@ -15,7 +15,7 @@ import {
   Textarea,
   useDisclosure,
 } from '@nextui-org/react';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { PlusIcon } from './icon/PlusIcon';
 import Image from 'next/image';
 import { parseDate } from '@internationalized/date';

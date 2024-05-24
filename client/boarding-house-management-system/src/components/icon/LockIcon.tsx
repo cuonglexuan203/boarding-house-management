@@ -1,5 +1,5 @@
 import React from 'react';
-export const LockIcon = (props) => (
+export const LockIcon = (props: any) => (
   <svg
     aria-hidden="true"
     fill="none"

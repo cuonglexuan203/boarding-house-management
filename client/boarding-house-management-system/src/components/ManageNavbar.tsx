@@ -1,5 +1,5 @@
 'use client';
-import { Button, Tab, Tabs } from '@nextui-org/react';
+import { Tab, Tabs } from '@nextui-org/react';
 import { usePathname } from 'next/navigation';
 import React, { useCallback, useMemo } from 'react';
 import HomeIcon from './icon/HomeIcon';
