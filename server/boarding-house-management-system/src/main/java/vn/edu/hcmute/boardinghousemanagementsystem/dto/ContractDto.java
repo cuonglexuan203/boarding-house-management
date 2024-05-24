@@ -12,13 +12,14 @@ public record ContractDto(
         Integer numberOfMember,
         LocalDate startDate,
         LocalDate endDate,
-        ContractStatus status
+        ContractStatus status,
+        TenantDto contractRepresentation
 
 ) {
     public ContractDto(Contract contract) {
         this(contract.getId(), contract.getDepositAmount(),
                 contract.getNumberOfMember(), contract.getStartDate(), contract.getEndDate(),
-                contract.getStatus());
+                contract.getStatus(), TenantDto.of( contract.getContractRepresentation()));
     }
     @JsonIgnore
     public Contract getContract() {

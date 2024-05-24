@@ -208,8 +208,8 @@ public class DbOperationRunner implements CommandLineRunner {
 //           service & service detail
             int servicesSize = services.size();
             int servicesIdx = 0;
-            for(int i = 0; i < serviceDetails.size(); i++){
-                if(servicesIdx >= servicesSize){
+            for (int i = 0; i < serviceDetails.size(); i++) {
+                if (servicesIdx >= servicesSize) {
                     servicesIdx = 0;
                 }
                 services.get(servicesIdx++).addServiceDetail(serviceDetails.get(i));
@@ -218,8 +218,8 @@ public class DbOperationRunner implements CommandLineRunner {
             invoiceService.save(invoices);
             int invoicesSize = invoices.size();
             int invoiceIdx = 0;
-            for(int i = 0; i < serviceDetails.size(); i++){
-                if(invoiceIdx >= invoicesSize){
+            for (int i = 0; i < serviceDetails.size(); i++) {
+                if (invoiceIdx >= invoicesSize) {
                     invoiceIdx = 0;
                 }
                 invoices.get(invoiceIdx++).addServiceDetail(serviceDetails.get(i));
@@ -229,8 +229,8 @@ public class DbOperationRunner implements CommandLineRunner {
 //          room & service
             roomService.save(rooms);
             servicesIdx = 0;
-            for(int i = 0; i < rooms.size(); i++){
-                if(servicesIdx >= servicesSize){
+            for (int i = 0; i < rooms.size(); i++) {
+                if (servicesIdx >= servicesSize) {
                     servicesIdx = 0;
                 }
                 rooms.get(i).addService(services.get(servicesIdx++));
@@ -239,14 +239,14 @@ public class DbOperationRunner implements CommandLineRunner {
 //          room booking & invoice
             int roomBookingsSize = roomBookings.size();
             int roomBookingsIdx = 0;
-            for(int i = 0; i < invoicesSize; i++){
+            for (int i = 0; i < invoicesSize; i++) {
                 roomBookings.get(roomBookingsIdx++).addInvoice(invoices.get(i));
             }
 //          room & room booking
             int roomsSize = rooms.size();
             int roomsIdx = 0;
-            for(int i = 0;  i < roomBookings.size(); i++){
-                if(roomsIdx >= roomsSize){
+            for (int i = 0; i < roomBookings.size(); i++) {
+                if (roomsIdx >= roomsSize) {
                     roomsIdx = 0;
                 }
                 rooms.get(roomsIdx++).addRoomBooking(roomBookings.get(i));
@@ -255,23 +255,31 @@ public class DbOperationRunner implements CommandLineRunner {
 //          room booking & contract
             int contractsSize = contracts.size();
             int contractsIdx = 0;
-            for(int i = 0; i < roomBookings.size(); i++){
-                if(contractsIdx >= contractsSize){
+            for (int i = 0; i < roomBookings.size(); i++) {
+                if (contractsIdx >= contractsSize) {
                     contractsIdx = 0;
                 }
                 contracts.get(contractsIdx++).addRoomBooking(roomBookings.get(i));
             }
             roomBookingService.save(roomBookings);
 //
-//          room booking & user
+//          room booking & user & contract
             roomBookingsIdx = 0;
-            for(int i = 0; i < users.size(); i++){
+            contractsIdx = 0;
+            boolean canSetContractRepresentation = true;
+            for (int i = 0; i < users.size(); i++) {
                 User user = users.get(i);
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
-                if(roomBookingsIdx >= roomBookingsSize){
+                if (roomBookingsIdx >= roomBookingsSize) {
                     roomBookingsIdx = 0;
                 }
+                if (contractsIdx >= contractsSize) {
+                    canSetContractRepresentation = false;
+                }
                 roomBookings.get(roomBookingsIdx++).addUser(user);
+                if (canSetContractRepresentation) {
+                    contracts.get(contractsIdx++).addContractRepresentation(user);
+                }
             }
             userService.save(users);
 

@@ -110,6 +110,7 @@ export interface Contract {
   startDate: string;
   endDate: string;
   status: string;
+  contractRepresentation: ITenant;
 }
 
 export interface IRoomDetails {
@@ -119,5 +120,5 @@ export interface IRoomDetails {
   services: IService[];
   tenants: ITenant[];
   invoices: IInvoice[];
-  contract: Contract;
+  contracts: Contract[];
 }

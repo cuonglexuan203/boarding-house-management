@@ -468,9 +468,13 @@ const InvoiceGrid = ({
     return {
       editable: (params: EditableCallbackParams) => {
         const colIdArr = params.colDef.colId?.split('_');
-        const serviceId = colIdArr?.at(0);
-        // @ts-ignore
-        if (parseInt(serviceId) > params.data.serviceDetails.length) {
+        const serviceId = Number(colIdArr?.at(0));
+        if (
+          serviceId !== 0 &&
+          params.data.serviceDetails.filter(
+            (sd: IServiceDetail) => sd.serviceId === serviceId,
+          ).length <= 0
+        ) {
           return false;
         }
         return !colIdArr?.includes('immutability');
@@ -534,7 +538,12 @@ const InvoiceGrid = ({
       const colIdArr = event.colDef.colId?.split('_');
       if (colIdArr!.length >= 2) {
         // @ts-ignore
-        const serviceDetailId = parseInt(colIdArr!.at(0), 10);
+        const serviceId = parseInt(colIdArr!.at(0), 10);
+        const serviceDetails = oldData.serviceDetails as IServiceDetail[];
+        const serviceDetailId = serviceDetails
+          .filter((sd) => sd.serviceId === serviceId)
+          .at(0)?.id;
+
         const serviceDetailField = colIdArr?.at(1) as string;
         if (newData.serviceDetails) {
           const serviceDetail: IServiceDetail = newData.serviceDetails.find(

@@ -21,7 +21,6 @@ public class AuthController {
     public ResponseEntity<User> register(@RequestBody UserDto userDto){
         User user = authService.register(userDto.getUser());
         return ResponseEntity.ok(user);
-
     }
 
     @PostMapping("signin")

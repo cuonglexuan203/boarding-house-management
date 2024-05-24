@@ -161,12 +161,16 @@ public class RoomServiceImpl implements RoomService {
                     services.stream().map(AccommodationServiceDto::of).collect(Collectors.toList()),
                     List.of(),
                     List.of(),
-                    null);
+                    List.of());
             return roomDetailsDto;
         }
         List<User> tenants = currentRoomBooking.getUsers();
         List<Invoice> invoices = currentRoomBooking.getInvoices();
-        Contract contract = currentRoomBooking.getContract();
+        List<ContractDto> contractDtos = roomBookings.stream().map(r -> {
+            Contract contract = r.getContract();
+            contract.getContractRepresentation().setRoomBookings(null);
+            return ContractDto.of(r.getContract());
+        }).collect(Collectors.toList());
         //
         tenants.forEach(t -> t.setRoomBookings(null));
         //
@@ -176,7 +180,7 @@ public class RoomServiceImpl implements RoomService {
                 services.stream().map(AccommodationServiceDto::of).collect(Collectors.toList()),
                 tenants.stream().map(TenantDto::of).collect(Collectors.toList()),
                 invoices.stream().map(InvoiceDto::of).collect(Collectors.toList()),
-                ContractDto.of(contract)
+                contractDtos
         );
         return roomDetailsDto;
     }

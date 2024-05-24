@@ -11,7 +11,7 @@ public record RoomDetailsDto(
         List<AccommodationServiceDto> services,
         List<TenantDto> tenants,
         List<InvoiceDto> invoices,
-        ContractDto contract
+        List<ContractDto> contracts
 
 ) {
 

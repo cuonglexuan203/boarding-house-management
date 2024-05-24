@@ -36,6 +36,7 @@ const RoomDetails = ({ params }: { params: { roomId: string } }) => {
   } = useGetRoomDetailsQuery(Number(params.roomId));
   const [servicePage, setServicePage] = useState(1);
   const [invoicePage, setInvoicePage] = useState(1);
+  const [contractPage, setContractPage] = useState(1);
   const serviceColumns = useMemo(
     () => [
       {
@@ -77,11 +78,44 @@ const RoomDetails = ({ params }: { params: { roomId: string } }) => {
       },
       {
         key: 'invoiceTime',
-        label: 'Creation Date & Payment Deadline',
+        label: 'Creation date & Payment deadline',
       },
       {
         key: 'status',
         label: 'Status',
+      },
+    ],
+    [],
+  );
+  const contractColumns = useMemo(
+    () => [
+      {
+        key: 'contractRepresentation',
+        label: 'Contract representation',
+      },
+      {
+        key: 'phoneNumber',
+        label: 'Phone number',
+      },
+      {
+        key: 'depositAmount',
+        label: 'Deposit price',
+      },
+      {
+        key: 'numberOfMember',
+        label: 'Number of member',
+      },
+      {
+        key: 'startDate',
+        label: 'Contract start date',
+      },
+      {
+        key: 'endDate',
+        label: 'Contract end date',
+      },
+      {
+        key: 'status',
+        label: 'Contract status',
       },
     ],
     [],
@@ -115,6 +149,15 @@ const RoomDetails = ({ params }: { params: { roomId: string } }) => {
     return rows;
   }, [data]);
 
+  const contractRows = useMemo(() => {
+    const rows = data?.contracts.map((c) => ({
+      ...c,
+      contractRepresentation: c.contractRepresentation.fullName,
+      phoneNumber: c.contractRepresentation.phoneNumber,
+    }));
+    return rows;
+  }, [data]);
+
   const serviceInfo: ITablePagination = useMemo(() => {
     const rowsPerPage = 5;
     const start = (servicePage - 1) * rowsPerPage;
@@ -137,6 +180,17 @@ const RoomDetails = ({ params }: { params: { roomId: string } }) => {
     };
   }, [invoicePage, data]);
 
+  const contractInfo: ITablePagination = useMemo(() => {
+    const rowsPerPage = 5;
+    const start = (servicePage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    return {
+      rowsPerPage,
+      pages: contractRows ? Math.ceil(contractRows.length / rowsPerPage) : 0,
+      items: contractRows ? contractRows.slice(start, end) : [],
+    };
+  }, [contractPage, data]);
+
   if (isRoomDetailsLoading) {
     return <div>Loading...</div>;
   }
@@ -150,11 +204,11 @@ const RoomDetails = ({ params }: { params: { roomId: string } }) => {
     services,
     tenants,
     invoices,
-    contract,
+    contracts,
   } = data as IRoomDetails;
 
   return (
-    <section className="relative mt-8 mx-6 grid grid-cols-3 gap-4">
+    <section className="relative mt-8 mx-6 grid grid-cols-3 gap-4 mb-8">
       {/* Room infor */}
       <div className="sticky top-4 left-4 h-fit">
         {/* Header */}
@@ -165,15 +219,32 @@ const RoomDetails = ({ params }: { params: { roomId: string } }) => {
         {/* Room infor */}
         <div className="mt-6">
           <Card>
-            <CardHeader className="flex justify-center">
+            <CardHeader className="flex justify-center items-center">
               <p>Room number:&nbsp;</p>
-              <p className="font-semibold">{room.roomNumber}</p>
+              <div className="flex justify-center items-center">
+                <p className="font-bold text-xl mr-4">{room.roomNumber}</p>
+                <div>
+                  <Image
+                    alt=""
+                    sizes="100%"
+                    width={0}
+                    height={0}
+                    className="w-12 h-auto"
+                    src={'/image/room_details/room.png'}
+                  />
+                </div>
+              </div>
             </CardHeader>
             <Divider orientation="horizontal" />
             <CardBody className="gap-3 flex flex-col">
               <div className="flex justify-between">
                 <span>Floor</span>
                 <span className="font-semibold">{room.floor}</span>
+              </div>
+              <Divider orientation="horizontal" />
+              <div className="flex justify-between">
+                <span>Room type</span>
+                <span className="font-semibold">{room.type}</span>
               </div>
               <Divider orientation="horizontal" />
               <div className="flex justify-between">
@@ -205,41 +276,9 @@ const RoomDetails = ({ params }: { params: { roomId: string } }) => {
                   <Divider orientation="horizontal" />
                   <div className="flex justify-between">
                     <span>Check in date</span>
-                    <span className="font-semibold">
+                    <span className="font-semibold text-primary">
                       {currentRoomBooking.checkInDate.toString()}
                     </span>
-                  </div>
-                  <Divider orientation="horizontal" />
-                  <div className="flex justify-between">
-                    <span>Deposit amount</span>
-                    <span className="font-semibold">
-                      {getReadableNumber(contract.depositAmount)}&nbsp;VND
-                    </span>
-                  </div>
-                  <Divider orientation="horizontal" />
-                  <div className="flex justify-between">
-                    <span>Financial status</span>
-                    {contract.status.toLowerCase() === 'paid' ? (
-                      <Chip
-                        startContent={<CheckIcon size={28} />}
-                        variant="flat"
-                        color="success"
-                      >
-                        <span className="font-semibold">
-                          {contract.status}&nbsp;
-                        </span>
-                      </Chip>
-                    ) : (
-                      <Chip
-                        startContent={<CheckIcon size={28} />}
-                        variant="flat"
-                        color="warning"
-                      >
-                        <span className="font-semibold">
-                          {contract.status}&nbsp;
-                        </span>
-                      </Chip>
-                    )}
                   </div>
                 </>
               )}
@@ -440,6 +479,106 @@ const RoomDetails = ({ params }: { params: { roomId: string } }) => {
               Record guest stays over the period of the room
             </p>
           </div>
+          {/* Room history details */}
+          {contracts && contracts.length > 0 ? (
+            <Table
+              className="mt-6 text-center"
+              classNames={{
+                wrapper: 'min-h-[222px]',
+              }}
+              bottomContent={
+                <div className="flex w-full justify-center">
+                  <Pagination
+                    isCompact
+                    showControls
+                    showShadow
+                    color="primary"
+                    page={contractPage}
+                    total={contractInfo.pages}
+                    onChange={(page) => setContractPage(page)}
+                  />
+                </div>
+              }
+            >
+              <TableHeader columns={contractColumns}>
+                {(column) => (
+                  <TableColumn className="text-center" key={column.key}>
+                    {column.label}
+                  </TableColumn>
+                )}
+              </TableHeader>
+              <TableBody items={contractInfo.items}>
+                {(item) => (
+                  <TableRow key={item.id}>
+                    {(columnKey) => {
+                      const cellValue = getKeyValue(item, columnKey);
+                      switch (columnKey) {
+                        case 'contractRepresentation': {
+                          return (
+                            <TableCell>
+                              <p className="font-semibold">{cellValue}</p>
+                            </TableCell>
+                          );
+                        }
+                        case 'status': {
+                          return (
+                            <TableCell>
+                              {cellValue.toLowerCase() === 'paid' ? (
+                                <Chip
+                                  startContent={<CheckIcon size={28} />}
+                                  variant="flat"
+                                  color="success"
+                                >
+                                  <span className="font-semibold">
+                                    {cellValue}&nbsp;
+                                  </span>
+                                </Chip>
+                              ) : (
+                                <Chip
+                                  startContent={<CheckIcon size={28} />}
+                                  variant="flat"
+                                  color="warning"
+                                >
+                                  <span className="font-semibold">
+                                    {cellValue}&nbsp;
+                                  </span>
+                                </Chip>
+                              )}
+                            </TableCell>
+                          );
+                        }
+                        case 'startDate': {
+                          return (
+                            <TableCell>
+                              <p className="text-primary">{cellValue}</p>
+                            </TableCell>
+                          );
+                        }
+                        case 'endDate': {
+                          return (
+                            <TableCell>
+                              <p className="text-danger">{cellValue}</p>
+                            </TableCell>
+                          );
+                        }
+                        default: {
+                          return (
+                            <TableCell>
+                              {getKeyValue(item, columnKey)}
+                            </TableCell>
+                          );
+                        }
+                      }
+                    }}
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="flex justify-center items-center text-center">
+              <p>No contract to show</p>
+            </div>
+          )}
         </div>
       </div>
     </section>

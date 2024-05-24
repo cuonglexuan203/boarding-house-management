@@ -46,10 +46,24 @@ public class Contract {
     @OneToOne(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private RoomBooking roomBooking;
 
+    @ToString.Exclude
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private User contractRepresentation;
+
     //
     public void addRoomBooking(RoomBooking roomBooking){
         roomBooking.setContract(this);
         this.roomBooking = roomBooking;
+    }
+
+    public void addContractRepresentation(User contractRepresentation){
+        contractRepresentation.getContracts().add(this);
+        this.contractRepresentation = contractRepresentation;
+    }
+    public void removeContractRepresentation(User contractRepresentation){
+        contractRepresentation.getContracts().remove(this);
+        this.contractRepresentation = null;
     }
 
 }

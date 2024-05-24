@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "user")
-public class    User {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -92,11 +92,17 @@ public class    User {
     )
     private List<Permission> permissions = new ArrayList<>();
 
+    @ToString.Exclude
+    @JsonIgnore
+    @OneToMany(mappedBy = "contractRepresentation", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private List<Contract> contracts = new ArrayList<>();
+
     //
     public void addRole(Role role) {
         role.getUsers().add(this);
         this.roles.add(role);
     }
+
     public void removeRole(Role role) {
         role.getUsers().remove(this);
         this.roles.remove(role);
@@ -106,18 +112,30 @@ public class    User {
         notification.setUser(this);
         this.notifications.add(notification);
     }
+
     public void removeNotification(Notification notification) {
         notification.setUser(null);
         this.notifications.remove(notification);
     }
-    public void addRoomBooking(RoomBooking roomBooking){
+
+    public void addRoomBooking(RoomBooking roomBooking) {
         roomBooking.getUsers().add(this);
         this.getRoomBookings().add(roomBooking);
     }
-    public void removeRoomBooking(RoomBooking roomBooking){
+
+    public void removeRoomBooking(RoomBooking roomBooking) {
         roomBooking.getUsers().remove(null);
         this.getRoomBookings().remove(roomBooking);
     }
 
+    public void addContract(Contract contract) {
+        contract.setContractRepresentation(this);
+        this.contracts.add(contract);
+    }
+
+    public void removeContract(Contract contract) {
+        contract.setContractRepresentation(null);
+        this.contracts.remove(contract);
+    }
 
 }
