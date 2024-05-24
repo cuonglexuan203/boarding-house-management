@@ -24,7 +24,7 @@ const Login = () => {
       const data = await loginTrigger({ username, password }).unwrap();
       console.log(data);
       setJwtAuthToken(data);
-      router.push('/'); // Redirect to home page or any other page after login
+      router.refresh(); // Redirect to home page or any other page after login
     } catch (err) {
       console.error('Login error:', err);
     }

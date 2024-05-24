@@ -450,6 +450,7 @@ const InvoiceGrid = ({
               fontWeight: 'bold',
             };
           },
+          editable: true,
         };
 
         return [
