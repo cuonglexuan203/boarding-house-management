@@ -4,17 +4,33 @@ import { Input, Checkbox, Button, Link, Image } from '@nextui-org/react';
 import { MailIcon } from '@/components/icon/MailIcon';
 import { LockIcon } from '@/components/icon/LockIcon';
 import { useRouter } from 'next/navigation';
-
+import { useSignInMutation } from '@/libs/services/authApi';
+import { setJwtAuthToken } from '@/utils/auth';
+import Cookies from 'js-cookie';
 const Login = () => {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
-  const handleSignIn = () => {
-    router.push('/');
+  const [loginTrigger] = useSignInMutation();
+  const jwtToken = Cookies.get('jwtToken');
+  if (jwtToken) {
+    router.replace('/');
+  }
+  if (jwtToken) {
+    return <></>;
+  }
+  const handleSignIn = async () => {
+    try {
+      const data = await loginTrigger({ username, password }).unwrap();
+      console.log(data);
+      setJwtAuthToken(data);
+      router.push('/'); // Redirect to home page or any other page after login
+    } catch (err) {
+      console.error('Login error:', err);
+    }
   };
 
-  const isSignInDisabled = !email || !password;
+  const isSignInDisabled = !username || !password;
 
   return (
     <>
@@ -36,19 +52,17 @@ const Login = () => {
             endContent={
               <MailIcon className="text-3xl text-default-400 pointer-events-none flex-shrink-0" />
             }
-            label="Email"
-            placeholder="Enter your email"
+            label="Username"
             variant="underlined"
             className="mb-4"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <Input
             endContent={
               <LockIcon className="text-3xl text-default-400 pointer-events-none flex-shrink-0" />
             }
             label="Password"
-            placeholder="Enter your password"
             type="password"
             variant="underlined"
             className="mb-4"

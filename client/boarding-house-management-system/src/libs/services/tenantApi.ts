@@ -1,11 +1,19 @@
 import { ITenant } from '@/utils/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import Cookies from 'js-cookie';
 
 export const tenantApi = createApi({
   reducerPath: 'tenantApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:5000/api/tenants',
     // credentials: 'include',
+    prepareHeaders: (headers) => {
+      const token = Cookies.get('jwtToken');
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   refetchOnReconnect: true,
   tagTypes: ['tenants', 'tenant'],

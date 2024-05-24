@@ -5,7 +5,6 @@ import { MailIcon } from '@/components/icon/MailIcon';
 import { LockIcon } from '@/components/icon/LockIcon';
 import { UserIcon } from '@/components/icon/UserIcon';
 import { PhoneIcon } from '@/components/icon/PhoneIcon';
-import RoomHubLogo from '@/components/RoomHubLogo';
 import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {

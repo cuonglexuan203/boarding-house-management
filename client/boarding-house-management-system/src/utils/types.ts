@@ -122,3 +122,13 @@ export interface IRoomDetails {
   invoices: IInvoice[];
   contracts: Contract[];
 }
+
+export interface ISignIn {
+  username: string;
+  password: string;
+}
+
+export interface IAuthResponse {
+  token: string;
+  expiresIn: number;
+}

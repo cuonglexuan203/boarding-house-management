@@ -1,9 +1,10 @@
 'use client';
-import { Tab, Tabs } from '@nextui-org/react';
+import { Button, Tab, Tabs } from '@nextui-org/react';
 import { usePathname } from 'next/navigation';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import HomeIcon from './icon/HomeIcon';
 import Image from 'next/image';
+import Cookies from 'js-cookie';
 
 const ManageNavbar = () => {
   const pathname = usePathname();
@@ -14,6 +15,9 @@ const ManageNavbar = () => {
     }
     return pathname.substring(0, nextSubrouteIdx);
   }, [pathname]);
+  const handleLogout = useCallback(() => {
+    Cookies.remove('jwtToken');
+  }, []);
   const navbarContent = [
     {
       id: '/manage',
@@ -78,18 +82,20 @@ const ManageNavbar = () => {
     },
     {
       id: '/logout',
-      href: '/logout',
+      href: '/',
       label: (
         <>
-          <Image
-            src={'/image/manageNavbar/logout.png'}
-            alt=""
-            className="h-12 w-12"
-            width={0}
-            height={0}
-            sizes="100"
-          />
-          <span>Log out</span>
+          <div onClick={handleLogout}>
+            <Image
+              src={'/image/manageNavbar/logout.png'}
+              alt=""
+              className="h-12 w-12"
+              width={0}
+              height={0}
+              sizes="100"
+            />
+            <span>Log out</span>
+          </div>
         </>
       ),
     },

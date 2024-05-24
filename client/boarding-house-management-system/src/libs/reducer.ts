@@ -9,6 +9,7 @@ import { locationApi } from './services/locationApi';
 import { invoiceApi } from './services/invoiceApi';
 import { serviceApi } from './services/serviceApi';
 import { roomDetailsApi } from './services/roomDetailsApi';
+import { authApi } from './services/authApi';
 
 const rootPersistConfig = {
   key: 'root',
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   [invoiceApi.reducerPath]: invoiceApi.reducer,
   [serviceApi.reducerPath]: serviceApi.reducer,
   [roomDetailsApi.reducerPath]: roomDetailsApi.reducer,
+  [authApi.reducerPath]: authApi.reducer,
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);

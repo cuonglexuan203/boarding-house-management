@@ -29,6 +29,7 @@
     "ag-grid-react": "^31.3.1",
     "font-awesome": "^4.7.0",
     "framer-motion": "^11.1.7",
+    "js-cookie": "^3.0.5",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
@@ -37,6 +38,7 @@
     "redux-thunk": "^3.1.0"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

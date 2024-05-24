@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Modal,
   ModalContent,
@@ -15,10 +15,24 @@ import {
 import { MailIcon } from './icon/MailIcon';
 import { LockIcon } from './icon/LockIcon';
 import { useRouter } from 'next/navigation';
+import { useSignInMutation } from '@/libs/services/authApi';
+import { setJwtAuthToken } from '@/utils/auth';
 
 export default function LoginModal() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const { onOpenChange } = useDisclosure();
   const router = useRouter();
+  const [loginTrigger] = useSignInMutation();
+  const handleSignIn = async () => {
+    try {
+      const data = await loginTrigger({ username, password }).unwrap();
+      await setJwtAuthToken(data);
+      router.refresh(); // Redirect to home page or any other page after login
+    } catch (err) {
+      console.error('Login error:', err);
+    }
+  };
   const onClose = (defaultOnClose: () => void) => {
     router.back();
     defaultOnClose();
@@ -42,8 +56,10 @@ export default function LoginModal() {
                   endContent={
                     <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
                   }
-                  label="Email"
-                  placeholder="Enter your email"
+                  label="Username"
+                  placeholder="Enter your username"
+                  value={username}
+                  onValueChange={setUsername}
                   variant="bordered"
                 />
                 <Input
@@ -53,6 +69,8 @@ export default function LoginModal() {
                   label="Password"
                   placeholder="Enter your password"
                   type="password"
+                  value={password}
+                  onValueChange={setPassword}
                   variant="bordered"
                 />
                 <div className="flex py-2 px-1 justify-between">
@@ -76,7 +94,13 @@ export default function LoginModal() {
                 >
                   Close
                 </Button>
-                <Button color="primary" onPress={() => onClose(defaultOnClose)}>
+                <Button
+                  color="primary"
+                  onPress={async () => {
+                    await handleSignIn();
+                    onClose(defaultOnClose);
+                  }}
+                >
                   Sign in
                 </Button>
               </ModalFooter>

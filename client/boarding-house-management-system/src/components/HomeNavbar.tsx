@@ -14,7 +14,6 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   NavbarMenuToggle,
-  useDisclosure,
 } from '@nextui-org/react';
 import {
   ChevronDown,
@@ -25,15 +24,14 @@ import {
   TagUser,
   Scale,
 } from '@/components/icon/Icon';
-import { AcmeLogo } from '@/components/icon/AcmeLogo';
 import RoomHubLogo from '@/components/icon/RoomHubLogo';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 const HomeNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
+  const jwtAuthToken = Cookies.get('jwtToken');
   const router = useRouter();
   const menuItems = [
     'Profile',
@@ -48,14 +46,21 @@ const HomeNavbar = () => {
     'Log Out',
   ];
   const icons = {
+    // @ts-ignore
     chevron: <ChevronDown fill="currentColor" size={16} />,
+    // @ts-ignore
     scale: <Scale className="text-warning" fill="currentColor" size={30} />,
+    // @ts-ignore
     lock: <Lock className="text-success" fill="currentColor" size={30} />,
     activity: (
+      // @ts-ignore
       <Activity className="text-secondary" fill="currentColor" size={30} />
     ),
+    // @ts-ignore
     flash: <Flash className="text-primary" fill="currentColor" size={30} />,
+    // @ts-ignore
     server: <Server className="text-success" fill="currentColor" size={30} />,
+    // @ts-ignore
     user: <TagUser className="text-danger" fill="currentColor" size={30} />,
   };
   return (
@@ -152,25 +157,45 @@ const HomeNavbar = () => {
         </NavbarContent>
         <NavbarContent justify="end" className="gap-2">
           <NavbarItem className="hidden lg:flex">
-            <Button
-              onClick={() => router.push('/login')}
-              className="bg-gradient-to-tr from-cyan-500 to-blue-500 font-bold"
-              color="primary"
-              startContent={
-                <Image
-                  className="w-3/4 h-3/4"
-                  src={'/image/signup.png'}
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100"
-                />
-              }
-            >
-              Login
-            </Button>
+            {jwtAuthToken ? (
+              <Button
+                onClick={() => router.push('/manage')}
+                className="bg-gradient-to-tr from-cyan-500 to-blue-500 font-bold"
+                color="primary"
+                startContent={
+                  <Image
+                    className="w-3/4 h-3/4"
+                    src={'/image/home/manage.png'}
+                    alt=""
+                    width={0}
+                    height={0}
+                    sizes="100"
+                  />
+                }
+              >
+                Manage
+              </Button>
+            ) : (
+              <Button
+                onClick={() => router.push('/login')}
+                className="bg-gradient-to-tr from-cyan-500 to-blue-500 font-bold"
+                color="primary"
+                startContent={
+                  <Image
+                    className="w-3/4 h-3/4"
+                    src={'/image/signup.png'}
+                    alt=""
+                    width={0}
+                    height={0}
+                    sizes="100"
+                  />
+                }
+              >
+                Login
+              </Button>
+            )}
           </NavbarItem>
-          <NavbarItem>
+          {/* <NavbarItem>
             <Button
               onClick={() => router.push('/register')}
               className="bg-gradient-to-bl from-pink-500 to-yellow-500 text-white shadow-lg font-bold"
@@ -188,7 +213,7 @@ const HomeNavbar = () => {
             >
               Register
             </Button>
-          </NavbarItem>
+          </NavbarItem> */}
         </NavbarContent>
         <NavbarMenu>
           {menuItems.map((item, index) => (

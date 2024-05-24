@@ -1,5 +1,6 @@
-import {IService} from '@/utils/types';
+import { IService } from '@/utils/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import Cookies from 'js-cookie';
 
 export const serviceApi = createApi({
   reducerPath: 'serviceApi',
@@ -7,12 +8,19 @@ export const serviceApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:5000/api/services',
     //credentials: 'include',
+    prepareHeaders: (headers) => {
+      const token = Cookies.get('jwtToken');
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   refetchOnReconnect: true,
   endpoints: (builder) => ({
     getServices: builder.query<IService[], void>({
       query: () => '',
-      providesTags: ['services']
+      providesTags: ['services'],
     }),
     addService: builder.mutation<IService, IService>({
       query: (body) => ({
@@ -46,4 +54,9 @@ export const serviceApi = createApi({
   }),
 });
 
-export const { useGetServicesQuery, useAddServiceMutation, useUpdateServiceMutation, useDeleteServiceMutation } = serviceApi;
+export const {
+  useGetServicesQuery,
+  useAddServiceMutation,
+  useUpdateServiceMutation,
+  useDeleteServiceMutation,
+} = serviceApi;
