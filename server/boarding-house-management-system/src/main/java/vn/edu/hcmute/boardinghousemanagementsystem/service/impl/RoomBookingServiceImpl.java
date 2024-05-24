@@ -42,24 +42,4 @@ public class RoomBookingServiceImpl implements RoomBookingService {
         roomBookingRepo.saveAll(roomBookings);
     }
 
-    @Override
-    public RoomBooking getLatestRoomBookingInUse(long roomId) {
-        if (roomId <= 0) {
-            return null;
-        }
-        LocalDate now = LocalDate.now();
-        Room room = roomService.findById(roomId).orElseThrow(() -> new RoomNotFoundException("Room not found with id: " + roomId));
-        if(!room.getStatus().equals(RoomStatus.OCCUPIED)){
-           return null;
-        }
-        List<RoomBooking> roomBookings = room.getRoomBookings().stream().filter(r -> {
-            Contract contract = r.getContract();
-            return DateTimeUtil.isDateInRange(contract.getStartDate(), contract.getEndDate(), now);
-        }).collect(Collectors.toList());
-        if (roomBookings.isEmpty()) {
-            return null;
-        }
-//        List<LocalDate>
-        return roomBookings.getFirst();
-    }
 }

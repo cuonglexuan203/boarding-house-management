@@ -1,7 +1,9 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.service;
 
+import vn.edu.hcmute.boardinghousemanagementsystem.dto.RoomDetailsDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.RoomDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
+import vn.edu.hcmute.boardinghousemanagementsystem.entity.RoomBooking;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,9 @@ public interface RoomService {
     //
     List<Room> getRooms();
     List<RoomDto> getRoomDtos();
+    RoomBooking getLatestRoomBookingInUse(long roomId);
+    RoomDetailsDto getRoomDetailsDto(long roomId);
     Room save(RoomDto roomDto);
     Room update(RoomDto roomDto);
+
 }

@@ -96,3 +96,28 @@ export interface IService {
   isMeteredService: boolean;
   roomIds: number[];
 }
+
+export interface IRoomBooking {
+  id: number;
+  checkInDate: string;
+  checkOutDate: string;
+}
+
+export interface Contract {
+  id: number;
+  depositAmount: number;
+  numberOfMember: number;
+  startDate: string;
+  endDate: string;
+  status: string;
+}
+
+export interface IRoomDetails {
+  room: IRoom;
+  roomBookings: IRoomBooking[];
+  currentRoomBooking: IRoomBooking;
+  services: IService[];
+  tenants: ITenant[];
+  invoices: IInvoice[];
+  contract: Contract;
+}

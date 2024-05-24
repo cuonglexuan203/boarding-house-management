@@ -6,19 +6,20 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import vn.edu.hcmute.boardinghousemanagementsystem.dto.RoomDto;
-import vn.edu.hcmute.boardinghousemanagementsystem.entity.AccommodationService;
-import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
-import vn.edu.hcmute.boardinghousemanagementsystem.entity.RoomBooking;
-import vn.edu.hcmute.boardinghousemanagementsystem.entity.User;
+import vn.edu.hcmute.boardinghousemanagementsystem.dto.*;
+import vn.edu.hcmute.boardinghousemanagementsystem.entity.*;
 import vn.edu.hcmute.boardinghousemanagementsystem.exception.AccommodationServiceNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.exception.RoomNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.repo.RoomRepository;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.AccommodationServiceService;
+import vn.edu.hcmute.boardinghousemanagementsystem.service.RoomBookingService;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.RoomService;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.UserService;
+import vn.edu.hcmute.boardinghousemanagementsystem.util.DateTimeUtil;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.ObjectUtil;
+import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomStatus;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -93,7 +94,7 @@ public class RoomServiceImpl implements RoomService {
         }
         room.getRoomBookings().clear();
         //
-        for(AccommodationService service : room.getServices()){
+        for (AccommodationService service : room.getServices()) {
             service.getRooms().remove(room);
         }
         room.getServices().clear();
@@ -127,12 +128,66 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public RoomBooking getLatestRoomBookingInUse(long roomId) {
+        if (roomId <= 0) {
+            return null;
+        }
+        LocalDate now = LocalDate.now();
+        Room room = findById(roomId).orElseThrow(() -> new RoomNotFoundException("Room not found with id: " + roomId));
+        if (!room.getStatus().equals(RoomStatus.OCCUPIED)) {
+            return null;
+        }
+        List<RoomBooking> roomBookings = room.getRoomBookings().stream().filter(r -> {
+            Contract contract = r.getContract();
+            return DateTimeUtil.isDateInRange(contract.getStartDate(), contract.getEndDate(), now);
+        }).collect(Collectors.toList());
+        if (roomBookings.isEmpty()) {
+            return null;
+        }
+//        List<LocalDate>
+        return roomBookings.getFirst();
+    }
+
+    @Override
+    public RoomDetailsDto getRoomDetailsDto(long roomId) {
+        Room room = findById(roomId).orElseThrow(() -> new RoomNotFoundException(("Room not found by id: " + roomId)));
+        List<RoomBooking> roomBookings = room.getRoomBookings();
+        List<AccommodationService> services = room.getServices();
+        RoomBooking currentRoomBooking = getLatestRoomBookingInUse(roomId);
+        if (currentRoomBooking == null) {
+            RoomDetailsDto roomDetailsDto = new RoomDetailsDto(RoomDto.of(room),
+                    roomBookings == null ? List.of() : roomBookings.stream().map(RoomBookingDto::of).collect(Collectors.toList()),
+                    null,
+                    services.stream().map(AccommodationServiceDto::of).collect(Collectors.toList()),
+                    List.of(),
+                    List.of(),
+                    null);
+            return roomDetailsDto;
+        }
+        List<User> tenants = currentRoomBooking.getUsers();
+        List<Invoice> invoices = currentRoomBooking.getInvoices();
+        Contract contract = currentRoomBooking.getContract();
+        //
+        tenants.forEach(t -> t.setRoomBookings(null));
+        //
+        RoomDetailsDto roomDetailsDto = new RoomDetailsDto(RoomDto.of(room),
+                roomBookings.stream().map(RoomBookingDto::of).collect(Collectors.toList()),
+                RoomBookingDto.of(currentRoomBooking),
+                services.stream().map(AccommodationServiceDto::of).collect(Collectors.toList()),
+                tenants.stream().map(TenantDto::of).collect(Collectors.toList()),
+                invoices.stream().map(InvoiceDto::of).collect(Collectors.toList()),
+                ContractDto.of(contract)
+        );
+        return roomDetailsDto;
+    }
+
+    @Override
     public Room save(RoomDto roomDto) {
         Room newRoom = roomDto.getNewRoom();
         List<AccommodationService> managedServices = new ArrayList<>();
         for (AccommodationService service : newRoom.getServices()) {
             AccommodationService managedService;
-            if(service.getId() == null){
+            if (service.getId() == null) {
                 return null;
             }
             managedService = accommodationServiceService.findById(service.getId())

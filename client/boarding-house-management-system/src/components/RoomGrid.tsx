@@ -27,6 +27,7 @@ import CustomDropdown from './CustomDropdown';
 import AutocompleteEditor from './grid/AutocompleteEditor';
 import { getReadableNumber, isNumeric } from '@/utils/converterUtil';
 import ImmutableColumn from './ImmutableColumn';
+import { useRouter } from 'next/navigation';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -43,6 +44,7 @@ const RoomGrid = ({
   const { data: rooms = [], isLoading, error } = useGetRoomsQuery();
   const [updateRoomTrigger] = useUpdateRoomMutation();
   const [deleteRoomTrigger] = useDeleteRoomMutation();
+  const router = useRouter();
   // const [rooms, setRooms] = useState([
   //   {
   //     id: 1,
@@ -259,6 +261,9 @@ const RoomGrid = ({
             items: [
               {
                 value: 'Room detail',
+                onPress: (e: any, selectedRowId: number) => {
+                  router.push(`/manage/roomdetails/${selectedRowId}`);
+                },
               },
               {
                 value: 'New contract',

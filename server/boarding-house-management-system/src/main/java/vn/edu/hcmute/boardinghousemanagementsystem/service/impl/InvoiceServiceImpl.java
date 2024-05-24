@@ -34,7 +34,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final UserService userService;
     private final RoomService roomService;
-    private final RoomBookingService roomBookingService;
 
     @Override
     public Optional<Invoice> findById(long id) {
@@ -163,7 +162,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 //
         List<Invoice> invoices = createInvoices(newInvoice, numberOfRooms);
-        List<RoomBooking> roomBookings = invoiceInfo.roomIds().stream().map(roomBookingService::getLatestRoomBookingInUse).collect(Collectors.toList());
+        List<RoomBooking> roomBookings = invoiceInfo.roomIds().stream().map(roomService::getLatestRoomBookingInUse).collect(Collectors.toList());
         for (int i = 0; i < numberOfRooms; i++) {
             RoomBooking roomBooking = roomBookings.get(i);
             if(roomBooking == null){

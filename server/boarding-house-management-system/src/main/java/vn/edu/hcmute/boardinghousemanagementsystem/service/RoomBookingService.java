@@ -10,5 +10,4 @@ public interface RoomBookingService {
     void save(List<RoomBooking> roomBookings);
 
     //
-    RoomBooking getLatestRoomBookingInUse(long roomId);
 }

@@ -3,10 +3,7 @@ package vn.edu.hcmute.boardinghousemanagementsystem.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.ContractStatus;
 
 import java.time.LocalDate;
@@ -15,6 +12,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "contract")
 public class Contract {

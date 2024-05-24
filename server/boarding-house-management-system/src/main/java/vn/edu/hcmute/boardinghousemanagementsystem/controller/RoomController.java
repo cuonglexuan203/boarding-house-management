@@ -6,8 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.hcmute.boardinghousemanagementsystem.dto.RoomDetailsDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.RoomDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
+import vn.edu.hcmute.boardinghousemanagementsystem.entity.RoomBooking;
+import vn.edu.hcmute.boardinghousemanagementsystem.entity.RoomBookingDto;
+import vn.edu.hcmute.boardinghousemanagementsystem.service.RoomBookingService;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.RoomService;
 
 import java.util.List;
@@ -20,6 +24,7 @@ import java.util.List;
 public class RoomController {
 
     private final RoomService roomService;
+    private final RoomBookingService roomBookingService;
 
     @GetMapping
     public ResponseEntity<List<RoomDto>> getRooms() {
@@ -27,11 +32,22 @@ public class RoomController {
         return ResponseEntity.ok(roomDtos);
     }
 
+    @GetMapping("/{roomId}")
+    public ResponseEntity<RoomDetailsDto> getRoomDetails(@PathVariable Long roomId) {
+        if (roomId == null || roomId <= 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        RoomDetailsDto roomDetailsDto = roomService.getRoomDetailsDto(roomId);
+        if (roomDetailsDto == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.ok(roomDetailsDto);
+    }
 
     @PostMapping
     public ResponseEntity<RoomDto> addRoom(@RequestBody @Valid RoomDto roomDto) {
         log.info("Receive an add room request: " + roomDto);
-       Room persistedRoom = roomService.save(roomDto);
+        Room persistedRoom = roomService.save(roomDto);
         if (persistedRoom == null) {
             log.error("Request for add new room failed");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -70,7 +86,6 @@ public class RoomController {
         roomService.delete(roomId);
         return ResponseEntity.ok().build();
     }
-
 
 
 }

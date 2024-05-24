@@ -33,7 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
-    private final RoomBookingService roomBookingService;
+    private final RoomService roomService;
 
     @Override
     public User register(User user) {
@@ -68,7 +68,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public User register(UserDto userDto) {
         List<Long> roomIds = userDto.rooms().stream().map(roomDto -> roomDto.id()).collect(Collectors.toList());
-        List<RoomBooking> roomBookings = roomIds.stream().map(roomBookingService::getLatestRoomBookingInUse).collect(Collectors.toList());
+        List<RoomBooking> roomBookings = roomIds.stream().map(roomService::getLatestRoomBookingInUse).collect(Collectors.toList());
+        if(roomBookings == null || roomBookings.isEmpty()){
+            return null;
+        }
         User user = userDto.getUser();
         user.setRoomBookings(new ArrayList<>());
         for(RoomBooking roomBooking : roomBookings) {

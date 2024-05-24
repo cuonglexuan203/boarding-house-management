@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,10 +25,10 @@ public class RoomBooking {
     private Long id;
 
     @Column(name = "check_in_date")
-    private Date checkInDate;
+    private LocalDate checkInDate;
 
     @Column(name = "check_out_date")
-    private Date checkOutDate;
+    private LocalDate checkOutDate;
 
     // Relationships
 
