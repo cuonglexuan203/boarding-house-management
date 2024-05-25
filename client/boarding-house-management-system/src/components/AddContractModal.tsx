@@ -1,6 +1,5 @@
 import {
   Button,
-  CheckboxGroup,
   DatePicker,
   Input,
   Modal,
@@ -21,11 +20,8 @@ import { parseDate } from '@internationalized/date';
 import { getReadableNumber, parseOnlyNumber } from '@/utils/converterUtil';
 import { getCurrentDateString } from '@/utils/dateUtil';
 import { useGetRoomsQuery } from '@/libs/services/roomApi';
-import RoomCheckbox from './RoomCheckbox';
-import { IAddContract, IContract, ITenant, IUser } from '@/utils/types';
-import { useAddInvoiceMutation } from '@/libs/services/invoiceApi';
+import { IAddContract, IContract, IUser } from '@/utils/types';
 import { useGetTenantsQuery } from '@/libs/services/tenantApi';
-import CircularProgressLoading from './CircularProgressLoading';
 import Error from './Error';
 import { TenantInputForm } from './TenantInputForm';
 import RoomRadio from './RoomRadio';
@@ -43,6 +39,7 @@ const AddContractModal = () => {
   const [tenantOption, setTenantOption] = useState('old');
   const [tenantId, setTenantId] = useState(new Set([]));
   const [tenantData, setTenantData] = useState<{ tenant: IUser }>({
+    //@ts-ignore
     tenant: null,
   });
   //

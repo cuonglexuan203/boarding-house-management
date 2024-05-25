@@ -19,10 +19,7 @@ import { useAppDispatch } from '@/libs/hooks';
 import { setSelectedRowId } from '@/libs/features/gridSlice';
 import ImmutableColumn from './ImmutableColumn';
 
-import { IServiceDetail } from '@/utils/types';
-
 import { RowClassParams } from 'ag-grid-community';
-import CircularProgressLoading from './CircularProgressLoading';
 import CustomDatePicker from './CustomDatePicker';
 import {
   useDeleteContractMutation,

@@ -9,7 +9,7 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import Image from 'next/image';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import CustomSelect, { ISelectItem } from './CustomSelect';
 import {
   useGetDistrictsQuery,

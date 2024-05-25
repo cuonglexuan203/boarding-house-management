@@ -48,7 +48,7 @@ const TenantGrid = ({
     data: tenants = [],
     isLoading: isTenantLoading,
     error: tenantError,
-  } = useGetTenantsQuery(null);
+  } = useGetTenantsQuery();
   const [updateTenantTrigger] = useUpdateTenantMutation();
   const [deleteTenantTrigger] = useDeleteTenantMutation();
 

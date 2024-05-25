@@ -1,12 +1,6 @@
 'use client';
 import { Badge, CheckboxGroup, Tooltip } from '@nextui-org/react';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter';
 import { CustomCheckbox } from '@/components/CustomCheckbox';

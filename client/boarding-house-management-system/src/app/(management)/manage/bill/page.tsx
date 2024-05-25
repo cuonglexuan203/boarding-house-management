@@ -7,7 +7,7 @@ import { CustomCheckbox } from '@/components/CustomCheckbox';
 import ExportButton from '@/components/ExportButton';
 import { AgGridReact } from 'ag-grid-react';
 import { IRowNode } from 'ag-grid-community';
-import { IContract, IInvoice } from '@/utils/types';
+import { IContract } from '@/utils/types';
 import InvoiceGrid from '@/components/InvoiceGrid';
 import AddInvoiceModal from '@/components/AddInvoiceModal';
 
