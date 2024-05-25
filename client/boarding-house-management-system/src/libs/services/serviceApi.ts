@@ -6,8 +6,7 @@ export const serviceApi = createApi({
   reducerPath: 'serviceApi',
   tagTypes: ['services'],
   baseQuery: fetchBaseQuery({
-    baseUrl:
-      'https://boarding-house-management-latest.onrender.com/api/services',
+    baseUrl: 'http://localhost:5000/api/services',
     //credentials: 'include',
     prepareHeaders: (headers) => {
       const token = Cookies.get('jwtToken');

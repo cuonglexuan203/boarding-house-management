@@ -5,8 +5,7 @@ import Cookies from 'js-cookie';
 export const tenantApi = createApi({
   reducerPath: 'tenantApi',
   baseQuery: fetchBaseQuery({
-    baseUrl:
-      'https://boarding-house-management-latest.onrender.com/api/tenants',
+    baseUrl: 'http://localhost:5000/api/tenants',
     // credentials: 'include',
     prepareHeaders: (headers) => {
       const token = Cookies.get('jwtToken');

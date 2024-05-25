@@ -6,8 +6,7 @@ export const invoiceApi = createApi({
   reducerPath: 'invoice',
   tagTypes: ['invoices', 'invoice'],
   baseQuery: fetchBaseQuery({
-    baseUrl:
-      'https://boarding-house-management-latest.onrender.com/api/invoices',
+    baseUrl: 'http://localhost:5000/api/invoices',
     prepareHeaders: (headers) => {
       const token = Cookies.get('jwtToken');
       if (token) {
