@@ -5,7 +5,7 @@ export const authApi = createApi({
   reducerPath: 'authApi',
   tagTypes: ['auth'],
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/auth/',
+    baseUrl: process.env.NEXT_PUBLIC_SERVER_URI + '/auth/',
     // credentials: 'include',
   }),
   refetchOnReconnect: true,

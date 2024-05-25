@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 export const tenantApi = createApi({
   reducerPath: 'tenantApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/api/tenants',
+    baseUrl: process.env.NEXT_PUBLIC_SERVER_URI + '/api/tenants',
     // credentials: 'include',
     prepareHeaders: (headers) => {
       const token = Cookies.get('jwtToken');

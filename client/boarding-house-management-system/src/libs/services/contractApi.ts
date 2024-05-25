@@ -6,7 +6,7 @@ export const contractApi = createApi({
   reducerPath: 'contractApi',
   tagTypes: ['contracts', 'rooms'],
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/api/contracts',
+    baseUrl: process.env.NEXT_PUBLIC_SERVER_URI + '/api/contracts',
     prepareHeaders: (headers) => {
       const token = Cookies.get('jwtToken');
       if (token) {

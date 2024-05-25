@@ -4,7 +4,7 @@ export const userApi = createApi({
   reducerPath: 'userApi',
   tagTypes: ['user', 'account', 'invoices'],
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/',
+    baseUrl: process.env.NEXT_PUBLIC_SERVER_URI,
     // credentials: 'include',
   }),
   refetchOnReconnect: true,

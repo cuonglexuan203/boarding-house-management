@@ -6,7 +6,7 @@ export const invoiceApi = createApi({
   reducerPath: 'invoice',
   tagTypes: ['invoices', 'invoice'],
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/api/invoices',
+    baseUrl: process.env.NEXT_PUBLIC_SERVER_URI + '/api/invoices',
     prepareHeaders: (headers) => {
       const token = Cookies.get('jwtToken');
       if (token) {
