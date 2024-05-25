@@ -235,6 +235,7 @@ public class DbOperationRunner implements CommandLineRunner {
                 }
                 rooms.get(i).addService(services.get(servicesIdx++));
             }
+            roomService.save(rooms);
 //
 //          room booking & invoice
             int roomBookingsSize = roomBookings.size();

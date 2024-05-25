@@ -5,7 +5,7 @@ export const authApi = createApi({
   reducerPath: 'authApi',
   tagTypes: ['auth'],
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/auth/',
+    baseUrl: 'https://boarding-house-management-latest.onrender.com/auth/',
     // credentials: 'include',
   }),
   refetchOnReconnect: true,

@@ -16,11 +16,5 @@
     "price": 30000,
     "unit": "Time",
     "isMeteredService": false
-  },
-  {
-    "name": "Laundry",
-    "price": 20000,
-    "unit": "Kg",
-    "isMeteredService": false
   }
 ]
