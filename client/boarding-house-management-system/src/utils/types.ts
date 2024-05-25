@@ -103,7 +103,7 @@ export interface IRoomBooking {
   checkOutDate: string;
 }
 
-export interface Contract {
+export interface IContract {
   id: number;
   depositAmount: number;
   numberOfMember: number;
@@ -111,6 +111,7 @@ export interface Contract {
   endDate: string;
   status: string;
   contractRepresentation: ITenant;
+  room: IRoom;
 }
 
 export interface IRoomDetails {
@@ -120,7 +121,7 @@ export interface IRoomDetails {
   services: IService[];
   tenants: ITenant[];
   invoices: IInvoice[];
-  contracts: Contract[];
+  contracts: IContract[];
 }
 
 export interface ISignIn {
@@ -131,4 +132,15 @@ export interface ISignIn {
 export interface IAuthResponse {
   token: string;
   expiresIn: number;
+}
+
+export interface IAddContract {
+  contract: IContract;
+  contractRepresentation: IUser;
+  roomId: number;
+}
+
+export interface IUser extends ITenant {
+  username: string;
+  password: string;
 }

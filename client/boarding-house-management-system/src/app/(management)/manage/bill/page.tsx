@@ -7,7 +7,7 @@ import { CustomCheckbox } from '@/components/CustomCheckbox';
 import ExportButton from '@/components/ExportButton';
 import { AgGridReact } from 'ag-grid-react';
 import { IRowNode } from 'ag-grid-community';
-import { IInvoice } from '@/utils/types';
+import { IContract, IInvoice } from '@/utils/types';
 import InvoiceGrid from '@/components/InvoiceGrid';
 import AddInvoiceModal from '@/components/AddInvoiceModal';
 
@@ -42,7 +42,7 @@ const InvoiceManagement = () => {
   }, [selectedFilterOptions]);
 
   const doesExternalFilterPass = useCallback(
-    (node: IRowNode<IInvoice>): boolean => {
+    (node: IRowNode<IContract>): boolean => {
       let isMatched = true;
       if (node.data) {
         selectedFilterOptions.forEach((selectedOption) => {
@@ -66,14 +66,12 @@ const InvoiceManagement = () => {
         <div className="flex justify-between">
           {/* Page infor */}
           <div className="border-s-4 border-[#4b4ce4] ps-2">
-            <h2 className="text-2xl font-semibold">All housing receipts</h2>
+            <h2 className="text-2xl font-semibold">All contracts</h2>
             <p className="italic text-sm text-gray-500">
-              You&apos;ll see monthly invoices Be invoiced or generate monthly
-              invoices if they haven&apos;t already been created in{' '}
-              <span className="">Boarding House</span>
+              List of contracts created when adding a new session
             </p>
           </div>
-          {/* Invoice mange guide and Add invoice button */}
+          {/* Contract manage guide and Add contract button */}
           <div>
             <Tooltip
               content="Add new tenant"

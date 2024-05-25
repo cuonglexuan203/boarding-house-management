@@ -38,6 +38,7 @@ import { getReadableNumber } from '@/utils/converterUtil';
 import RoomInvoice from './RoomInvoice';
 import { RowClassParams } from 'ag-grid-community';
 import SurchargeEditorModal from './SurchargeEditorModal';
+import CircularProgressLoading from './CircularProgressLoading';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -625,7 +626,7 @@ const InvoiceGrid = ({
   // }, [services]);
   //
   if (isServiceLoading || isInvoiceLoading) {
-    return <div>Loading...</div>;
+    return <CircularProgressLoading />;
   }
   if (serviceError || invoiceError) {
     return <div>Error</div>;

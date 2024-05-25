@@ -13,13 +13,14 @@ public record ContractDto(
         LocalDate startDate,
         LocalDate endDate,
         ContractStatus status,
-        TenantDto contractRepresentation
+        TenantDto contractRepresentation,
+        RoomDto room
 
 ) {
     public ContractDto(Contract contract) {
         this(contract.getId(), contract.getDepositAmount(),
                 contract.getNumberOfMember(), contract.getStartDate(), contract.getEndDate(),
-                contract.getStatus(), TenantDto.of( contract.getContractRepresentation()));
+                contract.getStatus(), TenantDto.of( contract.getContractRepresentation()), RoomDto.of(contract.getRoomBooking().getRoom()));
     }
     @JsonIgnore
     public Contract getContract() {

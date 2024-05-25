@@ -1,12 +1,8 @@
 'use client';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
-import React, { useCallback, useMemo, useState } from 'react';
-import {
-  useDeleteRoomMutation,
-  useGetRoomsQuery,
-  useUpdateRoomMutation,
-} from '@/libs/services/roomApi';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+
 import { IRowDragItem, ModuleRegistry } from '@ag-grid-community/core';
 import {
   CellClickedEvent,
@@ -17,22 +13,32 @@ import {
   IsExternalFilterPresentParams,
 } from 'ag-grid-community';
 import 'ag-grid-enterprise';
-import {} from 'ag-grid-enterprise';
 import '@/app/(management)/manage/(room)/style.css';
-import { AgGridReact } from 'ag-grid-react';
 import { GetRowIdParams } from 'ag-grid-community';
 import { useAppDispatch } from '@/libs/hooks';
 import { setSelectedRowId } from '@/libs/features/gridSlice';
+import ImmutableColumn from './ImmutableColumn';
+
+import { IServiceDetail } from '@/utils/types';
+
+import { RowClassParams } from 'ag-grid-community';
+import CircularProgressLoading from './CircularProgressLoading';
+import CustomDatePicker from './CustomDatePicker';
+import {
+  useDeleteContractMutation,
+  useGetContractsQuery,
+  useUpdateContractMutation,
+} from '@/libs/services/contractApi';
+import { AgGridReact } from 'ag-grid-react';
+import '@/styles/contractGrid.css';
 import CustomDropdown from './CustomDropdown';
 import AutocompleteEditor from './grid/AutocompleteEditor';
-import { getReadableNumber, isNumeric } from '@/utils/converterUtil';
-import ImmutableColumn from './ImmutableColumn';
-import { useRouter } from 'next/navigation';
-import CircularProgressLoading from './CircularProgressLoading';
+import SuccessfulToast from './SuccessfulToast';
+import FailedToast from './FailedToast';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
-const RoomGrid = ({
+const ContractGrid = ({
   gridRef,
   isExternalFilterPresent,
   doesExternalFilterPass,
@@ -42,21 +48,14 @@ const RoomGrid = ({
   doesExternalFilterPass: (node: IRowNode) => boolean;
 }) => {
   const dispatch = useAppDispatch();
-  const { data: rooms = [], isLoading, error } = useGetRoomsQuery();
-  const [updateRoomTrigger] = useUpdateRoomMutation();
-  const [deleteRoomTrigger] = useDeleteRoomMutation();
-  const router = useRouter();
-  // const [rooms, setRooms] = useState([
-  //   {
-  //     id: 1,
-  //     roomNumber: '102',
-  //     floor: 'ONE',
-  //     rentAmount: 12345,
-  //     area: 102,
-  //     type: 'SINGLE',
-  //     status: 'available',
-  //   },
-  // ]);
+  const { data: contracts = [], isLoading, error } = useGetContractsQuery();
+  const [updateContracTrigger] = useUpdateContractMutation();
+  const [deleteContractTrigger] = useDeleteContractMutation();
+  //
+  const [isSuccessfulToastVisible, setIsSuccessfulToastVisible] =
+    useState(false);
+  const [isFailedToastVisible, setIsFailedToastVisible] = useState(false);
+  // @ts-ignore
 
   const [columnDefs, setColumnDefs] = useState<ColDef[]>([
     {
@@ -64,6 +63,11 @@ const RoomGrid = ({
       colId: 'movableCol',
       valueGetter: (params) => {
         return null;
+      },
+      cellStyle: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       },
       width: 100,
       resizable: false,
@@ -82,7 +86,7 @@ const RoomGrid = ({
           component: ImmutableColumn,
           params: {
             iconSize: 32,
-            iconSrc: '/image/room/beds.png',
+            iconSrc: '/image/contract/contract.png',
           },
         };
       },
@@ -96,124 +100,86 @@ const RoomGrid = ({
     {
       headerName: 'ID',
       field: 'id',
-      suppressMovable: true,
       editable: false,
       width: 100,
+      resizable: false,
+      rowGroup: false,
+      lockPosition: 'left',
+      enableRowGroup: false,
+      // pinned: 'left',
+      lockPinned: true,
+      suppressMovable: true,
+      suppressColumnsToolPanel: true,
+      suppressFiltersToolPanel: true,
+      suppressHeaderMenuButton: true,
+      suppressHeaderFilterButton: true,
     },
-
     {
       headerName: 'Room number',
-      field: 'roomNumber',
+      field: 'room.roomNumber',
       cellDataType: 'string',
-      // valueSetter: (params) => {
-      //   params.data.roomNumber = 1;
-      //   return true;
-      // },
-      // cellStyle: (params) => {
-      //   if (params.value === '102') {
-      //     //mark police cells as red
-      //     return { color: 'red', backgroundColor: 'green' };
-      //   }
-      //   return null;
-      // },
+      editable: false,
     },
     {
-      headerName: 'Floor',
-      field: 'floor',
+      headerName: 'Contract representation',
+      field: 'contractRepresentation.fullName',
       cellDataType: 'string',
-      cellEditor: AutocompleteEditor,
-      cellEditorParams: {
-        items: [
-          { value: 'GROUND' },
-          { value: 'ONE' },
-          { value: 'TWO' },
-          { value: 'THREE' },
-          { value: 'FOUR' },
-          { value: 'FIVE' },
-        ],
-        label: 'Select floor',
-      },
+      editable: false,
     },
     {
-      headerName: 'Rent amount',
-      field: 'rentAmount',
+      headerName: 'Phone number',
+      field: 'contractRepresentation.phoneNumber',
+      cellDataType: 'string',
+      editable: false,
+    },
+    {
+      headerName: 'Deposit price',
+      field: 'depositAmount',
       cellDataType: 'number',
-      valueGetter: (params) => {
-        if (!params.data) {
-          return null;
-        }
-        let value = params.data.rentAmount;
-
-        if (value !== undefined) {
-          return value;
-        }
-      },
-      valueFormatter: (params) => {
-        if (!params.data) {
-          return params.value;
-        }
-        if (!isNumeric(params.value)) {
-          return params.value;
-        }
-        return getReadableNumber(params.value) + ' VND';
-      },
-      valueParser: (params) => {
-        if (!isNumeric(params.newValue)) {
-          return params.oldValue;
-        }
-        return params.newValue;
-      },
     },
     {
-      headerName: 'Area',
-      field: 'area',
+      headerName: 'Total members',
+      field: 'numberOfMember',
       cellDataType: 'number',
-      valueGetter: (params) => {
-        if (!params.data) {
-          return null;
-        }
-        let value = params.data.area;
-
-        if (value !== undefined) {
-          return value;
-        }
+    },
+    {
+      headerName: 'Start date',
+      field: 'startDate',
+      cellStyle: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       },
-      valueFormatter: (params) => {
+      cellEditorSelector: (params) => {
         if (!params.data) {
-          return params.value;
+          return undefined;
         }
-        if (!isNumeric(params.value)) {
-          return params.value;
-        }
-        return getReadableNumber(params.value) + ' m2';
-      },
-      valueParser: (params) => {
-        if (!isNumeric(params.newValue)) {
-          return params.oldValue;
-        }
-        return params.newValue;
+        return {
+          component: CustomDatePicker,
+          params: {
+            label: 'Start date',
+          },
+        };
       },
     },
     {
-      headerName: 'Type',
-      field: 'type',
-      cellEditor: AutocompleteEditor,
-      cellEditorParams: {
-        items: [
-          {
-            value: 'SINGLE',
+      headerName: 'End date',
+      field: 'endDate',
+      cellStyle: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      cellEditorSelector: (params) => {
+        if (!params.data) {
+          return undefined;
+        }
+        return {
+          component: CustomDatePicker,
+          params: {
+            label: 'End date',
           },
-          {
-            value: 'DOUBLE',
-          },
-          {
-            value: 'TRIPLE',
-          },
-          {
-            value: 'UNKNOWN',
-          },
-        ],
-        label: 'Select type',
+        };
       },
     },
     {
@@ -224,10 +190,10 @@ const RoomGrid = ({
       cellEditorParams: {
         items: [
           {
-            value: 'AVAILABLE',
+            value: 'PAID',
           },
           {
-            value: 'OCCUPIED',
+            value: 'UNPAID',
           },
         ],
         label: 'Select status',
@@ -261,25 +227,23 @@ const RoomGrid = ({
           params: {
             items: [
               {
-                value: 'Room detail',
-                onPress: (e: any, selectedRowId: number) => {
-                  router.push(`/manage/roomdetails/${selectedRowId}`);
-                },
+                value: 'View contract',
               },
               {
-                value: 'New contract',
+                value: 'Print contract',
+              },
+              {
+                value: 'Share contract',
                 color: 'success',
                 className: 'text-success',
               },
               {
-                value: 'Service setting',
-              },
-              {
-                value: 'Delete room',
+                value: 'Remove contract',
                 color: 'danger',
                 className: 'text-danger',
                 onPress: async (e: any, selectedRowId: number) => {
-                  await handleDeleteRoom(selectedRowId);
+                  // await handleDeleteContract(selectedRowId);
+                  setIsFailedToastVisible(true);
                 },
               },
             ],
@@ -302,36 +266,22 @@ const RoomGrid = ({
       floatingFilter: true,
       enableRowGroup: true,
       cellDataType: false,
-      width: 200,
+      width: 180,
+      autoHeight: true,
     };
   }, []);
+
   const rowDragText = useCallback(
     (params: IRowDragItem, dragedCount: number) =>
       dragedCount > 1
-        ? dragedCount + ' rooms'
-        : 'Room: ' +
-          params.rowNode!.data.floor +
-          '/' +
-          params.rowNode!.data.roomNumber,
+        ? dragedCount + ' contract'
+        : 'Contract: ' + params.rowNode!.data.contractRepresentation.fullName,
     [],
   );
 
-  const handleUpdateRoom = async (room: any) => {
-    try {
-      const updatedRoom = await updateRoomTrigger(room).unwrap();
-      console.log('Room updated: ' + JSON.stringify(updatedRoom));
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  const handleDeleteRoom = useCallback(async (roomId: number) => {
-    try {
-      await deleteRoomTrigger(roomId).unwrap();
-      console.log('Room deleted: ' + roomId);
-    } catch (err) {
-      console.error(err);
-    }
-  }, []);
+  //
+
+  //
 
   const onCellClicked = (event: CellClickedEvent) => {
     if (event.colDef.colId === 'menuCol') {
@@ -353,40 +303,81 @@ const RoomGrid = ({
       [field!]: event.newValue,
     };
     try {
-      await handleUpdateRoom(updateData);
+      await handleUpdateContract(updateData);
+      event.api.applyTransaction(tx);
+      setIsSuccessfulToastVisible(true);
     } catch (err) {
       console.error(err);
       return;
     }
-    event.api.applyTransaction(tx);
   }, []);
   const getRowId = useCallback((params: GetRowIdParams) => params.data.id, []);
+  const getRowStyle = (params: RowClassParams) => {
+    if (!params.data || !params.data.status) {
+      return {};
+    }
+    if (params.data.status === 'PAID') {
+      return {
+        background: '#cfead0',
+      };
+    }
+    return {
+      background: '#fff5f2',
+    };
+  };
 
-  //
+  const handleUpdateContract = async (data: any) => {
+    try {
+      const updatedTenant = await updateContracTrigger(data).unwrap();
+      console.log('Contract updated: ' + JSON.stringify(updatedTenant));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  // const handleDeleteContract = useCallback(async (contractId: number) => {
+  //   try {
+  //     await deleteContractTrigger(contractId).unwrap();
+  //     console.log('Tenant deleted: ' + contractId);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (isSuccessfulToastVisible) {
+        setIsSuccessfulToastVisible(false);
+      }
+      if (isFailedToastVisible) {
+        setIsFailedToastVisible(false);
+      }
+    }, 2500);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [isSuccessfulToastVisible, isFailedToastVisible]);
   if (isLoading) {
-    return <CircularProgressLoading />;
+    return <div>Loading...</div>;
   }
   if (error) {
     return <div>Error</div>;
   }
   //
-
-  //
   return (
-    <div className="ag-theme-quartz w-full" style={{ height: 500 }}>
+    <div className="ag-theme-quartz w-full h-[700px] overflow-hidden">
+      {/* @ts-ignore */}
       <AgGridReact
         ref={gridRef}
         // Option: Definition
-        rowData={rooms}
+        rowData={contracts}
         // @ts-ignore
         columnDefs={columnDefs}
         // @ts-ignore
         defaultColDef={defaultColDef}
         // Feat: Pagination
-        // pagination={true}
-        // paginationPageSize={10}
-        // paginationPageSizeSelector={[10, 25, 50]}
-
+        pagination={true}
+        paginationPageSize={10}
+        paginationPageSizeSelector={[10, 25, 50]}
         // Feat: Drag
         rowDragMultiRow={true}
         rowDragManaged={true}
@@ -408,9 +399,27 @@ const RoomGrid = ({
         isExternalFilterPresent={isExternalFilterPresent}
         doesExternalFilterPass={doesExternalFilterPass}
         onCellClicked={onCellClicked}
+        suppressAnimationFrame={true}
+        suppressRowHoverHighlight={true}
+        //
+        getRowStyle={getRowStyle}
       />
+      <div className="bottom-8 right-8 fixed">
+        {isSuccessfulToastVisible && (
+          <SuccessfulToast
+            setIsSuccessfulToastVisible={setIsSuccessfulToastVisible}
+            successfulLabel="Successfully"
+          />
+        )}
+        {isFailedToastVisible && (
+          <FailedToast
+            failedLabel="Can not do this action"
+            setIsFailedToastVisible={setIsFailedToastVisible}
+          />
+        )}
+      </div>
     </div>
   );
 };
 
-export default RoomGrid;
+export default ContractGrid;

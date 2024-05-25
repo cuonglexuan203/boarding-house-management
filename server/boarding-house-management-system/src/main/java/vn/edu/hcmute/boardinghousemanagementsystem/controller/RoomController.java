@@ -19,7 +19,6 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @Slf4j
-@CrossOrigin("*")
 @RequestMapping("/api/rooms")
 public class RoomController {
 

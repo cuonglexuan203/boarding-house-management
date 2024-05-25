@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @RestController
 @Slf4j
-@CrossOrigin("*")
 @RequestMapping("/api/services")
 public class AccommodationServiceController {
     private final AccommodationServiceService accommodationServiceService;

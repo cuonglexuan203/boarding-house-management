@@ -18,7 +18,7 @@ export const tenantApi = createApi({
   refetchOnReconnect: true,
   tagTypes: ['tenants', 'tenant'],
   endpoints: (builder) => ({
-    getTenants: builder.query<ITenant[], null>({
+    getTenants: builder.query<ITenant[], void>({
       query: () => '',
       providesTags: ['tenants'],
     }),

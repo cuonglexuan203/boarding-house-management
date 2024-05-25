@@ -27,6 +27,7 @@ import { setSelectedRowId } from '@/libs/features/gridSlice';
 import CustomDropdown from './CustomDropdown';
 import AutocompleteEditor from './grid/AutocompleteEditor';
 import { getReadableNumber, isNumeric } from '@/utils/converterUtil';
+import CircularProgressLoading from './CircularProgressLoading';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -236,7 +237,7 @@ const ServiceGrid = ({
 
   //
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <CircularProgressLoading />;
   }
   if (error) {
     return <div>Error</div>;

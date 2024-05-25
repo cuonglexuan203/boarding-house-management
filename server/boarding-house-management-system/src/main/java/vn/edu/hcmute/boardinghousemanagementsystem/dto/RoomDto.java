@@ -23,7 +23,7 @@ public record RoomDto(
 
         String roomNumber,
 
-        @AvailableValues(values = {"ONE", "TWO", "THREE", "FOUR"})
+        @AvailableValues(values = {"GROUND","ONE", "TWO", "THREE", "FOUR", "FIVE"})
         String floor,
 
         @Min(value = 0, message = "Area must be greater than or equal to 0")

@@ -30,6 +30,7 @@ import {
 import CustomDatePicker from './CustomDatePicker';
 import AddressEditorModal from './AddressEditorModal';
 import { IAddress, IRoom } from '@/utils/types';
+import CircularProgressLoading from './CircularProgressLoading';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -327,7 +328,7 @@ const TenantGrid = ({
 
   //
   if (isTenantLoading) {
-    return <div>Loading...</div>;
+    return <CircularProgressLoading />;
   }
   if (tenantError) {
     return <div>Error</div>;

@@ -2,10 +2,7 @@ package vn.edu.hcmute.boardinghousemanagementsystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,6 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "room_booking")
 public class RoomBooking {
@@ -34,7 +32,7 @@ public class RoomBooking {
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "room_booking_user",
             joinColumns = @JoinColumn(name = "room_booking_fk"),
             inverseJoinColumns = @JoinColumn(name = "user_fk"))
@@ -47,7 +45,7 @@ public class RoomBooking {
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(cascade = {CascadeType.MERGE})
     private Contract contract;
 
     @ToString.Exclude

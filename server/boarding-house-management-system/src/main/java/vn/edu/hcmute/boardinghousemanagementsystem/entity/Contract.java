@@ -23,7 +23,7 @@ public class Contract {
 
     @Min(0)
     @Column(name = "deposit_amount", nullable = false)
-    private float depositAmount;
+    private Float depositAmount;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
@@ -33,7 +33,7 @@ public class Contract {
 
     @Min(1)
     @Column(name = "number_of_member")
-    private int numberOfMember;
+    private Integer numberOfMember;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
