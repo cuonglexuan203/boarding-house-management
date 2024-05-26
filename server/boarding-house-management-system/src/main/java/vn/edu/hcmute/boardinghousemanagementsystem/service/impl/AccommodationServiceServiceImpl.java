@@ -3,6 +3,7 @@ package vn.edu.hcmute.boardinghousemanagementsystem.service.impl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.AccommodationServiceDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.AccommodationService;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.Room;
@@ -48,8 +49,23 @@ public class AccommodationServiceServiceImpl implements AccommodationServiceServ
         return serviceRepo.save(service);
     }
 
+    private boolean validateServiceInfo(AccommodationServiceDto serviceDto) {
+        if (serviceDto.name() == null || !StringUtils.hasText(serviceDto.name())) {
+            return false;
+        }
+        if (serviceDto.unit() == null || !StringUtils.hasText(serviceDto.unit())) {
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public AccommodationService save(AccommodationServiceDto serviceDto) {
+        // Validate service data
+        if (!validateServiceInfo(serviceDto)) {
+            return null;
+        }
+        //
         AccommodationService newAccommodationService = serviceDto.getNewAccommodationService();
         AccommodationService persistedAccommodationService = save(newAccommodationService);
         return persistedAccommodationService;

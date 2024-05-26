@@ -1,0 +1,78 @@
+/* components/CustomLoading.css */
+:root {
+  --dot-width: 20px;
+  --dot-height: 20px;
+  --dot-color: #9880ff;
+}
+
+.dot-floating {
+  position: relative;
+  width: var(--dot-width);
+  height: var(--dot-height);
+  border-radius: 50%;
+  background-color: var(--dot-color);
+  animation: dot-floating 3s infinite cubic-bezier(0.15, 0.6, 0.9, 0.1);
+}
+
+.dot-floating::before, .dot-floating::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  width: var(--dot-width);
+  height: var(--dot-height);
+  border-radius: 50%;
+  background-color: var(--dot-color);
+}
+
+.dot-floating::before {
+  left: -24px;
+  animation: dot-floating-before 3s infinite ease-in-out;
+}
+
+.dot-floating::after {
+  left: -24px;
+  animation: dot-floating-after 3s infinite cubic-bezier(0.4, 0, 1, 1);
+}
+
+@keyframes dot-floating {
+  0% {
+    left: calc(-50% - 5px);
+  }
+  75% {
+    left: calc(50% + 105px);
+  }
+  100% {
+    left: calc(50% + 105px);
+  }
+}
+
+@keyframes dot-floating-before {
+  0% {
+    left: -50px;
+  }
+  50% {
+    left: -20px;
+  }
+  75% {
+    left: -50px;
+  }
+  100% {
+    left: -50px;
+  }
+}
+
+@keyframes dot-floating-after {
+  0% {
+    left: -100px;
+  }
+  50% {
+    left: -40px;
+  }
+  75% {
+    left: -100px;
+  }
+  100% {
+    left: -100px;
+  }
+}

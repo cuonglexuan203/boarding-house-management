@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.TenantDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.UserDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.*;
+import vn.edu.hcmute.boardinghousemanagementsystem.exception.BusinessValidationException;
 import vn.edu.hcmute.boardinghousemanagementsystem.exception.PermissionNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.exception.RoleNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.repo.RoleRepository;
@@ -187,11 +188,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void delete(long userId) {
         if(userId <= 0){
-            return;
+            throw new BusinessValidationException("User id must be greater than 0");
         }
         if(!userRepo.existsById(userId)){
-            return;
+            throw new BusinessValidationException("User not found: " + userId);
         }
+        //
         User user = userRepo.findById(userId).get();
         for(RoomBooking roomBooking: user.getRoomBookings()) {
             roomBooking.getUsers().remove(user);

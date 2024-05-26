@@ -28,7 +28,7 @@ public record UserDto(Long id,
                       @Numeric
                       String idCardNumber,
 
-                      @AvailableValues(values = {"MALE", "FEMALE"})
+                      @AvailableValues(values = {"MALE", "FEMALE", "UNKNOWN"})
                       String gender,
 
                       Address address,

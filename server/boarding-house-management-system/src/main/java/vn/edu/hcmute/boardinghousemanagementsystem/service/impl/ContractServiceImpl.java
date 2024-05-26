@@ -19,6 +19,7 @@ import vn.edu.hcmute.boardinghousemanagementsystem.service.UserService;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.ObjectUtil;
 import vn.edu.hcmute.boardinghousemanagementsystem.util.enums.RoomStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -75,8 +76,13 @@ public class ContractServiceImpl implements ContractService {
         User tenant = contractInfo.contractRepresentation().getUser();
         if (tenant.getId() != null && tenant.getId() > 0) {
             tenant = userService.findById(tenant.getId()).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        }else {
+            tenant.setContracts(new ArrayList<>());
+            tenant.setRoomBookings(new ArrayList<>());
         }
+        userService.save(tenant);
         RoomBooking newRoomBooking = new RoomBooking();
+        newRoomBooking.setUsers(new ArrayList<>());
         roomBookingService.save(newRoomBooking);
         //
         room.setStatus(RoomStatus.OCCUPIED);
@@ -84,8 +90,9 @@ public class ContractServiceImpl implements ContractService {
         contract.addRoomBooking(newRoomBooking);
         contract.addContractRepresentation(tenant);
         newRoomBooking.addUser(tenant);
-        roomService.save(room);
+//        roomService.save(room);
         userService.save(tenant);
+//        roomBookingService.save(newRoomBooking);
         //
         return contract;
     }

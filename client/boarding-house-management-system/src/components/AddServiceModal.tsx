@@ -16,6 +16,9 @@ import Image from 'next/image';
 import { parseOnlyNumber } from '@/utils/converterUtil';
 import { IService } from '@/utils/types';
 import { useAddServiceMutation } from '@/libs/services/serviceApi';
+import { toast } from 'react-toastify';
+import FailedIcon from './icon/FailedIcon';
+import SuccessfulIcon from './icon/SuccessfulIcon';
 
 const AddServiceModal = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -40,6 +43,18 @@ const AddServiceModal = () => {
 
   const handleAddService = async () => {
     // validate input
+    if (name.trim().length === 0) {
+      toast.error('Service name can not empty', {
+        icon: <FailedIcon />,
+      });
+      return;
+    }
+    if (Array.from(unit).length === 0) {
+      toast.error('Please select unit', {
+        icon: <FailedIcon />,
+      });
+      return;
+    }
 
     //
     // @ts-ignore
@@ -53,9 +68,19 @@ const AddServiceModal = () => {
     //
     try {
       const response = await addServiceTrigger(newService).unwrap();
-      console.log('Added service: ' + JSON.stringify(response));
+      toast.success(
+        <p>
+          Add service <span>(ID: {response.id})</span> successfully
+        </p>,
+        {
+          icon: <SuccessfulIcon />,
+        },
+      );
     } catch (err: any) {
       console.log('Failed to add service: ' + err.message);
+      toast.error('Add failed', {
+        icon: <FailedIcon />,
+      });
     }
   };
 

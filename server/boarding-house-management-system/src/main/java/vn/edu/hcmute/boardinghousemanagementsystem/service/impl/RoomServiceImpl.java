@@ -6,9 +6,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.*;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.*;
 import vn.edu.hcmute.boardinghousemanagementsystem.exception.AccommodationServiceNotFoundException;
+import vn.edu.hcmute.boardinghousemanagementsystem.exception.BusinessValidationException;
 import vn.edu.hcmute.boardinghousemanagementsystem.exception.RoomNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.repo.RoomRepository;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.AccommodationServiceService;
@@ -186,6 +188,15 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public Room addNewRoom(RoomDto roomDto) {
+        // Sanitize input
+        if (!StringUtils.hasText(roomDto.roomNumber())) {
+            throw new BusinessValidationException("Invalid room number: " + roomDto.roomNumber());
+        }
+        return save(roomDto);
+    }
+
+    @Override
     public Room save(RoomDto roomDto) {
         Room newRoom = roomDto.getNewRoom();
         List<AccommodationService> managedServices = new ArrayList<>();
@@ -206,6 +217,12 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room update(RoomDto roomDto) {
+        if (roomDto.roomNumber() != null) {
+            if (!StringUtils.hasText(roomDto.roomNumber())) {
+                throw new BusinessValidationException("Room number can not be empty: " + roomDto.roomNumber());
+            }
+        }
+        //
         long id = roomDto.id();
         Room existingRoom = findById(id).orElseThrow(() -> new RoomNotFoundException("Room not found by id: " + id));
         //

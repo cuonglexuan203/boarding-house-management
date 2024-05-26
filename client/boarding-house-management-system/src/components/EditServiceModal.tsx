@@ -19,6 +19,9 @@ import RoomCheckbox from './RoomCheckbox';
 import { parseOnlyNumber } from '@/utils/converterUtil';
 import { IService } from '@/utils/types';
 import { useUpdateServiceMutation } from '@/libs/services/serviceApi';
+import { toast } from 'react-toastify';
+import FailedIcon from './icon/FailedIcon';
+import SuccessfulIcon from './icon/SuccessfulIcon';
 
 const EditServiceModal = ({ service }: { service: IService }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -57,6 +60,20 @@ const EditServiceModal = ({ service }: { service: IService }) => {
     [rooms],
   );
   const handleUpdateService = async () => {
+    if (name.trim().length === 0) {
+      setServiceName(service.name);
+      toast.error('Service name can not empty', {
+        icon: <FailedIcon />,
+      });
+      return;
+    }
+    if (Array.from(unit).length === 0) {
+      setUnit(new Set([service.unit]));
+      toast.error('Please select unit', {
+        icon: <FailedIcon />,
+      });
+      return;
+    }
     try {
       const modifiedService: IService = {
         id: service.id,
@@ -69,9 +86,20 @@ const EditServiceModal = ({ service }: { service: IService }) => {
       };
       const updatedService =
         await updateServiceTrigger(modifiedService).unwrap();
+      toast.success(
+        <p>
+          Add service <span>(ID: {updatedService.id})</span> successfully
+        </p>,
+        {
+          icon: <SuccessfulIcon />,
+        },
+      );
       console.log('Service updated: ' + JSON.stringify(updatedService));
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      toast.error('Update failed', {
+        icon: <FailedIcon />,
+      });
     }
   };
 

@@ -23,6 +23,7 @@ public interface RoomService {
     List<RoomDto> getRoomDtos();
     RoomBooking getLatestRoomBookingInUse(long roomId);
     RoomDetailsDto getRoomDetailsDto(long roomId);
+    Room addNewRoom(RoomDto roomDto);
     Room save(RoomDto roomDto);
     Room update(RoomDto roomDto);
 

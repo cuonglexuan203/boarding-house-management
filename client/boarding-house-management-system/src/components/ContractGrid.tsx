@@ -1,7 +1,7 @@
 'use client';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import { IRowDragItem, ModuleRegistry } from '@ag-grid-community/core';
 import {
@@ -30,8 +30,9 @@ import { AgGridReact } from 'ag-grid-react';
 import '@/styles/contractGrid.css';
 import CustomDropdown from './CustomDropdown';
 import AutocompleteEditor from './grid/AutocompleteEditor';
-import SuccessfulToast from './SuccessfulToast';
-import FailedToast from './FailedToast';
+import { toast } from 'react-toastify';
+import SuccessfulIcon from './icon/SuccessfulIcon';
+import FailedIcon from './icon/FailedIcon';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -48,12 +49,6 @@ const ContractGrid = ({
   const { data: contracts = [], isLoading, error } = useGetContractsQuery();
   const [updateContracTrigger] = useUpdateContractMutation();
   const [deleteContractTrigger] = useDeleteContractMutation();
-  //
-  const [isSuccessfulToastVisible, setIsSuccessfulToastVisible] =
-    useState(false);
-  const [isFailedToastVisible, setIsFailedToastVisible] = useState(false);
-  // @ts-ignore
-
   const [columnDefs, setColumnDefs] = useState<ColDef[]>([
     {
       headerName: '',
@@ -239,8 +234,7 @@ const ContractGrid = ({
                 color: 'danger',
                 className: 'text-danger',
                 onPress: async (e: any, selectedRowId: number) => {
-                  // await handleDeleteContract(selectedRowId);
-                  setIsFailedToastVisible(true);
+                  await handleDeleteContract(selectedRowId);
                 },
               },
             ],
@@ -302,7 +296,6 @@ const ContractGrid = ({
     try {
       await handleUpdateContract(updateData);
       event.api.applyTransaction(tx);
-      setIsSuccessfulToastVisible(true);
     } catch (err) {
       console.error(err);
       return;
@@ -326,33 +319,31 @@ const ContractGrid = ({
   const handleUpdateContract = async (data: any) => {
     try {
       const updatedTenant = await updateContracTrigger(data).unwrap();
-      console.log('Contract updated: ' + JSON.stringify(updatedTenant));
+      toast.success(
+        <p>
+          Update contract <span>(ID: {updatedTenant.id})</span> successfully
+        </p>,
+        {
+          icon: <SuccessfulIcon />,
+        },
+      );
     } catch (err) {
       console.error(err);
+      toast.error('Update failed', {
+        icon: <FailedIcon />,
+      });
     }
   };
-  // const handleDeleteContract = useCallback(async (contractId: number) => {
-  //   try {
-  //     await deleteContractTrigger(contractId).unwrap();
-  //     console.log('Tenant deleted: ' + contractId);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }, []);
+  const handleDeleteContract = useCallback(async (contractId: number) => {
+    // try {
+    //   await deleteContractTrigger(contractId).unwrap();
+    //   console.log('Tenant deleted: ' + contractId);
+    // } catch (err) {
+    //   console.error(err);
+    // }
+    toast.warning(<p>Can not delete old contract cause its relationships</p>);
+  }, []);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (isSuccessfulToastVisible) {
-        setIsSuccessfulToastVisible(false);
-      }
-      if (isFailedToastVisible) {
-        setIsFailedToastVisible(false);
-      }
-    }, 2500);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [isSuccessfulToastVisible, isFailedToastVisible]);
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -401,20 +392,6 @@ const ContractGrid = ({
         //
         getRowStyle={getRowStyle}
       />
-      <div className="bottom-8 right-8 fixed">
-        {isSuccessfulToastVisible && (
-          <SuccessfulToast
-            setIsSuccessfulToastVisible={setIsSuccessfulToastVisible}
-            successfulLabel="Successfully"
-          />
-        )}
-        {isFailedToastVisible && (
-          <FailedToast
-            failedLabel="Can not do this action"
-            setIsFailedToastVisible={setIsFailedToastVisible}
-          />
-        )}
-      </div>
     </div>
   );
 };

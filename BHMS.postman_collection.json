@@ -531,6 +531,45 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Add contract",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJSb3lfUmF5bm9yNDQiLCJpYXQiOjE3MTY2NDU2NDgsImV4cCI6MTcxNjY0OTI0OH0.2MHfmKcoyt3BvHwx6UZTVN9bct9LNcWQyjqWHq1LM9I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"contract\": {\r\n        \"id\": 0,\r\n        \"depositAmount\": 0,\r\n        \"startDate\": \"2024-05-25\",\r\n        \"endDate\": \"2024-05-25\",\r\n        \"numberOfMember\": 4,\r\n        \"status\": \"UNPAID\",\r\n        \"contractRepresentation\": null\r\n    },\r\n    \"contractRepresentation\": {\r\n        \"id\": \"6\"\r\n    },\r\n    \"roomId\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/contracts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"contracts"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

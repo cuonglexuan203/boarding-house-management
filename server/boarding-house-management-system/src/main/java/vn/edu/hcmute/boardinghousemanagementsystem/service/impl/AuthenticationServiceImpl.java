@@ -1,5 +1,6 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.service.impl;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.LoginDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.RegisterDto;
+import vn.edu.hcmute.boardinghousemanagementsystem.dto.RoomDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.dto.UserDto;
 import vn.edu.hcmute.boardinghousemanagementsystem.entity.*;
+import vn.edu.hcmute.boardinghousemanagementsystem.exception.BusinessValidationException;
 import vn.edu.hcmute.boardinghousemanagementsystem.exception.RoomNotFoundException;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.AuthenticationService;
 import vn.edu.hcmute.boardinghousemanagementsystem.service.RoomBookingService;
@@ -65,24 +68,65 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return userService.registerNewUser(user);
     }
 
+
+    private boolean validateUserInfo(UserDto userDto) {
+        if (userDto.fullName() == null || !StringUtils.hasText(userDto.fullName())) {
+            return false;
+        }
+        if (userDto.email() == null || !StringUtils.hasText(userDto.email())) {
+            return false;
+        }
+        if (userDto.phoneNumber() == null || !StringUtils.hasText(userDto.phoneNumber())) {
+            return false;
+        }
+        if (userDto.idCardNumber() == null || !StringUtils.hasText(userDto.idCardNumber())) {
+            return false;
+        }
+        if (userDto.address() == null) {
+            return false;
+        }
+        if (userDto.birthday() == null || !StringUtils.hasText(userDto.birthday())) {
+            return false;
+        }
+        if (userDto.career() == null || !StringUtils.hasText(userDto.career())) {
+            return false;
+        }
+        if (userDto.username() == null || !StringUtils.hasText(userDto.username())) {
+            return false;
+        }
+        if (userDto.password() == null || !StringUtils.hasText(userDto.password())) {
+            return false;
+        }
+        if(userDto.rooms() == null || userDto.rooms().isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public User register(UserDto userDto) {
-        List<Long> roomIds = userDto.rooms().stream().map(roomDto -> roomDto.id()).collect(Collectors.toList());
-        List<RoomBooking> roomBookings = roomIds.stream().map(roomService::getLatestRoomBookingInUse).collect(Collectors.toList());
-        if(roomBookings == null || roomBookings.isEmpty()){
+        // Validate new user info
+        if (!validateUserInfo(userDto)) {
             return null;
+        }
+        //
+        List<Long> roomIds = userDto.rooms().stream().map(RoomDto::id).collect(Collectors.toList());
+        List<RoomBooking> roomBookings = roomIds.stream().map(roomService::getLatestRoomBookingInUse).collect(Collectors.toList());
+        if (roomBookings.isEmpty()) {
+            throw new BusinessValidationException("No any room booking");
         }
         User user = userDto.getUser();
         user.setRoomBookings(new ArrayList<>());
-        for(RoomBooking roomBooking : roomBookings) {
+        for (RoomBooking roomBooking : roomBookings) {
             user.addRoomBooking(roomBooking);
-        };
+        }
+        ;
         final User persistedUser = register(user);
         return persistedUser;
     }
 
     @Override
-    public User authenticate(LoginDto input) {
+    public User authenticate(@Valid LoginDto input) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 input.username(),
                 input.password()

@@ -17,6 +17,12 @@ import { LockIcon } from './icon/LockIcon';
 import { useRouter } from 'next/navigation';
 import { useSignInMutation } from '@/libs/services/authApi';
 import { setJwtAuthToken } from '@/utils/auth';
+import { useAppDispatch, useAppSelector } from '@/libs/hooks';
+import { setLoading } from '@/libs/features/loadingSlice';
+import FloatingLoading from './FloatingLoading';
+import { toast } from 'react-toastify';
+import SuccessfulIcon from './icon/SuccessfulIcon';
+import FailedIcon from './icon/FailedIcon';
 
 export default function LoginModal() {
   const [username, setUsername] = useState('');
@@ -24,15 +30,27 @@ export default function LoginModal() {
   const { onOpenChange } = useDisclosure();
   const router = useRouter();
   const [loginTrigger] = useSignInMutation();
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state) => state.loading.isLoading);
+
   const handleSignIn = async () => {
+    dispatch(setLoading(true));
     try {
       const data = await loginTrigger({ username, password }).unwrap();
+      toast('Login successful', {
+        icon: <SuccessfulIcon />,
+      });
       await setJwtAuthToken(data);
       router.refresh(); // Redirect to home page or any other page after login
     } catch (err) {
-      console.error('Login error:', err);
+      toast.error('Login failed', {
+        icon: <FailedIcon />,
+      });
+    } finally {
+      dispatch(setLoading(false));
     }
   };
+
   const onClose = (defaultOnClose: () => void) => {
     router.back();
     defaultOnClose();
@@ -108,6 +126,7 @@ export default function LoginModal() {
           )}
         </ModalContent>
       </Modal>
+      {isLoading && <FloatingLoading />}
     </>
   );
 }

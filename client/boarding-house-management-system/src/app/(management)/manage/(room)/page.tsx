@@ -18,7 +18,7 @@ interface IFilterOption {
 
 const HomeManagement = () => {
   const gridRef = useRef<AgGridReact>(null);
-  const [selected, setSelected] = useState('management');
+  // const [selected, setSelected] = useState('management');
   const [selectedFilterOptions, setSelectedFilterOptions] = useState<string[]>(
     [],
   );

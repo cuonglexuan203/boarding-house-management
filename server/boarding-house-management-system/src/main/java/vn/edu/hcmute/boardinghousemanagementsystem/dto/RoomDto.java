@@ -18,12 +18,12 @@ public record RoomDto(
         @Min(value = 0, message = "Room id must be greater than or equal to 0")
         Long id,
 
+        String roomNumber,
+
         @Min(value = 0, message = "Rent amount must be greater than or equal to 0")
         Float rentAmount,
 
-        String roomNumber,
-
-        @AvailableValues(values = {"GROUND","ONE", "TWO", "THREE", "FOUR", "FIVE"})
+        @AvailableValues(values = {"GROUND", "ONE", "TWO", "THREE", "FOUR", "FIVE"})
         String floor,
 
         @Min(value = 0, message = "Area must be greater than or equal to 0")
@@ -39,7 +39,7 @@ public record RoomDto(
 
 ) {
     public RoomDto(Room room) {
-        this(room.getId(), room.getRentAmount(), room.getRoomNumber(),
+        this(room.getId(), room.getRoomNumber(), room.getRentAmount(),
                 room.getFloor().toString(), room.getArea(), room.getType().toString(),
                 room.getStatus().toString(), room.getServices().stream().map(AccommodationServiceDto::new).collect(Collectors.toList()));
     }

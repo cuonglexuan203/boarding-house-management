@@ -31,6 +31,9 @@ import CustomDatePicker from './CustomDatePicker';
 import AddressEditorModal from './AddressEditorModal';
 import { IAddress, IRoom } from '@/utils/types';
 import CircularProgressLoading from './CircularProgressLoading';
+import { toast } from 'react-toastify';
+import SuccessfulIcon from './icon/SuccessfulIcon';
+import FailedIcon from './icon/FailedIcon';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -283,17 +286,31 @@ const TenantGrid = ({
   const handleUpdateTenant = async (tenant: any) => {
     try {
       const updatedTenant = await updateTenantTrigger(tenant).unwrap();
-      console.log('Tenant updated: ' + JSON.stringify(updatedTenant));
-    } catch (err) {
-      console.error(err);
+      toast.success(
+        <p>
+          Update room <span>(ID: {updatedTenant.id})</span> successfully
+        </p>,
+        {
+          icon: <SuccessfulIcon />,
+        },
+      );
+    } catch (err: any) {
+      toast.error('Update failed', {
+        icon: <FailedIcon />,
+      });
+      throw new Error(err.message);
     }
   };
   const handleDeleteTenant = useCallback(async (tenantId: number) => {
     try {
       await deleteTenantTrigger(tenantId).unwrap();
-      console.log('Tenant deleted: ' + tenantId);
-    } catch (err) {
-      console.error(err);
+      toast.success(<p>Delete tenant successfully</p>, {
+        icon: <SuccessfulIcon />,
+      });
+    } catch (err: any) {
+      toast.error('Delete failed', {
+        icon: <FailedIcon />,
+      });
     }
   }, []);
 
@@ -337,7 +354,7 @@ const TenantGrid = ({
 
   //
   return (
-    <div className="ag-theme-quartz w-full" style={{ height: 500 }}>
+    <div className="ag-theme-quartz w-full min-h-[500px] h-[820px] max-h-fit">
       <AgGridReact
         ref={gridRef}
         // Option: Definition
@@ -347,10 +364,9 @@ const TenantGrid = ({
         // @ts-ignore
         defaultColDef={defaultColDef}
         // Feat: Pagination
-        // pagination={true}
-        // paginationPageSize={10}
-        // paginationPageSizeSelector={[10, 25, 50]}
-
+        pagination={true}
+        paginationPageSize={10}
+        paginationPageSizeSelector={[10, 25, 50]}
         // Feat: Drag
         rowDragMultiRow={true}
         rowDragManaged={true}

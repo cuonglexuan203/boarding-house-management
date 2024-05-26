@@ -10,6 +10,9 @@ import {
 } from '@nextui-org/react';
 import Image from 'next/image';
 import React, { useCallback } from 'react';
+import { toast } from 'react-toastify';
+import SuccessfulIcon from './icon/SuccessfulIcon';
+import FailedIcon from './icon/FailedIcon';
 
 const DeleteServiceModal = ({ serviceId }: { serviceId: number }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -17,9 +20,14 @@ const DeleteServiceModal = ({ serviceId }: { serviceId: number }) => {
   const handleDeleteService = useCallback(async () => {
     try {
       await deleteServiceTrigger(serviceId).unwrap();
-      console.log('Service deleted: ' + serviceId);
+      toast.success(<p>Delete service successfully</p>, {
+        icon: <SuccessfulIcon />,
+      });
     } catch (err) {
       console.error(err);
+      toast.error('Delete failed', {
+        icon: <FailedIcon />,
+      });
     }
   }, [serviceId]);
   return (

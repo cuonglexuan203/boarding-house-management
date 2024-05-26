@@ -25,6 +25,9 @@ import { useGetRoomsQuery } from '@/libs/services/roomApi';
 import RoomCheckbox from './RoomCheckbox';
 import { IAddInvoice, IInvoice } from '@/utils/types';
 import { useAddInvoiceMutation } from '@/libs/services/invoiceApi';
+import { toast } from 'react-toastify';
+import SuccessfulIcon from './icon/SuccessfulIcon';
+import FailedIcon from './icon/FailedIcon';
 
 const reasons = [
   {
@@ -105,9 +108,14 @@ const AddInvoiceModal = () => {
     };
     try {
       const response = await addInvoiceTrigger(addInvoicesBody).unwrap();
-      console.log('Add new invoices:' + response);
+      toast.success(<p>Add {response.length} invoice successfully</p>, {
+        icon: <SuccessfulIcon />,
+      });
     } catch (err: any) {
       console.log('Failed to add invoice: ' + err.message);
+      toast.error('Add invoice failed', {
+        icon: <FailedIcon />,
+      });
     }
   };
   return (

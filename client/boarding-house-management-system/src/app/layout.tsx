@@ -5,6 +5,9 @@ import { NextUIProvider } from '@nextui-org/react';
 import StoreProvider from '@/components/StoreProvider';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { config } from '@fortawesome/fontawesome-svg-core';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import LoadingLayout from '@/components/LoadingLayout';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -22,7 +25,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <NextUIProvider>
-          <StoreProvider>{children}</StoreProvider>
+          <StoreProvider>
+            <LoadingLayout>{children}</LoadingLayout>
+          </StoreProvider>
+          <ToastContainer />
         </NextUIProvider>
       </body>
     </html>

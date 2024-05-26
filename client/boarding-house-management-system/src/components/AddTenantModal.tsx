@@ -24,6 +24,10 @@ import {
 import { useAddTenantMutation } from '@/libs/services/tenantApi';
 import PasswordInput from './PasswordInput';
 import RoomCheckbox from './RoomCheckbox';
+import FailedIcon from './icon/FailedIcon';
+import { toast } from 'react-toastify';
+import * as EmailValidator from 'email-validator';
+import SuccessfulIcon from './icon/SuccessfulIcon';
 
 const AddTenantModal = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -103,9 +107,93 @@ const AddTenantModal = () => {
 
   const GENDER = useMemo(() => ['MALE', 'FEMALE', 'UNKNOWN'], []);
 
+  const validateTenantInfo: () => boolean = () => {
+    if (fullName.trim().length === 0) {
+      toast.error('Tenant name can not empty', {
+        icon: <FailedIcon />,
+      });
+      return false;
+    }
+    if (phoneNumber.trim().length === 0) {
+      toast.error('Phone number can not empty', {
+        icon: <FailedIcon />,
+      });
+      return false;
+    }
+    if (!EmailValidator.validate(email)) {
+      toast.error('Please enter your email correctly!', {
+        icon: <FailedIcon />,
+      });
+      return false;
+    }
+    if (idCardNumber.trim().length === 0) {
+      toast.error('ID card number can not empty', {
+        icon: <FailedIcon />,
+      });
+      return false;
+    }
+    if (!Array.from(gender)?.at(0)) {
+      toast.error('Please select gender', {
+        icon: <FailedIcon />,
+      });
+      return false;
+    }
+    if (!Array.from(province).at(0)) {
+      toast.error('Please select province', {
+        icon: <FailedIcon />,
+      });
+      return false;
+    }
+    if (!Array.from(district)?.at(0)) {
+      toast.error('Please select district', {
+        icon: <FailedIcon />,
+      });
+      return false;
+    }
+    if (!Array.from(ward)?.at(0)) {
+      toast.error('Please select ward', {
+        icon: <FailedIcon />,
+      });
+      return false;
+    }
+    if (!Array.from(addressDetails)?.at(0)) {
+      toast.error('Please enter address details', {
+        icon: <FailedIcon />,
+      });
+      return false;
+    }
+    if (career.trim()?.length === 0) {
+      toast.error('Please enter career', {
+        icon: <FailedIcon />,
+      });
+      return false;
+    }
+    if (username.trim()?.length === 0) {
+      toast.error('Please enter username', {
+        icon: <FailedIcon />,
+      });
+      return false;
+    }
+    if (password.trim()?.length === 0) {
+      toast.error('Please enter password', {
+        icon: <FailedIcon />,
+      });
+      return false;
+    }
+    if (selectedRooms.length === 0) {
+      toast.error('Please select room for new tenant', {
+        icon: <FailedIcon />,
+      });
+      return false;
+    }
+    return true;
+  };
+
   const handleAddTenant = async () => {
     // validate input
-
+    if (!validateTenantInfo()) {
+      return;
+    }
     //
     // @ts-ignore
     const newTennt = {
@@ -133,12 +221,20 @@ const AddTenantModal = () => {
     };
     //
     try {
-      console.log(newTennt);
       // @ts-ignore
       const response = await addTenantTrigger(newTennt).unwrap();
-      console.log('Added tenant: ' + JSON.stringify(response));
+      toast.success(
+        <p>
+          Add tenant <span>(ID: {response.id})</span> successfully
+        </p>,
+        {
+          icon: <SuccessfulIcon />,
+        },
+      );
     } catch (err: any) {
-      console.log('Failed to add tenant: ' + err.message);
+      toast.error('Add failed', {
+        icon: <FailedIcon />,
+      });
     }
   };
 

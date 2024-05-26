@@ -26,6 +26,9 @@ import Error from './Error';
 import { TenantInputForm } from './TenantInputForm';
 import RoomRadio from './RoomRadio';
 import { useAddContractMutation } from '@/libs/services/contractApi';
+import FailedIcon from './icon/FailedIcon';
+import { toast } from 'react-toastify';
+import SuccessfulIcon from './icon/SuccessfulIcon';
 
 const AddContractModal = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -88,10 +91,20 @@ const AddContractModal = () => {
     };
     try {
       const response = await addContractTrigger(addContractBody).unwrap();
-      console.log('Add new contract:' + response);
-      console.log(addContractBody);
+
+      toast.success(
+        <p>
+          Add contract <span>(ID: {response.id})</span> successfully
+        </p>,
+        {
+          icon: <SuccessfulIcon />,
+        },
+      );
     } catch (err: any) {
       console.log('Failed to add contract: ' + err.message);
+      toast.error('Add failed', {
+        icon: <FailedIcon />,
+      });
     }
   };
   if (isRoomLoading || isTenantLoading) {

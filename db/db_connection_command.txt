@@ -1,0 +1,1 @@
+mysql -u sql12709085 -P 3306 -pQeZ49gLMvf -h sql12.freesqldatabase.com sql12709085

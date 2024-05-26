@@ -7,11 +7,20 @@ import { useRouter } from 'next/navigation';
 import { useSignInMutation } from '@/libs/services/authApi';
 import { setJwtAuthToken } from '@/utils/auth';
 import Cookies from 'js-cookie';
+import { useAppDispatch, useAppSelector } from '@/libs/hooks';
+import { setLoading } from '@/libs/features/loadingSlice';
+import FloatingLoading from '@/components/FloatingLoading';
+import { toast } from 'react-toastify';
+import SuccessfulIcon from '@/components/icon/SuccessfulIcon';
+import FailedIcon from '@/components/icon/FailedIcon';
+
 const Login = () => {
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginTrigger] = useSignInMutation();
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state) => state.loading.isLoading);
   const jwtToken = Cookies.get('jwtToken');
   if (jwtToken) {
     router.replace('/');
@@ -20,13 +29,20 @@ const Login = () => {
     return <></>;
   }
   const handleSignIn = async () => {
+    dispatch(setLoading(true));
     try {
       const data = await loginTrigger({ username, password }).unwrap();
-      console.log(data);
       setJwtAuthToken(data);
       router.refresh(); // Redirect to home page or any other page after login
+      toast('Login successful', {
+        icon: <SuccessfulIcon />,
+      });
     } catch (err) {
-      console.error('Login error:', err);
+      toast.error('Login failed', {
+        icon: <FailedIcon />,
+      });
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -93,6 +109,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+      {isLoading && <FloatingLoading />}
     </>
   );
 };

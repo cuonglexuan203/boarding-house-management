@@ -11,6 +11,7 @@ import { serviceApi } from './services/serviceApi';
 import { roomDetailsApi } from './services/roomDetailsApi';
 import { authApi } from './services/authApi';
 import { contractApi } from './services/contractApi';
+import loadingSlice from './features/loadingSlice';
 
 const rootPersistConfig = {
   key: 'root',
@@ -22,6 +23,7 @@ const rootPersistConfig = {
 const rootReducer = combineReducers({
   status: statusReducer,
   gridStatus: gridStatusReducer,
+  loading: loadingSlice,
   [roomApi.reducerPath]: roomApi.reducer,
   [tenantApi.reducerPath]: tenantApi.reducer,
   [locationApi.reducerPath]: locationApi.reducer,

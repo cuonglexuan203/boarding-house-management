@@ -33,7 +33,7 @@ public class ContractController {
 
     @PostMapping
     public ResponseEntity<ContractDto> addContract(@RequestBody @Valid AddContractDto contractInfo) {
-        log.info("Receive an add invoice request: " + contractInfo);
+        log.info("Receive an add contract request: " + contractInfo);
         Contract contract = contractService.addNewContract(contractInfo);
         if (contract == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

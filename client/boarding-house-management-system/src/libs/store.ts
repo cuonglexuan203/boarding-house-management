@@ -19,6 +19,7 @@ import { invoiceApi } from './services/invoiceApi';
 import { roomDetailsApi } from './services/roomDetailsApi';
 import { authApi } from './services/authApi';
 import { contractApi } from './services/contractApi';
+import loadingMiddleware from './middlewares/loadingMiddleware';
 //
 
 export const store: EnhancedStore = configureStore({
@@ -39,7 +40,8 @@ export const store: EnhancedStore = configureStore({
       .concat(invoiceApi.middleware)
       .concat(roomDetailsApi.middleware)
       .concat(authApi.middleware)
-      .concat(contractApi.middleware),
+      .concat(contractApi.middleware)
+      .concat(loadingMiddleware),
 });
 //
 setupListeners(store.dispatch);

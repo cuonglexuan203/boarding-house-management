@@ -27,6 +27,7 @@ public class RoomController {
 
     @GetMapping
     public ResponseEntity<List<RoomDto>> getRooms() {
+
         List<RoomDto> roomDtos = roomService.getRoomDtos();
         return ResponseEntity.ok(roomDtos);
     }
@@ -46,7 +47,7 @@ public class RoomController {
     @PostMapping
     public ResponseEntity<RoomDto> addRoom(@RequestBody @Valid RoomDto roomDto) {
         log.info("Receive an add room request: " + roomDto);
-        Room persistedRoom = roomService.save(roomDto);
+        Room persistedRoom = roomService.addNewRoom(roomDto);
         if (persistedRoom == null) {
             log.error("Request for add new room failed");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

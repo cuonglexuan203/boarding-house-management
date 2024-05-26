@@ -1,5 +1,6 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -51,7 +52,7 @@ public class AccommodationServiceController {
 
     @PostMapping
 //    @PreAuthorize("hasRole(ADMIN)")
-    public ResponseEntity<AccommodationServiceDto> addAccommodationService(@RequestBody AccommodationServiceDto accommodationServiceDto) {
+    public ResponseEntity<AccommodationServiceDto> addAccommodationService(@RequestBody @Valid AccommodationServiceDto accommodationServiceDto) {
         log.info("Receive an add Service request: " + accommodationServiceDto);
         AccommodationService persistedAccommodationService = accommodationServiceService.save(accommodationServiceDto);
         if (persistedAccommodationService == null) {
@@ -63,7 +64,7 @@ public class AccommodationServiceController {
     }
 
     @PatchMapping
-    public ResponseEntity<AccommodationServiceDto> updateAccommodationService(@RequestBody AccommodationServiceDto accommodationServiceDto) {
+    public ResponseEntity<AccommodationServiceDto> updateAccommodationService(@RequestBody @Valid AccommodationServiceDto accommodationServiceDto) {
         log.info("Receive an update AccommodationService request: " + accommodationServiceDto);
         //
         Long accommodationServiceId = accommodationServiceDto.id();
@@ -83,7 +84,7 @@ public class AccommodationServiceController {
         }
         //
         log.info("AccommodationService updated: " + persistedAccommodationService);
-        return ResponseEntity.status(HttpStatus.CREATED).body(AccommodationServiceDto.of(persistedAccommodationService));
+        return ResponseEntity.status(HttpStatus.OK).body(AccommodationServiceDto.of(persistedAccommodationService));
     }
 
     @DeleteMapping("/{accommodationServiceId}")

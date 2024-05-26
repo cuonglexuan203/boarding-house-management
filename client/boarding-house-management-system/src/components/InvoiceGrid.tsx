@@ -39,6 +39,9 @@ import RoomInvoice from './RoomInvoice';
 import { RowClassParams } from 'ag-grid-community';
 import SurchargeEditorModal from './SurchargeEditorModal';
 import CircularProgressLoading from './CircularProgressLoading';
+import { toast } from 'react-toastify';
+import FailedIcon from './icon/FailedIcon';
+import SuccessfulIcon from './icon/SuccessfulIcon';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -509,17 +512,31 @@ const InvoiceGrid = ({
   const handleUpdateInvoice = async (invoice: any) => {
     try {
       const updatedInvoice = await updateInvoiceTrigger(invoice).unwrap();
-      console.log('Invoice updated: ' + JSON.stringify(updatedInvoice));
+      toast.success(
+        <p>
+          Update invoice <span>(ID: {updatedInvoice.id})</span> successfully
+        </p>,
+        {
+          icon: <SuccessfulIcon />,
+        },
+      );
     } catch (err) {
       console.error(err);
+      toast.error('Update invoice failed', {
+        icon: <FailedIcon />,
+      });
     }
   };
   const handleDeleteInvoice = useCallback(async (invoiceId: number) => {
     try {
       await deleteInvoiceTrigger(invoiceId).unwrap();
-      console.log('Invoice deleted: ' + invoiceId);
-    } catch (err) {
-      console.error(err);
+      toast.success(<p>Delete bill successfully</p>, {
+        icon: <SuccessfulIcon />,
+      });
+    } catch (err: any) {
+      toast.error('Delete failed', {
+        icon: <FailedIcon />,
+      });
     }
   }, []);
   //
@@ -635,7 +652,7 @@ const InvoiceGrid = ({
 
   //
   return (
-    <div className="ag-theme-quartz w-full h-[700px]">
+    <div className="ag-theme-quartz w-full min-h-[500px] h-[820px] max-h-fit">
       <AgGridReact
         ref={gridRef}
         // Option: Definition
@@ -646,10 +663,9 @@ const InvoiceGrid = ({
         defaultColDef={defaultColDef}
         defaultColGroupDef={defaultColGroupDef}
         // Feat: Pagination
-        // pagination={true}
-        // paginationPageSize={10}
-        // paginationPageSizeSelector={[10, 25, 50]}
-
+        pagination={true}
+        paginationPageSize={10}
+        paginationPageSizeSelector={[10, 25, 50]}
         // Feat: Drag
         rowDragMultiRow={true}
         rowDragManaged={true}

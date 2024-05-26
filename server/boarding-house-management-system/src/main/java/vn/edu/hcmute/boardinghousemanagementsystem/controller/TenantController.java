@@ -1,5 +1,6 @@
 package vn.edu.hcmute.boardinghousemanagementsystem.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,10 +33,8 @@ public class TenantController {
 
     @PostMapping
 //    @PreAuthorize("hasRole(ADMIN)")
-    public ResponseEntity<TenantDto> addTenant(@RequestBody UserDto userDto) {
+    public ResponseEntity<TenantDto> addTenant(@RequestBody @Valid UserDto userDto) {
         // Note: new user id must be null
-        // Validate input
-        //
         log.info("Receive an add tenant request: " + userDto);
         User persistedTenant = authService.register(userDto);
         if (persistedTenant == null) {
@@ -47,7 +46,7 @@ public class TenantController {
     }
 
     @PatchMapping
-    public ResponseEntity<TenantDto> updateTenant(@RequestBody TenantDto tenantDto) {
+    public ResponseEntity<TenantDto> updateTenant(@RequestBody @Valid TenantDto tenantDto) {
         log.info("Receive an update room request: " + tenantDto);
         //
         Long tenantId = tenantDto.id();

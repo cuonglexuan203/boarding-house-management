@@ -21,7 +21,6 @@ import {} from 'ag-grid-enterprise';
 import '@/app/(management)/manage/(room)/style.css';
 import { AgGridReact } from 'ag-grid-react';
 import { GetRowIdParams } from 'ag-grid-community';
-import { useAppDispatch } from '@/libs/hooks';
 import { setSelectedRowId } from '@/libs/features/gridSlice';
 import CustomDropdown from './CustomDropdown';
 import AutocompleteEditor from './grid/AutocompleteEditor';
@@ -29,6 +28,10 @@ import { getReadableNumber, isNumeric } from '@/utils/converterUtil';
 import ImmutableColumn from './ImmutableColumn';
 import { useRouter } from 'next/navigation';
 import CircularProgressLoading from './CircularProgressLoading';
+import { useAppDispatch } from '@/libs/hooks';
+import { toast } from 'react-toastify';
+import SuccessfulIcon from './icon/SuccessfulIcon';
+import FailedIcon from './icon/FailedIcon';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -46,6 +49,7 @@ const RoomGrid = ({
   const [updateRoomTrigger] = useUpdateRoomMutation();
   const [deleteRoomTrigger] = useDeleteRoomMutation();
   const router = useRouter();
+
   // const [rooms, setRooms] = useState([
   //   {
   //     id: 1,
@@ -319,17 +323,36 @@ const RoomGrid = ({
   const handleUpdateRoom = async (room: any) => {
     try {
       const updatedRoom = await updateRoomTrigger(room).unwrap();
-      console.log('Room updated: ' + JSON.stringify(updatedRoom));
-    } catch (err) {
-      console.error(err);
+      toast.success(
+        <p>
+          Update room <span>(ID: {updatedRoom.id})</span> successfully
+        </p>,
+        {
+          icon: <SuccessfulIcon />,
+        },
+      );
+    } catch (err: any) {
+      toast.error(
+        <p>
+          Update failed: <span>{err.message}</span>
+        </p>,
+        {
+          icon: <FailedIcon />,
+        },
+      );
     }
   };
   const handleDeleteRoom = useCallback(async (roomId: number) => {
     try {
       await deleteRoomTrigger(roomId).unwrap();
-      console.log('Room deleted: ' + roomId);
+      toast.success(<p>Delete room successfully</p>, {
+        icon: <SuccessfulIcon />,
+      });
     } catch (err) {
       console.error(err);
+      toast.error('Delete failed', {
+        icon: <FailedIcon />,
+      });
     }
   }, []);
 
@@ -366,50 +389,50 @@ const RoomGrid = ({
   if (isLoading) {
     return <CircularProgressLoading />;
   }
-  if (error) {
-    return <div>Error</div>;
-  }
+
   //
 
   //
   return (
-    <div className="ag-theme-quartz w-full" style={{ height: 500 }}>
-      <AgGridReact
-        ref={gridRef}
-        // Option: Definition
-        rowData={rooms}
-        // @ts-ignore
-        columnDefs={columnDefs}
-        // @ts-ignore
-        defaultColDef={defaultColDef}
-        // Feat: Pagination
-        // pagination={true}
-        // paginationPageSize={10}
-        // paginationPageSizeSelector={[10, 25, 50]}
-
-        // Feat: Drag
-        rowDragMultiRow={true}
-        rowDragManaged={true}
-        rowSelection={'multiple'}
-        // @ts-ignore
-        rowDragText={rowDragText}
-        // Feat: Panel
-        enableFillHandle={true}
-        enableRangeSelection={true}
-        rowGroupPanelShow="always"
-        // sideBar={['columns']}
-        // Option: Grid properties
-        rowHeight={60}
-        // Feat: Editing
-        readOnlyEdit={true}
-        reactiveCustomComponents={true}
-        onCellEditRequest={onCellEditRequest}
-        getRowId={getRowId}
-        isExternalFilterPresent={isExternalFilterPresent}
-        doesExternalFilterPass={doesExternalFilterPass}
-        onCellClicked={onCellClicked}
-      />
-    </div>
+    <>
+      <div className="ag-theme-quartz w-full min-h-[500px] h-[800px] max-h-fit">
+        <AgGridReact
+          ref={gridRef}
+          // Option: Definition
+          rowData={rooms}
+          // @ts-ignore
+          columnDefs={columnDefs}
+          // @ts-ignore
+          defaultColDef={defaultColDef}
+          // Feat: Pagination
+          pagination={true}
+          paginationPageSize={10}
+          paginationPageSizeSelector={[10, 25, 50]}
+          // Feat: Drag
+          rowDragMultiRow={true}
+          rowDragManaged={true}
+          rowSelection={'multiple'}
+          // @ts-ignore
+          rowDragText={rowDragText}
+          // Feat: Panel
+          enableFillHandle={true}
+          enableRangeSelection={true}
+          rowGroupPanelShow="always"
+          // sideBar={['columns']}
+          // Option: Grid properties
+          rowHeight={60}
+          // Feat: Editing
+          readOnlyEdit={true}
+          reactiveCustomComponents={true}
+          onCellEditRequest={onCellEditRequest}
+          getRowId={getRowId}
+          isExternalFilterPresent={isExternalFilterPresent}
+          doesExternalFilterPass={doesExternalFilterPass}
+          onCellClicked={onCellClicked}
+        />
+      </div>
+      {error && <div>Error</div>}
+    </>
   );
 };
 

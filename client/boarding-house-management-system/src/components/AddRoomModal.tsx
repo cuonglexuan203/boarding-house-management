@@ -17,6 +17,9 @@ import { parseOnlyNumber } from '@/utils/converterUtil';
 import { IRoom } from '@/utils/types';
 import { useAddRoomMutation } from '@/libs/services/roomApi';
 import { useGetServicesQuery } from '@/libs/services/serviceApi';
+import { toast } from 'react-toastify';
+import SuccessfulIcon from './icon/SuccessfulIcon';
+import FailedIcon from './icon/FailedIcon';
 
 const AddRoomModal = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -54,7 +57,25 @@ const AddRoomModal = () => {
   };
 
   const handleAddRoom = async () => {
-    //
+    // Validate input
+    if (roomName.trim().length === 0) {
+      toast.error('Room name can not empty', {
+        icon: <FailedIcon />,
+      });
+      return;
+    }
+    if (rentAmount < 0) {
+      toast.error('Rent amount can not less than 0', {
+        icon: <FailedIcon />,
+      });
+      return;
+    }
+    if (area <= 0) {
+      toast.error('Area must be greater than 0', {
+        icon: <FailedIcon />,
+      });
+      return;
+    }
     // @ts-ignore
     const newRoom: IRoom = {
       id: 0,
@@ -68,23 +89,27 @@ const AddRoomModal = () => {
         id: i,
       })),
     };
-    console.log(newRoom);
-    // Validate input
-    if (newRoom.id < 0) {
-      return;
-    }
-    if (rentAmount < 0) {
-      return;
-    }
-    if (area < 0) {
-      return;
-    }
+
     //
     try {
       const response = await addRoomTrigger(newRoom).unwrap();
-      console.log('Added room: ' + JSON.stringify(response));
+      toast.success(
+        <p>
+          Add room <span>(ID: {response.id})</span> successfully
+        </p>,
+        {
+          icon: <SuccessfulIcon />,
+        },
+      );
     } catch (err: any) {
-      console.log('Failed to add room: ' + err.message);
+      toast.error(
+        <p>
+          Add failed: <span>{err.message}</span>
+        </p>,
+        {
+          icon: <FailedIcon />,
+        },
+      );
     }
   };
 

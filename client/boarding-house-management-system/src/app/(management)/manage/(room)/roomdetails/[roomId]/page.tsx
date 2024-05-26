@@ -277,7 +277,7 @@ const RoomDetails = ({ params }: { params: { roomId: string } }) => {
                   <div className="flex justify-between">
                     <span>Check in date</span>
                     <span className="font-semibold text-primary">
-                      {currentRoomBooking.checkInDate.toString()}
+                      {currentRoomBooking.checkInDate?.toString()}
                     </span>
                   </div>
                 </>
